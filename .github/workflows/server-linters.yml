@@ -1,0 +1,29 @@
+name: Server linters
+
+on: ["pull_request", "workflow_dispatch"]
+
+jobs:
+  lint:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout sources
+        uses: actions/checkout@v4
+
+      - name: Setup Java
+        uses: actions/setup-java@v4
+        with:
+          distribution: 'temurin'
+          java-version: 17
+
+      - name: Setup Gradle
+        uses: gradle/actions/setup-gradle@v4
+
+      - name: Server lint
+        run: |
+          cd server
+          gradle sonarLintMain
+
+      - name: Server formatting
+        run: |
+          cd server
+          gradle spotlessCheck
