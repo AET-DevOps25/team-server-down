@@ -13,8 +13,9 @@ It addresses the need for a flexible, collaborative space where users can visual
 -  **Visual Whiteboard**: Add and arrange text, shapes, and colors to visualise ideas.
 -  **Real-Time Collaboration**: Share boards with others and edit together in real-time.
 -  **Generative AI Integration**:
-    - **Text Autocompletion**: AI text-autocompletion
+    - **Text Autocompletion**: AI text-autocompletion.
     - **Text-to-Image Generation**: Select text and generate relevant images.
+    - **Text Enhancement**: Summarize and rewrite paragraphs with the help of AI.
 ---
 
 ## 👥 Intended Users
