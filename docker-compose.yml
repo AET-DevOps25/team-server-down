@@ -46,11 +46,13 @@ services:
       - server
 
   client:
-    container_name: client
     restart: always
     build:
       context: ./client
       dockerfile: Dockerfile
+    volumes:
+      - ./client:/app
+      - /app/node_modules
     ports:
       - "3000:3000"       
     networks:
