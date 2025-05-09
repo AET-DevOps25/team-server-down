@@ -45,6 +45,18 @@ services:
     networks:
       - server
 
+  client:
+    container_name: client
+    restart: always
+    build:
+      context: ./client
+      dockerfile: Dockerfile
+    ports:
+      - "3000:3000"       
+    networks:
+      - server         
+   
+
   db:
     restart: always
     build:
@@ -65,8 +77,10 @@ services:
     networks:
       - server
 
+
 networks:
   server:
 
 volumes:
   db-data:
+
