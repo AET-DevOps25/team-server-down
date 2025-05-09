@@ -13,23 +13,23 @@ jobs:
       - name: Set up Node.js
         uses: actions/setup-node@v3
         with:
-          node-version: '16'  
+          node-version: '16'
 
       - name: Install dependencies
-        run: |
-          npm install
+        run: npm install
+        working-directory: client/teamserverdown
 
       - name: Run ESLint
-        run: |
-          npm run lint  
-
+        run: npm run lint
+        working-directory: client/teamserverdown
 
       - name: Run Prettier for formatting check
-        run: |
-          npx prettier --check "src/**/*.{ts,tsx}" 
+        run: npx prettier --check "src/**/*.{ts,tsx}"
+        working-directory: client/teamserverdown
 
       - name: Fix Prettier formatting
-        run: |
-          npm run format 
-        if: failure()  
+        run: npm run format
+        working-directory: client/teamserverdown
+        if: failure()
+
 
