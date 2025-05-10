@@ -14,6 +14,7 @@ jobs:
 
       - name: "Set up Python"
         uses: actions/setup-python@v5
+        run: cd genai
         with:
           python-version-file: ".python-version"
 
