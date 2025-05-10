@@ -1,0 +1,32 @@
+name: GenAI linters
+
+on: ["pull_request", "workflow_dispatch"]
+
+jobs:
+  lint:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout sources
+        uses: actions/checkout@v4
+
+      - name: Install uv
+        uses: astral-sh/setup-uv@v5
+
+      - name: "Set up Python"
+        uses: actions/setup-python@v5
+        with:
+          python-version-file: ".python-version"
+
+      - name: Install dependencies
+        run: |
+          uv pip install -r requirements.txt --system
+
+      - name: GenAI lint
+        run: |
+          cd genai
+          ruff  --check .
+
+      - name: GenAI formatting
+        run: |
+          cd genai
+          ruff format --check .

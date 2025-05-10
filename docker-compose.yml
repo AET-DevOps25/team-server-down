@@ -1,72 +1,133 @@
 name: team-server-down
 
 services:
-  nginx:
-    restart: always
-    image: nginx:stable-alpine
-    healthcheck:
-      test: "curl -f http://localhost:80 || exit 1"
-      interval: 5s
-    volumes:
-      - ./docker/nginx/conf.d:/etc/nginx/conf.d:ro
-      - ./docker/nginx/cert.crt:/etc/nginx/cert.crt:ro
-      - ./docker/nginx/private.key:/etc/nginx/private.key:ro
-    depends_on:
-      - server
-    ports:
-      - "80:80"
-      - "443:443"
-    networks:
-      - server
+#  nginx:
+#    restart: always
+#    image: nginx:stable-alpine
+#    healthcheck:
+#      test: "curl -f http://localhost:80 || exit 1"
+#      interval: 5s
+#    volumes:
+#      - ./docker/nginx/conf.d:/etc/nginx/conf.d:ro
+#      - ./docker/nginx/cert.crt:/etc/nginx/cert.crt:ro
+#      - ./docker/nginx/private.key:/etc/nginx/private.key:ro
+#    depends_on:
+#      - server
+#    ports:
+#      - "80:80"
+#      - "443:443"
+#    networks:
+#      - server
 
-  server:
+#  server:
+#    restart: always
+#    build:
+#      context: ./server
+#      dockerfile: Dockerfile
+#      target: development
+#    healthcheck:
+#      test: ["CMD", "curl", "-f", "http://server:8080/"]
+#      interval: 10s
+#      timeout: 3s
+#    environment:
+#      DB_HOST: ${DB_HOST:-db}
+#      DB_PORT: ${DB_PORT:-5432}
+#      DB_NAME: ${DB_NAME:-postgres}
+#      DB_USER: ${DB_USER:-postgres}
+#      DB_PASSWORD: ${DB_PASSWORD:-postgres}
+#    depends_on:
+#      db:
+#        condition: service_healthy
+#    ports:
+#      - "8080:8080"
+#    volumes:
+#      - ./server:/app
+#    networks:
+#      - server
+#
+#  db:
+#    restart: always
+#    build:
+#      context: ./docker/postgresql
+#      dockerfile: Dockerfile
+#    environment:
+#      POSTGRES_USER: postgres
+#      POSTGRES_PASSWORD: postgres
+#    healthcheck:
+#      test: [ "CMD-SHELL", "sh -c 'pg_isready -U postgres -d postgres'" ]
+#      interval: 10s
+#      timeout: 3s
+#      retries: 3
+#    ports:
+#      - "5432:5432"
+#    volumes:
+#      - db-data:/var/lib/postgresql/data
+#    networks:
+#      - server
+
+  genai:
     restart: always
     build:
-      context: ./server
+      context: ./genai
       dockerfile: Dockerfile
-      target: development
-    healthcheck:
-      test: ["CMD", "curl", "-f", "http://server:8080/"]
-      interval: 10s
-      timeout: 3s
-    environment:
-      DB_HOST: ${DB_HOST:-db}
-      DB_PORT: ${DB_PORT:-5432}
-      DB_NAME: ${DB_NAME:-postgres}
-      DB_USER: ${DB_USER:-postgres}
-      DB_PASSWORD: ${DB_PASSWORD:-postgres}
-    depends_on:
-      db:
-        condition: service_healthy
     ports:
-      - "8080:8080"
+      - "8000:8000"
+#    depends_on:
+#      - weaviate
     volumes:
-      - ./server:/app
+      - ./genai:/app
     networks:
       - server
+      - rag
 
-  db:
-    restart: always
-    build:
-      context: ./docker/postgresql
-      dockerfile: Dockerfile
-    environment:
-      POSTGRES_USER: postgres
-      POSTGRES_PASSWORD: postgres
-    healthcheck:
-      test: [ "CMD-SHELL", "sh -c 'pg_isready -U postgres -d postgres'" ]
-      interval: 10s
-      timeout: 3s
-      retries: 3
-    ports:
-      - "5432:5432"
-    volumes:
-      - db-data:/var/lib/postgresql/data
-    networks:
-      - server
+#  weaviate:
+#    command: [ "--host", "0.0.0.0", "--port", "9090", "--scheme", "http"]
+##      - --host
+##      - 0.0.0.0
+##      - --port
+##      - '9090'
+##      - --scheme
+##      - http
+#    image: cr.weaviate.io/semitechnologies/weaviate:1.30.0
+#    ports:
+#      - 9090:9090
+#      - 50051:50051
+#    volumes:
+#      - weaviate-data:/var/lib/weaviate
+#    restart: on-failure:0
+#    environment:
+#      TRANSFORMERS_INFERENCE_API: 'http://t2v-transformers:8080'
+#      IMAGE_INFERENCE_API: 'http://i2v-neural:8080'
+#      SPELLCHECK_INFERENCE_API: 'http://text-spellcheck:8080'
+#      QUERY_DEFAULTS_LIMIT: 25
+#      AUTHENTICATION_ANONYMOUS_ACCESS_ENABLED: 'true'
+#      PERSISTENCE_DATA_PATH: '/var/lib/weaviate'
+#      DEFAULT_VECTORIZER_MODULE: 'text2vec-transformers'
+#      ENABLE_MODULES: 'text2vec-transformers,text-spellcheck,img2vec-neural'
+#      CLUSTER_HOSTNAME: 'node1'
+#    networks:
+#      - rag
+#  t2v-transformers:
+#    image: cr.weaviate.io/semitechnologies/transformers-inference:sentence-transformers-multi-qa-MiniLM-L6-cos-v1
+#    environment:
+#      ENABLE_CUDA: '0'
+#    networks:
+#      - rag
+#  text-spellcheck:
+#    image: cr.weaviate.io/semitechnologies/text-spellcheck-model:pyspellchecker-en
+#    networks:
+#      - rag
+#  i2v-neural:
+#    image: cr.weaviate.io/semitechnologies/img2vec-pytorch:resnet50
+#    environment:
+#      ENABLE_CUDA: '0'
+#    networks:
+#      - rag
 
 networks:
   server:
+  rag:
 
 volumes:
   db-data:
+  weaviate-data:
