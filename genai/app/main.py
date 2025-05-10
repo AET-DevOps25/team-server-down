@@ -10,6 +10,7 @@ async def lifespan(app: FastAPI):
     print("Weaviate client initialized")
     yield
 
+
 app = FastAPI(lifespan=lifespan)
 
 app.include_router(root.router)
