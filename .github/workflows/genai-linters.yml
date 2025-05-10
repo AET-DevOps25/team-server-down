@@ -24,7 +24,7 @@ jobs:
       - name: GenAI lint
         run: |
           cd genai
-          ruff  --check .
+          ruff check .
 
       - name: GenAI formatting
         run: |
