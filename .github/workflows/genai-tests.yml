@@ -19,7 +19,7 @@ jobs:
 
       - name: Install dependencies
         run: |
-          uv pip install -r requirements.txt --system
+          uv pip install -r ./genai/requirements.txt --system
 
       - name: GenAI tests
         run: |
