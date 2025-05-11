@@ -17,19 +17,19 @@ jobs:
 
       - name: Install dependencies
         run: npm install
-        working-directory: client/teamserverdown
+        working-directory: client
 
       - name: Run ESLint
         run: npm run lint
-        working-directory: client/teamserverdown
+        working-directory: client
 
       - name: Run Prettier for formatting check
         run: npx prettier --check "src/**/*.{ts,tsx}"
-        working-directory: client/teamserverdown
+        working-directory: client
 
       - name: Fix Prettier formatting
         run: npm run format
-        working-directory: client/teamserverdown
+        working-directory: client
         if: failure()
 
 
