@@ -50,14 +50,18 @@ services:
     build:
       context: ./client
       dockerfile: Dockerfile
+      target: deps
+    entrypoint: npm run dev
     volumes:
       - ./client:/app
-      - /app/node_modules
+      - node-modules-client:/app/node_modules
+    healthcheck:
+      test: "curl -f http://localhost:3000 || exit 1"
+      interval: 5s
     ports:
       - "3000:3000"       
     networks:
-      - server         
-   
+      - server
 
   db:
     restart: always
@@ -79,10 +83,9 @@ services:
     networks:
       - server
 
-
 networks:
   server:
 
 volumes:
   db-data:
-
+  node-modules-client:
