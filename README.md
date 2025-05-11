@@ -49,5 +49,7 @@ It addresses the need for a flexible, collaborative space where users can visual
 ## UML Models
 ### UML Use Case Diagram
 
+![UML Use Case Diagram](images/UMLUseCaseDiagram.png)
+
 ### Analysis Object Model
 
