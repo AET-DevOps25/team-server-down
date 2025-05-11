@@ -44,3 +44,10 @@ It addresses the need for a flexible, collaborative space where users can visual
 6. As a user, I want to select a piece of text and generate a relevant image, so that I can visually enhance my whiteboard content.
 7. As a user, I want to summarize long paragraphs using AI, so that I can condense information and understand key points quickly.
 8. As a user, I want to rewrite selected text with AI assistance, so that I can improve clarity, tone, or grammar effortlessly.
+
+---
+## UML Models
+### UML Use Case Diagram
+
+### Analysis Object Model
+
