@@ -1,0 +1,35 @@
+name: Lint and Format Check
+
+on: ["pull_request", "workflow_dispatch"]
+
+jobs:
+  lint-format:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: '18.18.0'
+
+      - name: Install dependencies
+        run: npm install
+        working-directory: client
+
+      - name: Run ESLint
+        run: npm run lint
+        working-directory: client
+
+      - name: Run Prettier for formatting check
+        run: npx prettier --check "src/**/*.{ts,tsx}"
+        working-directory: client
+
+      - name: Fix Prettier formatting
+        run: npm run format
+        working-directory: client
+        if: failure()
+
+
