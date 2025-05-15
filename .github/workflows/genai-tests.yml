@@ -1,6 +1,10 @@
 name: GenAI tests
 
-on: ["pull_request", "workflow_dispatch"]
+on:
+  pull_request:
+    paths:
+      - 'genai/**'
+  workflow_dispatch:
 
 jobs:
   lint:

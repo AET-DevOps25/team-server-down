@@ -1,6 +1,10 @@
 name: Server linters
 
-on: ["pull_request", "workflow_dispatch"]
+on:
+  pull_request:
+    paths:
+      - 'server/**'
+  workflow_dispatch:
 
 jobs:
   lint:
