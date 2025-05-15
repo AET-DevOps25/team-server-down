@@ -7,7 +7,7 @@ on:
   workflow_dispatch:
 
 jobs:
-  lint:
+  genai-lint:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout sources
