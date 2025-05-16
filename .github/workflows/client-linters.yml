@@ -1,9 +1,13 @@
 name: Lint and Format Check
 
-on: ["pull_request", "workflow_dispatch"]
+on:
+  pull_request:
+    paths:
+      - 'client/**'
+  workflow_dispatch:
 
 jobs:
-  lint-format:
+  client-lint-format:
     runs-on: ubuntu-latest
 
     steps:

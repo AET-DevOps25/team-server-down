@@ -53,4 +53,3 @@ It addresses the need for a flexible, collaborative space where users can visual
 
 ### Analysis Object Model
 ![AOM](docs/AOM.png)
-

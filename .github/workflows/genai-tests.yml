@@ -1,9 +1,13 @@
 name: GenAI tests
 
-on: ["pull_request", "workflow_dispatch"]
+on:
+  pull_request:
+    paths:
+      - 'genai/**'
+  workflow_dispatch:
 
 jobs:
-  lint:
+  genai-test:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout sources

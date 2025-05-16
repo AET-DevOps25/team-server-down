@@ -1,9 +1,13 @@
 name: Server tests
 
-on: ["pull_request", "workflow_dispatch"]
+on:
+  pull_request:
+    paths:
+      - 'server/**'
+  workflow_dispatch:
 
 jobs:
-  lint:
+  server-test:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout sources
