@@ -1,6 +1,6 @@
 "use client";
 
-import { WhiteBoard } from "@/components/ui/WhiteBoard";
+import { WhiteBoard } from "@/components/WhiteBoard";
 
 export default function Home() {
   return <WhiteBoard/>;

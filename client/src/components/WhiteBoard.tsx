@@ -12,10 +12,10 @@ import {
 import { Button } from "@/components/ui/button";
 import { Type } from "lucide-react";
 import "@xyflow/react/dist/style.css";
-import { Text } from "@/components/ui/Text";
+import { TextNode} from "@/components/TextNode";
 
 const nodeTypes = {
-  text: Text,
+  text: TextNode,
 };
 
 export function WhiteBoard() {
