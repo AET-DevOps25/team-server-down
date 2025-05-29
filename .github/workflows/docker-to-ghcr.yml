@@ -37,7 +37,7 @@ jobs:
           context: ./client
           file: ./client/Dockerfile
           push: true
-          tags: ghcr.io/${{ github.repository }}/client:latest
+          tags: ghcr.io/${{ github.repository.toLowerCase() }}/client:latest
           platforms: linux/amd64
 
       - name: Server -> Build and push Docker image
@@ -46,5 +46,5 @@ jobs:
           context: ./server
           file: ./server/Dockerfile
           push: true
-          tags: ghcr.io/${{ github.repository }}/server:latest
+          tags: ghcr.io/${{ github.repository.toLowerCase() }}/server:latest
           platforms: linux/amd64
