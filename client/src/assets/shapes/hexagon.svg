@@ -1,0 +1,9 @@
+<svg viewBox="0 0 100 100" preserveAspectRatio="none" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <defs>
+        <polygon id="hexagon" vector-effect="non-scaling-stroke" points="25,0 75,0 100,50 75,100 25,100 0,50" />
+        <clipPath id="clipHexagon">
+            <use xlink:href="#hexagon" />
+        </clipPath>
+    </defs>
+    <use xlink:href="#hexagon" clip-path="url(#clipHexagon)"/>
+</svg>
