@@ -21,7 +21,6 @@ RUN npm run build
 
 # Production image
 FROM node:18-alpine AS runner
-WORKDIR /app
 
 ENV NODE_ENV=production
 
