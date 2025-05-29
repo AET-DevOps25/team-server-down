@@ -31,13 +31,16 @@ jobs:
           restore-keys: |
             ${{ runner.os }}-buildx-
 
+      - name: downcase REPO
+        run: echo "REPO=${GITHUB_REPOSITORY,,}" >> $GITHUB_ENV
+
       - name: Client -> Build and push Docker image
         uses: docker/build-push-action@v3
         with:
           context: ./client
           file: ./client/Dockerfile
           push: true
-          tags: ghcr.io/${{ github.repository.toLowerCase() }}/client:latest
+          tags: ghcr.io/${{ env.REPO }}/client:latest
           platforms: linux/amd64
 
       - name: Server -> Build and push Docker image
@@ -46,5 +49,5 @@ jobs:
           context: ./server
           file: ./server/Dockerfile
           push: true
-          tags: ghcr.io/${{ github.repository.toLowerCase() }}/server:latest
+          tags: ghcr.io/${{ env.REPO }}/server:latest
           platforms: linux/amd64
