@@ -3,7 +3,8 @@ name: Build and Publish Docker Image to GHCR
 on:
   push:
     branches:
-      - pipeline
+      - main
+      - develop
 
 jobs:
   build-and-push:
@@ -31,8 +32,18 @@ jobs:
           restore-keys: |
             ${{ runner.os }}-buildx-
 
-      - name: downcase REPO
-        run: echo "REPO=${GITHUB_REPOSITORY,,}" >> $GITHUB_ENV
+      - name: Set REPO, TAG, NAMESPACE, and VALUES_FILE environment variables
+        run: |
+          echo "REPO=${GITHUB_REPOSITORY,,}" >> $GITHUB_ENV
+          if [[ "${GITHUB_REF##*/}" == "main" ]]; then
+            echo "TAG=latest" >> $GITHUB_ENV
+            echo "NAMESPACE=tsd-prod" >> $GITHUB_ENV
+            echo "VALUES_FILE=./whiteboard-app/staging.values.yaml" >> $GITHUB_ENV
+          elif [[ "${GITHUB_REF##*/}" == "develop" ]]; then
+            echo "TAG=develop" >> $GITHUB_ENV
+            echo "NAMESPACE=tsd-staging" >> $GITHUB_ENV
+            echo "VALUES_FILE=./whiteboard-app/production.values.yaml" >> $GITHUB_ENV
+          fi
 
       - name: Client -> Build and push Docker image
         uses: docker/build-push-action@v3
@@ -40,7 +51,7 @@ jobs:
           context: ./client
           file: ./client/Dockerfile
           push: true
-          tags: ghcr.io/${{ env.REPO }}/client:latest
+          tags: ghcr.io/${{ env.REPO }}/client:${{ env.TAG }}
           platforms: linux/amd64
 
       - name: Server -> Build and push Docker image
@@ -49,5 +60,28 @@ jobs:
           context: ./server
           file: ./server/Dockerfile
           push: true
-          tags: ghcr.io/${{ env.REPO }}/server:latest
+          tags: ghcr.io/${{ env.REPO }}/server:${{ env.TAG }}
           platforms: linux/amd64
+
+
+      - name: Set up Kubeconfig
+        run: |
+          echo "${{ secrets.KUBECONFIG }}" > kubeconfig
+          echo "KUBECONFIG=$(pwd)/kubeconfig" >> $GITHUB_ENV
+
+      - name: Install Helm
+        uses: azure/setup-helm@v3
+
+
+      - name: Update Helm dependencies
+        run: |
+          helm repo add bitnami https://charts.bitnami.com/bitnami
+          helm repo update
+          helm dependency update ./helm/whiteboard-app/
+
+      - name: Deploy App with Helm
+        run: |
+          helm upgrade whiteboard ./helm/whiteboard-app/ \
+            -f ${{ env.VALUES_FILE }} \
+            -n ${{ env.NAMESPACE }} \
+            --kubeconfig ${{ env.KUBECONFIG }}
