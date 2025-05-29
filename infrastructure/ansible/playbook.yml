@@ -1,0 +1,108 @@
+- hosts: all
+  become: true
+  vars:
+    container_count: 4
+    default_container_name: docker
+    default_container_image: ubuntu
+    default_container_command: sleep 1
+
+- name: Install Docker, Docker Compose
+  hosts: all
+  become: true
+  tasks:
+    - name: Install aptitude
+      apt:
+        name: aptitude
+        state: latest
+        update_cache: true
+
+    - name: Install required system packages
+      apt:
+        pkg:
+          - apt-transport-https
+          - ca-certificates
+          - curl
+          - software-properties-common
+          - python3-pip
+          - virtualenv
+          - python3-setuptools
+        state: latest
+        update_cache: true
+
+    - name: Add Docker GPG apt Key
+      apt_key:
+        url: https://download.docker.com/linux/ubuntu/gpg
+        state: present
+
+    - name: Add Docker Repository
+      apt_repository:
+        repo: deb https://download.docker.com/linux/ubuntu focal stable
+        state: present
+
+    - name: Update apt and install docker-ce
+      apt:
+        name: docker-ce
+        state: latest
+        update_cache: true
+
+    - name: Install Docker module for Python
+      apt:
+        name: python3-docker
+        state: present
+      become: true
+
+    - name: Start docker daemon
+      systemd:
+        name: docker
+        state: started
+
+- name: Create a new Linux User
+  hosts: all
+  become: yes
+  tasks:
+    - name: Create new Linux User
+      user:
+        name: teamserverdown
+        groups: adm,docker
+        append: yes
+
+    - name: Reconnect to server session
+      meta: reset_connection
+
+- name: Start Project
+  hosts: all
+  become: yes
+  tasks:
+    - name: Clone GitHub repository
+      git:
+        repo: https://github.com/AET-DevOps25/team-server-down
+        dest: /home/ubuntu/team-server-down/
+        clone: yes
+        update: yes
+
+    - name: Get the public IP address of the network.
+      uri:
+        url: https://api.ipify.org?format=json
+        method: Get
+      changed_when: false
+      register: public_ip
+      until: public_ip.status == 200
+      retries: 6
+      delay: 10
+
+    - name: Create .env.prod
+      ansible.builtin.shell: |
+        cd team-server-down
+        rm .env.prod
+        touch .env.prod
+        echo "CLIENT_HOST=client.{{ public_ip.json.ip }}.nip.io" >> .env.prod
+        echo "SERVER_HOST=api.{{ public_ip.json.ip }}.nip.io" >> .env.prod
+        echo "PUBLIC_API_URL=https://api.{{ public_ip.json.ip }}.nip.io/api" >> .env.prod
+
+    - name: Start Container
+      community.docker.docker_compose_v2:
+        project_src: /home/ubuntu/team-server-down
+        files: compose.aws.yml
+        env_files: .env.prod
+      register: output
+
