@@ -77,4 +77,5 @@ jobs:
           helm upgrade whiteboard ./helm/whiteboard-app/ \
             -f ${{ env.VALUES_FILE }} \
             -n ${{ env.NAMESPACE }} \
+            --install --atomic
             --kubeconfig ${{ env.KUBECONFIG }}
