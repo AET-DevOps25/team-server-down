@@ -79,4 +79,3 @@ jobs:
             -n ${{ env.NAMESPACE }} \
             --install \
             --atomic \
-            --kubeconfig ${{ env.KUBECONFIG }}
