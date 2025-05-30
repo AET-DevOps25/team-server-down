@@ -2,6 +2,8 @@ name: Deploy Docker Images
 
 on:
   push:
+    branches:
+      - mainx
 
 jobs:
   deploy:
