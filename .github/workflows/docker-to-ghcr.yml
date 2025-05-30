@@ -72,13 +72,6 @@ jobs:
       - name: Install Helm
         uses: azure/setup-helm@v3
 
-
-      - name: Update Helm dependencies
-        run: |
-          helm repo add bitnami https://charts.bitnami.com/bitnami
-          helm repo update
-          helm dependency update ./helm/whiteboard-app/
-
       - name: Deploy App with Helm
         run: |
           helm upgrade whiteboard ./helm/whiteboard-app/ \
