@@ -1,5 +1,7 @@
 # Install dependencies only when needed
-FROM node:18-alpine AS deps
+FROM node:20-bullseye-slim AS deps
+
+RUN apt update && apt install --yes --no-install-recommends curl default-jre
 
 # Set working directory
 WORKDIR /app
