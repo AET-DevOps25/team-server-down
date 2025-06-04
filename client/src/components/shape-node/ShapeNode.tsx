@@ -2,27 +2,26 @@
 import { memo } from "react";
 import {
   Handle,
+  NodeProps,
   NodeResizer,
   NodeToolbar,
   Position,
   useReactFlow,
 } from "@xyflow/react";
-import StyleBar from "@/components/shape-node/style-bar/StyleBar";
-import { getFontStyle, ShapeNodeProperties } from "@/types/ShapeNodeProperties";
+import StyleBar from "@/components/style-bar/StyleBar";
+import {
+  getFontStyle,
+  handleStyle,
+  NodeProperties,
+} from "@/types/NodeProperties";
+import { updateNode } from "@/util/updateNode";
 
-const handleStyle = {
-  width: 2,
-  height: 2,
-  background: "#ffffff",
-  border: "1px solid gray",
-};
-
-export interface ShapeNodeParams {
+export interface ShapeNodeParams extends NodeProps {
   id: string;
   data: {
     label: string;
     Shape: React.ComponentType<React.SVGProps<SVGSVGElement>>;
-    nodeProperties: ShapeNodeProperties;
+    nodeProperties: NodeProperties;
   };
   selected: boolean;
 }
@@ -32,45 +31,22 @@ const ShapeNode = ({ id, data, selected }: ShapeNodeParams) => {
 
   const { setNodes } = useReactFlow();
 
-  const onUpdateNode = (
-    updater: Partial<{
-      label: string;
-      nodeProperties: Partial<ShapeNodeProperties>;
-    }>,
-  ) => {
-    setNodes((nodes) =>
-      nodes.map((node) => {
-        if (node.id === id) {
-          return {
-            ...node,
-            data: {
-              ...node.data,
-              ...(updater.label !== undefined && { label: updater.label }),
-              ...(updater.nodeProperties && {
-                nodeProperties: {
-                  ...(node.data.nodeProperties || {}),
-                  ...updater.nodeProperties,
-                },
-              }),
-            },
-          };
-        }
-        return node;
-      }),
-    );
+  const onUpdateNode = (updater: {
+    label?: string;
+    nodeProperties?: Partial<NodeProperties>;
+  }) => {
+    setNodes(updateNode(id, updater));
   };
 
   return (
     <>
-      <NodeToolbar isVisible={selected}>
-        <div className="absolute -top-14 left-1/2 transform -translate-x-1/2 z-20">
-          <StyleBar
-            nodeProperties={nodeProperties}
-            onUpdateNode={(updatedProperties: Partial<ShapeNodeProperties>) =>
-              onUpdateNode({ nodeProperties: updatedProperties })
-            }
-          />
-        </div>
+      <NodeToolbar isVisible={selected} position={Position.Top}>
+        <StyleBar
+          nodeProperties={nodeProperties}
+          onUpdateNode={(updatedProperties: Partial<NodeProperties>) =>
+            onUpdateNode({ nodeProperties: updatedProperties })
+          }
+        />
       </NodeToolbar>
 
       <NodeResizer
@@ -115,26 +91,55 @@ const ShapeNode = ({ id, data, selected }: ShapeNodeParams) => {
         />
       </div>
 
-      <Handle type="target" position={Position.Top} style={handleStyle} />
+      <Handle
+        type="source"
+        id="top-source"
+        position={Position.Top}
+        style={handleStyle}
+      />
+      <Handle
+        type="target"
+        id="top-target"
+        position={Position.Top}
+        style={handleStyle}
+      />
 
       <Handle
         type="source"
+        id="bottom-source"
         position={Position.Bottom}
-        id="b"
+        style={handleStyle}
+      />
+      <Handle
+        type="target"
+        id="bottom-target"
+        position={Position.Bottom}
         style={handleStyle}
       />
 
       <Handle
         type="source"
+        id="left-source"
         position={Position.Left}
-        id="l"
+        style={handleStyle}
+      />
+      <Handle
+        type="target"
+        id="left-target"
+        position={Position.Left}
         style={handleStyle}
       />
 
       <Handle
         type="source"
+        id="right-source"
         position={Position.Right}
-        id="r"
+        style={handleStyle}
+      />
+      <Handle
+        type="target"
+        id="right-target"
+        position={Position.Right}
         style={handleStyle}
       />
     </>

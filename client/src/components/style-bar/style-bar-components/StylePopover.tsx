@@ -3,9 +3,9 @@ import {
   PopoverContent,
   PopoverTrigger,
 } from "@/components/ui/popover";
-import ColorPickerPanel from "@/components/shape-node/style-bar/style-bar-components/style-popover-components/ColorPickerPanel";
+import ColorPickerPanel from "@/components/style-bar/style-bar-components/style-popover-components/ColorPickerPanel";
 import React, { useState } from "react";
-import SliderControl from "@/components/shape-node/style-bar/style-bar-components/style-popover-components/SliderControl";
+import SliderControl from "@/components/style-bar/style-bar-components/style-popover-components/SliderControl";
 
 interface SliderConfig {
   title: string;
@@ -71,6 +71,7 @@ export default function StylePopover({
           color={color}
           localColor={localColor}
           handleColorChange={handleColorChange}
+          isTextPopOver={title === "Text Color"}
         />
       </PopoverContent>
     </Popover>

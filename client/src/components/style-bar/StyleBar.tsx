@@ -1,15 +1,15 @@
 "use client";
 import React from "react";
 import { memo } from "react";
-import StylePopover from "@/components/shape-node/style-bar/style-bar-components/StylePopover";
-import FontSizeSelector from "@/components/shape-node/style-bar/style-bar-components/FontSizeSelector";
-import TextStylingSelector from "@/components/shape-node/style-bar/style-bar-components/TextStylingSelector";
-import FontFamilySelector from "@/components/shape-node/style-bar/style-bar-components/FontFamilySelector";
-import { ShapeNodeProperties } from "@/types/ShapeNodeProperties";
+import StylePopover from "@/components/style-bar/style-bar-components/StylePopover";
+import FontSizeSelector from "@/components/style-bar/style-bar-components/FontSizeSelector";
+import TextStylingSelector from "@/components/style-bar/style-bar-components/TextStylingSelector";
+import FontFamilySelector from "@/components/style-bar/style-bar-components/FontFamilySelector";
+import { checkerboardStyle, NodeProperties } from "@/types/NodeProperties";
 
 interface StyleBarProps {
-  nodeProperties: ShapeNodeProperties;
-  onUpdateNode: (updatedProperties: Partial<ShapeNodeProperties>) => void;
+  nodeProperties: NodeProperties;
+  onUpdateNode: (updatedProperties: Partial<NodeProperties>) => void;
 }
 
 const StyleBar = ({ nodeProperties, onUpdateNode }: StyleBarProps) => {
@@ -84,8 +84,12 @@ const StyleBar = ({ nodeProperties, onUpdateNode }: StyleBarProps) => {
         onChangeColor={onChangeBgColor}
         buttonIcon={
           <div
-            className="w-4 h-4 rounded-full"
-            style={{ backgroundColor: bgColor }}
+            className="w-4 h-4 rounded-full border-[0.5px] border-gray-200"
+            style={
+              bgColor !== "none"
+                ? { backgroundColor: bgColor }
+                : checkerboardStyle
+            }
           />
         }
         sliders={[
@@ -107,9 +111,15 @@ const StyleBar = ({ nodeProperties, onUpdateNode }: StyleBarProps) => {
         onChangeColor={onChangeBorderColor}
         buttonIcon={
           <div
-            className="w-4 h-4 rounded-full border-2 bg-transparent"
-            style={{ borderColor: borderColor }}
-          />
+            className="w-4 h-4 rounded-full border-[0.5px] border-gray-200 flex items-center justify-center"
+            style={
+              borderColor !== "none"
+                ? { backgroundColor: borderColor }
+                : checkerboardStyle
+            }
+          >
+            <div className="w-2 h-2 rounded-full border-[0.5px] border-gray-200 bg-white" />
+          </div>
         }
         sliders={[
           {
@@ -140,11 +150,16 @@ const StyleBar = ({ nodeProperties, onUpdateNode }: StyleBarProps) => {
         color={textColor}
         onChangeColor={onChangeTextColor}
         buttonIcon={
-          <div
-            className="inline-block border-b-2 border-current leading-none px-0.5 m-0 text-base"
-            style={{ borderColor: textColor }}
-          >
-            A
+          <div className="flex flex-col text-base items-center justify-center">
+            <span className="-mt-1">A</span>
+            <div
+              className="w-4 h-1 -mt-1 border-[0.5px] border-gray-200"
+              style={
+                textColor !== "none"
+                  ? { backgroundColor: textColor }
+                  : checkerboardStyle
+              }
+            />
           </div>
         }
       />

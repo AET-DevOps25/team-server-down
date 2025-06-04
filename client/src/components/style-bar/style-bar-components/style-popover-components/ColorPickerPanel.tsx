@@ -1,12 +1,13 @@
 import React from "react";
 import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/components/ui/tabs";
 import { HexColorPicker, HexColorInput } from "react-colorful";
-import { predefinedColors } from "@/types/ShapeNodeProperties";
+import { checkerboardStyle, predefinedColors } from "@/types/NodeProperties";
 
 type Props = {
   color: string;
   localColor: string;
   handleColorChange: (color: string) => void;
+  isTextPopOver?: boolean;
 };
 
 const ColorOption = ({
@@ -25,11 +26,30 @@ const ColorOption = ({
   />
 );
 
+const TransparentOption = ({
+  onClick,
+  isSelected = false,
+}: {
+  onClick: () => void;
+  isSelected?: boolean;
+}) => (
+  <div
+    className={`w-6 h-6 rounded-full cursor-pointer flex items-center justify-center relative ${
+      isSelected ? "ring-2 ring-offset-2 ring-black" : ""
+    }`}
+    style={checkerboardStyle}
+    onClick={onClick}
+  ></div>
+);
+
 const ColorPickerPanel: React.FC<Props> = ({
   color,
   localColor,
   handleColorChange,
+  isTextPopOver,
 }) => {
+  const isTransparent = color === "none";
+
   return (
     <Tabs defaultValue="palette">
       <TabsList className="w-full">
@@ -43,6 +63,12 @@ const ColorPickerPanel: React.FC<Props> = ({
 
       <TabsContent value="palette" className="mt-2">
         <div className="grid grid-cols-5 gap-2 mb-2">
+          {!isTextPopOver && (
+            <TransparentOption
+              onClick={() => handleColorChange("none")}
+              isSelected={isTransparent}
+            />
+          )}
           {predefinedColors.map((hex, idx) => (
             <ColorOption
               key={idx}

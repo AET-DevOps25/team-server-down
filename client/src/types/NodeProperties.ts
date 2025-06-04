@@ -1,4 +1,4 @@
-export interface ShapeNodeProperties {
+export interface NodeProperties {
   color: string;
   borderColor: string;
   borderWidth?: number;
@@ -13,7 +13,6 @@ export interface ShapeNodeProperties {
   isUnderline: boolean;
 }
 
-// constants:
 export const fontSizes = [10, 12, 14, 18, 24, 36, 48, 64, 80, 144, 288];
 
 export const predefinedColors = [
@@ -60,7 +59,7 @@ export const getFontStyle = (fontName: string) => {
   return allFonts[fontName] || "sans-serif";
 };
 
-export const defaultShapeNodeProperties: ShapeNodeProperties = {
+export const defaultShapeNodeProperties: NodeProperties = {
   color: "#FFCC80",
   borderColor: "#FFAB40",
   borderWidth: 3,
@@ -73,4 +72,36 @@ export const defaultShapeNodeProperties: ShapeNodeProperties = {
   isItalic: false,
   isStrikethrough: false,
   isUnderline: false,
+};
+export const defaultTextNodeProperties: NodeProperties = {
+  color: "none",
+  borderColor: "none",
+  borderWidth: 3,
+  borderOpacity: 1,
+  opacity: 1,
+  textColor: "#000000",
+  fontSize: 16,
+  fontFamily: "Arial",
+  isBold: false,
+  isItalic: false,
+  isStrikethrough: false,
+  isUnderline: false,
+};
+
+export const checkerboardStyle = {
+  background: `
+          linear-gradient(45deg, #ccc 25%, transparent 25%), 
+          linear-gradient(-45deg, #ccc 25%, transparent 25%), 
+          linear-gradient(45deg, transparent 75%, #ccc 75%), 
+          linear-gradient(-45deg, transparent 75%, #ccc 75%)
+        `,
+  backgroundSize: "6px 6px",
+  backgroundPosition: "0 0, 0 3px, 3px -3px, -3px 0px",
+};
+
+export const handleStyle = {
+  width: 2,
+  height: 2,
+  background: "#ffffff",
+  border: "1px solid gray",
 };

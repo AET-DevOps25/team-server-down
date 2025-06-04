@@ -7,7 +7,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import { fontSizes } from "@/types/ShapeNodeProperties";
+import { fontSizes } from "@/types/NodeProperties";
 
 interface FontSizeSelectorProps {
   fontSize: number;

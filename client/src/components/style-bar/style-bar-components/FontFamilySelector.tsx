@@ -7,7 +7,7 @@ import {
   SelectValue,
   SelectGroup,
 } from "@/components/ui/select";
-import { allFonts, getFontStyle } from "@/types/ShapeNodeProperties";
+import { allFonts, getFontStyle } from "@/types/NodeProperties";
 
 interface FontSelectorProps {
   fontFamily: string;
