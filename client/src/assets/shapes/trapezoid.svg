@@ -1,0 +1,10 @@
+<svg viewBox="0 0 100 100" preserveAspectRatio="none" xmlns="http://www.w3.org/2000/svg"
+     xmlns:xlink="http://www.w3.org/1999/xlink">
+    <defs>
+        <polygon id="trapezoid" vector-effect="non-scaling-stroke" points="20,0 80,0 100,100 0,100"/>
+        <clipPath id="clipTrapezoid">
+            <use xlink:href="#trapezoid"/>
+        </clipPath>
+    </defs>
+    <use xlink:href="#trapezoid" clip-path="url(#clipTrapezoid)"/>
+</svg>
