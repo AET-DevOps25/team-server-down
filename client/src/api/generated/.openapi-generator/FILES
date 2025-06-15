@@ -1,0 +1,9 @@
+.gitignore
+.npmignore
+api.ts
+base.ts
+common.ts
+configuration.ts
+docs/RootApi.md
+git_push.sh
+index.ts

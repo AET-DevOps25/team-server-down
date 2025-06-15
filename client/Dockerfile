@@ -1,5 +1,7 @@
 # Install dependencies only when needed
-FROM node:18-alpine AS deps
+FROM node:24.2-bullseye-slim AS deps
+
+RUN apt update && apt install --yes --no-install-recommends curl default-jre
 
 # Set working directory
 WORKDIR /app
@@ -9,7 +11,7 @@ COPY package.json package-lock.json ./
 RUN npm ci
 
 # Rebuild the source code only when needed
-FROM node:20-slim AS builder
+FROM node:24.2-slim AS builder
 WORKDIR /app
 
 COPY . .
@@ -20,7 +22,8 @@ COPY --from=deps /app/node_modules ./node_modules
 RUN npm run build
 
 # Production image
-FROM node:20-alpine AS runner
+FROM node:24.2-alpine3.21 AS runner
+WORKDIR /app
 
 ENV NODE_ENV=production
 
