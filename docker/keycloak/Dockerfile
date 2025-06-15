@@ -1,4 +1,4 @@
-FROM quay.io/keycloak/keycloak:24.0.1 as development
+FROM quay.io/keycloak/keycloak:24.0.1 AS development
 
 ENV KC_HEALTH_ENABLED=true
 ENV KC_METRICS_ENABLED=true
@@ -9,8 +9,6 @@ FROM quay.io/keycloak/keycloak:24.0.1
 
 COPY --from=development /opt/keycloak/ /opt/keycloak/
 
-COPY ./server.crt.pem /opt/keycloak/conf/server.crt.pem
-COPY ./server.key.pem /opt/keycloak/conf/server.key.pem
 COPY ./realm-export.json /opt/keycloak/data/import/realm-export.json
 
 ENTRYPOINT ["/opt/keycloak/bin/kc.sh"]

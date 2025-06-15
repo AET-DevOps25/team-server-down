@@ -1,25 +1,6 @@
 name: team-server-down
 
 services:
-  nginx:
-    restart: always
-    image: nginx:stable-alpine
-    healthcheck:
-      test: "curl -f http://localhost:80 || exit 1"
-      interval: 5s
-    volumes:
-      - ./docker/nginx/conf.d:/etc/nginx/conf.d:ro
-      - ./docker/nginx/cert.crt:/etc/nginx/cert.crt:ro
-      - ./docker/nginx/private.key:/etc/nginx/private.key:ro
-    depends_on:
-#      - server
-      - keycloak
-    ports:
-      - "80:80"
-      - "443:443"
-    networks:
-      - server
-
   keycloak:
     restart: always
     build:
@@ -27,7 +8,6 @@ services:
       dockerfile: Dockerfile
       target: development
     ports:
-      - "8443:8443"
       - "8080:8080"
     command:
       - start-dev
@@ -43,44 +23,42 @@ services:
       KC_DB_URL: jdbc:postgresql://db:5432/keycloak
       KC_DB_USERNAME: root
       KC_DB_PASSWORD: password
-      KC_HTTPS_CERTIFICATE_FILE: /opt/keycloak/conf/server.crt.pem
-      KC_HTTPS_CERTIFICATE_KEY_FILE: /opt/keycloak/conf/server.key.pem
       KC_HOSTNAME: localhost
       KEYCLOAK_ADMIN: admin
       KEYCLOAK_ADMIN_PASSWORD: password
+      KC_HTTP_ENABLED: true
+      KC_HOSTNAME_STRICT: false
     volumes:
       - ./docker/keycloak/realm-export.json:/opt/keycloak/data/import/realm-export.json:ro
-      - ./docker/keycloak/cert.crt:/opt/keycloak/conf/server.crt.pem:ro
-      - ./docker/keycloak/private.key:/opt/keycloak/conf/server.key.pem:ro
     networks:
       - server
 
-#  server:
-#    restart: always
-#    build:
-#      context: ./server
-#      dockerfile: Dockerfile
-#      target: development
-#    healthcheck:
-#      test: ["CMD", "curl", "-f", "http://server:8080/"]
-#      interval: 10s
-#      timeout: 3s
-#    environment:
-#      DB_HOST: ${DB_HOST:-db}
-#      DB_PORT: ${DB_PORT:-5432}
-#      DB_NAME: ${DB_NAME:-main}
-#      DB_USER: ${DB_USER:-root}
-#      DB_PASSWORD: ${DB_PASSWORD:-password}
-#      ALLOWED_ORIGIN: ${ALLOWED_ORIGIN:-https://teamserverdown.devops.aet.cit.tum.de}
-#    depends_on:
-#      db:
-#        condition: service_healthy
-#    ports:
-#      - "8080:8080"
-#    volumes:
-#      - ./server:/app
-#    networks:
-#      - server
+  server:
+    restart: always
+    build:
+      context: ./server
+      dockerfile: Dockerfile
+      target: development
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:9001/"]
+      interval: 10s
+      timeout: 3s
+    environment:
+      DB_HOST: ${DB_HOST:-db}
+      DB_PORT: ${DB_PORT:-5432}
+      DB_NAME: ${DB_NAME:-main}
+      DB_USER: ${DB_USER:-root}
+      DB_PASSWORD: ${DB_PASSWORD:-password}
+      ALLOWED_ORIGIN: ${ALLOWED_ORIGIN:-http://localhost:3000}
+    depends_on:
+      db:
+        condition: service_healthy
+    ports:
+      - "9001:9001"
+    volumes:
+      - ./server:/app
+    networks:
+      - server
 
   client:
     restart: always

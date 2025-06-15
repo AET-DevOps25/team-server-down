@@ -87,6 +87,4 @@ const authOptions: NextAuthOptions = {
 };
 const handler = NextAuth(authOptions);
 
-console.log(authOptions.providers)
-
 export { handler as GET, handler as POST };
