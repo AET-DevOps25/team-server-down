@@ -28,7 +28,7 @@ public class SecurityConfiguration {
   @Bean
   public CorsFilter corsFilter() {
     CorsConfiguration config = new CorsConfiguration();
-    config.setAllowedOrigins(List.of("https://teamserverdown.devops.aet.cit.tum.de"));
+    config.setAllowedOrigins(List.of(System.getenv("ALLOWED_ORIGIN")));
     config.setAllowedMethods(List.of("GET", "POST", "PUT", "DELETE", "OPTIONS", "PATCH"));
     config.setAllowedHeaders(List.of("*"));
     config.setExposedHeaders(List.of("Authorization"));
