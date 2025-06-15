@@ -1,0 +1,149 @@
+"use client";
+import { memo } from "react";
+import {
+  Handle,
+  NodeProps,
+  NodeResizer,
+  NodeToolbar,
+  Position,
+  useReactFlow,
+} from "@xyflow/react";
+import StyleBar from "@/components/style-bar/StyleBar";
+import {
+  getFontStyle,
+  handleStyle,
+  NodeProperties,
+} from "@/types/NodeProperties";
+import { updateNode } from "@/util/updateNode";
+
+export interface ShapeNodeParams extends NodeProps {
+  id: string;
+  data: {
+    label: string;
+    Shape: React.ComponentType<React.SVGProps<SVGSVGElement>>;
+    nodeProperties: NodeProperties;
+  };
+  selected: boolean;
+}
+
+const ShapeNode = ({ id, data, selected }: ShapeNodeParams) => {
+  const { Shape, nodeProperties, label } = data;
+
+  const { setNodes } = useReactFlow();
+
+  const onUpdateNode = (updater: {
+    label?: string;
+    nodeProperties?: Partial<NodeProperties>;
+  }) => {
+    setNodes(updateNode(id, updater));
+  };
+
+  return (
+    <>
+      <NodeToolbar isVisible={selected} position={Position.Top}>
+        <StyleBar
+          nodeProperties={nodeProperties}
+          onUpdateNode={(updatedProperties: Partial<NodeProperties>) =>
+            onUpdateNode({ nodeProperties: updatedProperties })
+          }
+        />
+      </NodeToolbar>
+
+      <NodeResizer
+        color="#3859ff"
+        isVisible={selected}
+        minWidth={100}
+        minHeight={100}
+      />
+
+      <div className={`w-full h-full flex justify-center relative`}>
+        {Shape && (
+          <div className="p-0.5 absolute inset-0 flex items-center justify-center pointer-events-none w-full h-full ">
+            <Shape
+              className={`w-full h-full `}
+              style={{
+                fill: nodeProperties.color,
+                fillOpacity: nodeProperties.opacity,
+                strokeWidth: nodeProperties.borderWidth,
+                stroke: nodeProperties.borderColor,
+                strokeOpacity: nodeProperties.borderOpacity,
+                shapeRendering: "geometricPrecision",
+              }}
+            />
+          </div>
+        )}
+
+        <input
+          className={`w-4/5 min-h-[100px] bg-transparent text-center z-10 focus:outline-none`}
+          style={{
+            color: nodeProperties.textColor,
+            fontSize: `${nodeProperties.fontSize}px`,
+            fontFamily: getFontStyle(nodeProperties.fontFamily),
+            fontWeight: nodeProperties.isBold ? "bold" : "normal",
+            fontStyle: nodeProperties.isItalic ? "italic" : "normal",
+            textDecoration:
+              `${nodeProperties.isUnderline ? "underline" : ""} ${nodeProperties.isStrikethrough ? "line-through" : ""}`.trim() ||
+              "none",
+          }}
+          value={label}
+          onChange={(e) => onUpdateNode({ label: e.target.value })}
+          placeholder=""
+        />
+      </div>
+
+      <Handle
+        type="source"
+        id="top-source"
+        position={Position.Top}
+        style={handleStyle}
+      />
+      <Handle
+        type="target"
+        id="top-target"
+        position={Position.Top}
+        style={handleStyle}
+      />
+
+      <Handle
+        type="source"
+        id="bottom-source"
+        position={Position.Bottom}
+        style={handleStyle}
+      />
+      <Handle
+        type="target"
+        id="bottom-target"
+        position={Position.Bottom}
+        style={handleStyle}
+      />
+
+      <Handle
+        type="source"
+        id="left-source"
+        position={Position.Left}
+        style={handleStyle}
+      />
+      <Handle
+        type="target"
+        id="left-target"
+        position={Position.Left}
+        style={handleStyle}
+      />
+
+      <Handle
+        type="source"
+        id="right-source"
+        position={Position.Right}
+        style={handleStyle}
+      />
+      <Handle
+        type="target"
+        id="right-target"
+        position={Position.Right}
+        style={handleStyle}
+      />
+    </>
+  );
+};
+
+export default memo(ShapeNode);
