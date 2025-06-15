@@ -70,6 +70,7 @@ services:
       DB_NAME: ${DB_NAME:-main}
       DB_USER: ${DB_USER:-root}
       DB_PASSWORD: ${DB_PASSWORD:-password}
+      ALLOWED_ORIGIN: ${ALLOWED_ORIGIN:-https://teamserverdown.devops.aet.cit.tum.de}
     depends_on:
       db:
         condition: service_healthy

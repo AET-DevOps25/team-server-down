@@ -1,0 +1,75 @@
+
+namespace: "tsd-prod"
+
+client:
+  image:
+    repository: ghcr.io/aet-devops25/team-server-down/client
+    tag: latest
+    pullPolicy: Always
+
+  service:
+    type: ClusterIP
+    port: 3000
+    targetPort: 3000
+
+  replicaCount: 1
+
+server:
+  image:
+    repository: ghcr.io/aet-devops25/team-server-down/server
+    tag: latest
+    pullPolicy: Always
+
+  service:
+    type: ClusterIP
+    port: 8080
+    targetPort: 8080
+
+  env:
+    - name: DB_HOST
+      value: '{{ printf "%s-postgresql" .Release.Name }}'
+    - name: DB_PORT
+      value: "5432"
+    - name: DB_NAME
+      value: postgres
+    - name: DB_USER
+      value: postgres
+    - name: DB_PASSWORD
+      value: postgres
+
+  replicaCount: 1
+
+
+ingress:
+  enabled: true
+  className: "nginx"
+  annotations:
+    cert-manager.io/cluster-issuer: "letsencrypt-prod"
+    nginx.ingress.kubernetes.io/rewrite-target: /
+  tls:
+    hosts:
+      - "whiteboard.student.k8s.aet.cit.tum.de"
+      - "api.whiteboard.student.k8s.aet.cit.tum.de"
+    secretName: "whiteboard-devops25-tls"
+  rules:
+    - host: "whiteboard.student.k8s.aet.cit.tum.de"
+      paths:
+        - path: /
+          pathType: Prefix
+          service:
+            name: client-service
+            port:
+              number: 3000
+    - host: "api.whiteboard.student.k8s.aet.cit.tum.de"
+      paths:
+        - path: /
+          pathType: Prefix
+          service:
+            name: server-service
+            port:
+              number: 8080
+
+postgresql:
+  auth:
+    username: postgres
+    password: postgres
