@@ -12,7 +12,8 @@ services:
       - ./docker/nginx/cert.crt:/etc/nginx/cert.crt:ro
       - ./docker/nginx/private.key:/etc/nginx/private.key:ro
     depends_on:
-      - server
+#      - server
+      - keycloak
     ports:
       - "80:80"
       - "443:443"
@@ -27,11 +28,11 @@ services:
       target: development
     ports:
       - "8443:8443"
+      - "8080:8080"
     command:
       - start-dev
       - --db=postgres
       - --import-realm
-      - --hostname=https://auth.teamserverdown.devops.aet.cit.tum.de
       - -Dkeycloak.migration.strategy=OVERWRITE_EXISTING
       - --transaction-xa-enabled=false
     depends_on:
@@ -54,32 +55,32 @@ services:
     networks:
       - server
 
-  server:
-    restart: always
-    build:
-      context: ./server
-      dockerfile: Dockerfile
-      target: development
-    healthcheck:
-      test: ["CMD", "curl", "-f", "http://server:8080/"]
-      interval: 10s
-      timeout: 3s
-    environment:
-      DB_HOST: ${DB_HOST:-db}
-      DB_PORT: ${DB_PORT:-5432}
-      DB_NAME: ${DB_NAME:-main}
-      DB_USER: ${DB_USER:-root}
-      DB_PASSWORD: ${DB_PASSWORD:-password}
-      ALLOWED_ORIGIN: ${ALLOWED_ORIGIN:-https://teamserverdown.devops.aet.cit.tum.de}
-    depends_on:
-      db:
-        condition: service_healthy
-    ports:
-      - "8080:8080"
-    volumes:
-      - ./server:/app
-    networks:
-      - server
+#  server:
+#    restart: always
+#    build:
+#      context: ./server
+#      dockerfile: Dockerfile
+#      target: development
+#    healthcheck:
+#      test: ["CMD", "curl", "-f", "http://server:8080/"]
+#      interval: 10s
+#      timeout: 3s
+#    environment:
+#      DB_HOST: ${DB_HOST:-db}
+#      DB_PORT: ${DB_PORT:-5432}
+#      DB_NAME: ${DB_NAME:-main}
+#      DB_USER: ${DB_USER:-root}
+#      DB_PASSWORD: ${DB_PASSWORD:-password}
+#      ALLOWED_ORIGIN: ${ALLOWED_ORIGIN:-https://teamserverdown.devops.aet.cit.tum.de}
+#    depends_on:
+#      db:
+#        condition: service_healthy
+#    ports:
+#      - "8080:8080"
+#    volumes:
+#      - ./server:/app
+#    networks:
+#      - server
 
   client:
     restart: always

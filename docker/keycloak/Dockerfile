@@ -1,11 +1,11 @@
-FROM quay.io/keycloak/keycloak:26.2 as development
+FROM quay.io/keycloak/keycloak:24.0.1 as development
 
 ENV KC_HEALTH_ENABLED=true
 ENV KC_METRICS_ENABLED=true
 
 WORKDIR /opt/keycloak
 
-FROM quay.io/keycloak/keycloak:26.2
+FROM quay.io/keycloak/keycloak:24.0.1
 
 COPY --from=development /opt/keycloak/ /opt/keycloak/
 

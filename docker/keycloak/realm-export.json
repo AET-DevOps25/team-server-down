@@ -1,6 +1,6 @@
 {
   "id": "b36292b9-c4ed-4b3b-84b6-e9274821b709",
-  "realm": "staging",
+  "realm": "development",
   "displayName": "",
   "displayNameHtml": "",
   "notBefore": 0,
@@ -36,7 +36,7 @@
   "loginWithEmailAllowed": true,
   "duplicateEmailsAllowed": false,
   "resetPasswordAllowed": true,
-  "editUsernameAllowed": true,
+  "editUsernameAllowed": false,
   "bruteForceProtected": false,
   "permanentLockout": false,
   "maxTemporaryLockouts": 0,
@@ -50,7 +50,7 @@
     "realm": [
       {
         "id": "500d1053-80ba-47b9-8206-986de9ae2289",
-        "name": "default-roles-staging",
+        "name": "default-roles-development",
         "description": "${role_default-roles}",
         "composite": true,
         "composites": {
@@ -144,8 +144,8 @@
                 "manage-users",
                 "query-realms",
                 "manage-clients",
-                "query-clients",
                 "manage-identity-providers",
+                "query-clients",
                 "impersonation",
                 "view-authorization",
                 "manage-events",
@@ -174,8 +174,8 @@
           "composites": {
             "client": {
               "realm-management": [
-                "query-groups",
-                "query-users"
+                "query-users",
+                "query-groups"
               ]
             }
           },
@@ -303,16 +303,7 @@
       ],
       "webclient": [],
       "security-admin-console": [],
-      "admin-cli": [
-        {
-          "id": "b134d00a-64d3-4b86-86dc-bfdf450eca69",
-          "name": "uma_protection",
-          "composite": false,
-          "clientRole": true,
-          "containerId": "ecc207f7-abfc-49a6-8fa6-e1c6e89d84c6",
-          "attributes": {}
-        }
-      ],
+      "admin-cli": [],
       "account-console": [],
       "broker": [
         {
@@ -338,14 +329,6 @@
               ]
             }
           },
-          "clientRole": true,
-          "containerId": "02c640d1-327d-4227-a6e9-0435f9b1760e",
-          "attributes": {}
-        },
-        {
-          "id": "e4e0bc45-3c75-4fba-94ed-af390e90e4e7",
-          "name": "admin:full",
-          "composite": false,
           "clientRole": true,
           "containerId": "02c640d1-327d-4227-a6e9-0435f9b1760e",
           "attributes": {}
@@ -381,14 +364,6 @@
           "id": "98aee1c3-6c94-498f-8477-4e89a7fc03fc",
           "name": "view-profile",
           "description": "${role_view-profile}",
-          "composite": false,
-          "clientRole": true,
-          "containerId": "02c640d1-327d-4227-a6e9-0435f9b1760e",
-          "attributes": {}
-        },
-        {
-          "id": "a5db17f4-4375-4fa7-bd7b-a9325cbddfc4",
-          "name": "user",
           "composite": false,
           "clientRole": true,
           "containerId": "02c640d1-327d-4227-a6e9-0435f9b1760e",
@@ -434,7 +409,7 @@
   "groups": [],
   "defaultRole": {
     "id": "500d1053-80ba-47b9-8206-986de9ae2289",
-    "name": "default-roles-staging",
+    "name": "default-roles-development",
     "description": "${role_default-roles}",
     "composite": true,
     "clientRole": false,
@@ -507,13 +482,13 @@
       "clientId": "account",
       "name": "${client_account}",
       "rootUrl": "${authBaseUrl}",
-      "baseUrl": "/realms/staging/account/",
+      "baseUrl": "/realms/development/account/",
       "surrogateAuthRequired": false,
       "enabled": true,
       "alwaysDisplayInConsole": false,
       "clientAuthenticatorType": "client-secret",
       "redirectUris": [
-        "/realms/staging/account/*"
+        "/realms/development/account/*"
       ],
       "webOrigins": [],
       "notBefore": 0,
@@ -551,13 +526,13 @@
       "clientId": "account-console",
       "name": "${client_account-console}",
       "rootUrl": "${authBaseUrl}",
-      "baseUrl": "/realms/staging/account/",
+      "baseUrl": "/realms/development/account/",
       "surrogateAuthRequired": false,
       "enabled": true,
       "alwaysDisplayInConsole": false,
       "clientAuthenticatorType": "client-secret",
       "redirectUris": [
-        "/realms/staging/account/*"
+        "/realms/development/account/*"
       ],
       "webOrigins": [],
       "notBefore": 0,
@@ -605,89 +580,28 @@
       "id": "ecc207f7-abfc-49a6-8fa6-e1c6e89d84c6",
       "clientId": "admin-cli",
       "name": "${client_admin-cli}",
-      "description": "",
-      "rootUrl": "",
-      "adminUrl": "",
-      "baseUrl": "",
       "surrogateAuthRequired": false,
       "enabled": true,
-      "alwaysDisplayInConsole": true,
+      "alwaysDisplayInConsole": false,
       "clientAuthenticatorType": "client-secret",
-      "secret": "73WT1B4t5HacdOrdE75lpGXs9F80CzAt",
       "redirectUris": [],
       "webOrigins": [],
       "notBefore": 0,
       "bearerOnly": false,
       "consentRequired": false,
-      "standardFlowEnabled": true,
+      "standardFlowEnabled": false,
       "implicitFlowEnabled": false,
       "directAccessGrantsEnabled": true,
-      "serviceAccountsEnabled": true,
-      "publicClient": false,
+      "serviceAccountsEnabled": false,
+      "publicClient": true,
       "frontchannelLogout": false,
       "protocol": "openid-connect",
       "attributes": {
-        "oidc.ciba.grant.enabled": "false",
-        "client.secret.creation.time": "1719403816",
-        "backchannel.logout.session.required": "true",
-        "post.logout.redirect.uris": "+",
-        "display.on.consent.screen": "false",
-        "oauth2.device.authorization.grant.enabled": "true",
-        "backchannel.logout.revoke.offline.tokens": "false"
+        "post.logout.redirect.uris": "+"
       },
       "authenticationFlowBindingOverrides": {},
       "fullScopeAllowed": false,
       "nodeReRegistrationTimeout": 0,
-      "protocolMappers": [
-        {
-          "id": "655631bc-00ae-4b78-a645-33b29d5aebe2",
-          "name": "Client IP Address",
-          "protocol": "openid-connect",
-          "protocolMapper": "oidc-usersessionmodel-note-mapper",
-          "consentRequired": false,
-          "config": {
-            "user.session.note": "clientAddress",
-            "introspection.token.claim": "true",
-            "userinfo.token.claim": "true",
-            "id.token.claim": "true",
-            "access.token.claim": "true",
-            "claim.name": "clientAddress",
-            "jsonType.label": "String"
-          }
-        },
-        {
-          "id": "3987255f-7358-4301-b066-1aa58fa9c233",
-          "name": "Client ID",
-          "protocol": "openid-connect",
-          "protocolMapper": "oidc-usersessionmodel-note-mapper",
-          "consentRequired": false,
-          "config": {
-            "user.session.note": "client_id",
-            "introspection.token.claim": "true",
-            "userinfo.token.claim": "true",
-            "id.token.claim": "true",
-            "access.token.claim": "true",
-            "claim.name": "client_id",
-            "jsonType.label": "String"
-          }
-        },
-        {
-          "id": "c6890eab-8ba8-4c9e-98d6-8ba9ac21577d",
-          "name": "Client Host",
-          "protocol": "openid-connect",
-          "protocolMapper": "oidc-usersessionmodel-note-mapper",
-          "consentRequired": false,
-          "config": {
-            "user.session.note": "clientHost",
-            "introspection.token.claim": "true",
-            "userinfo.token.claim": "true",
-            "id.token.claim": "true",
-            "access.token.claim": "true",
-            "claim.name": "clientHost",
-            "jsonType.label": "String"
-          }
-        }
-      ],
       "defaultClientScopes": [
         "web-origins",
         "acr",
@@ -787,13 +701,13 @@
       "clientId": "security-admin-console",
       "name": "${client_security-admin-console}",
       "rootUrl": "${authAdminUrl}",
-      "baseUrl": "/admin/staging/console/",
+      "baseUrl": "/admin/development/console/",
       "surrogateAuthRequired": false,
       "enabled": true,
       "alwaysDisplayInConsole": false,
       "clientAuthenticatorType": "client-secret",
       "redirectUris": [
-        "/admin/staging/console/*"
+        "/admin/development/console/*"
       ],
       "webOrigins": [
         "+"
@@ -872,7 +786,7 @@
       "bearerOnly": false,
       "consentRequired": false,
       "standardFlowEnabled": true,
-      "implicitFlowEnabled": false,
+      "implicitFlowEnabled": true,
       "directAccessGrantsEnabled": true,
       "serviceAccountsEnabled": false,
       "publicClient": false,
@@ -882,7 +796,6 @@
         "oidc.ciba.grant.enabled": "false",
         "client.secret.creation.time": "1708880081",
         "backchannel.logout.session.required": "true",
-        "login_theme": "keycloakify-starter",
         "post.logout.redirect.uris": "http://localhost:3000",
         "display.on.consent.screen": "false",
         "oauth2.device.authorization.grant.enabled": "true",
@@ -1513,14 +1426,14 @@
         "subComponents": {},
         "config": {
           "allowed-protocol-mapper-types": [
-            "oidc-address-mapper",
             "oidc-usermodel-attribute-mapper",
-            "saml-user-property-mapper",
-            "saml-user-attribute-mapper",
+            "oidc-address-mapper",
             "oidc-full-name-mapper",
-            "oidc-sha256-pairwise-sub-mapper",
             "oidc-usermodel-property-mapper",
-            "saml-role-list-mapper"
+            "saml-user-attribute-mapper",
+            "saml-user-property-mapper",
+            "saml-role-list-mapper",
+            "oidc-sha256-pairwise-sub-mapper"
           ]
         }
       },
@@ -1568,14 +1481,14 @@
         "subComponents": {},
         "config": {
           "allowed-protocol-mapper-types": [
-            "saml-user-attribute-mapper",
-            "oidc-sha256-pairwise-sub-mapper",
-            "oidc-usermodel-property-mapper",
-            "saml-user-property-mapper",
-            "oidc-full-name-mapper",
-            "saml-role-list-mapper",
             "oidc-usermodel-attribute-mapper",
-            "oidc-address-mapper"
+            "saml-user-property-mapper",
+            "oidc-usermodel-property-mapper",
+            "saml-user-attribute-mapper",
+            "oidc-address-mapper",
+            "saml-role-list-mapper",
+            "oidc-sha256-pairwise-sub-mapper",
+            "oidc-full-name-mapper"
           ]
         }
       },
@@ -1590,7 +1503,7 @@
     ],
     "org.keycloak.userprofile.UserProfileProvider": [
       {
-        "id": "6a063cd6-eb2e-4abb-8661-06ff1d93a958",
+        "id": "74e1ebbf-606a-4293-86a2-f9cc0d8e91fb",
         "providerId": "declarative-user-profile",
         "subComponents": {},
         "config": {
@@ -1624,20 +1537,6 @@
         }
       },
       {
-        "id": "efee7784-4e59-4e33-9da7-8a17daeca051",
-        "name": "hmac-generated-hs512",
-        "providerId": "hmac-generated",
-        "subComponents": {},
-        "config": {
-          "priority": [
-            "100"
-          ],
-          "algorithm": [
-            "HS512"
-          ]
-        }
-      },
-      {
         "id": "1c57ab36-e4f7-4118-b225-6fdabc10321e",
         "name": "rsa-enc-generated",
         "providerId": "rsa-enc-generated",
@@ -1662,6 +1561,20 @@
           ],
           "algorithm": [
             "HS256"
+          ]
+        }
+      },
+      {
+        "id": "08057a00-49e2-47b3-89c1-ec25f5fdcc2f",
+        "name": "hmac-generated-hs512",
+        "providerId": "hmac-generated",
+        "subComponents": {},
+        "config": {
+          "priority": [
+            "100"
+          ],
+          "algorithm": [
+            "HS512"
           ]
         }
       }
@@ -2304,7 +2217,7 @@
     "frontendUrl": "",
     "acr.loa.map": "{}"
   },
-  "keycloakVersion": "24.0.1",
+  "keycloakVersion": "24.0.2",
   "userManagedAccessAllowed": true,
   "clientProfiles": {
     "profiles": []
@@ -2314,26 +2227,22 @@
   },
   "users": [
     {
-      "id": "a6bc1d79-777b-4349-9e41-4d6b09887b36",
-      "username": "service-account-admin-cli",
-      "emailVerified": false,
-      "createdTimestamp": 1719404426520,
+      "username": "leon.liang",
+      "firstName": "Leon",
+      "lastName": "Liang",
+      "email": "mail@leonliang.lu",
       "enabled": true,
-      "totp": false,
-      "serviceAccountClientId": "admin-cli",
-      "disableableCredentialTypes": [],
-      "requiredActions": [],
-      "realmRoles": [
-        "default-roles-staging"
+      "credentials": [
+        {
+          "type": "password",
+          "value": "123"
+        }
       ],
       "clientRoles": {
-        "realm-management": [
-          "manage-users",
-          "manage-clients"
+        "account": [
+          "user"
         ]
-      },
-      "notBefore": 0,
-      "groups": []
+      }
     }
   ]
 }
