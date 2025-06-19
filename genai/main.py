@@ -15,7 +15,7 @@ logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)
 
 # Environment configuration
-CHAIR_API_KEY = "sk-a4370d697e294dac819c95ba5ffe0740"
+CHAIR_API_KEY = "add_api_key_here"
 API_URL = "https://gpu.aet.cit.tum.de/api/chat/completions"
 
 class OpenWebUILLM(LLM):
