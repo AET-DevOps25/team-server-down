@@ -1,4 +1,4 @@
-import React, { useCallback } from "react";
+import React, { useCallback, useState } from "react";
 import {
   ReactFlow,
   Node,
@@ -14,6 +14,7 @@ import "@xyflow/react/dist/style.css";
 import Sidebar from "@/components/sidebar/Sidebar";
 import TextNode from "@/components/text-node/TextNode";
 import ShapeNode from "@/components/shape-node/ShapeNode";
+import { AIActionDropdown } from "./aiActionDropdown/aiActionDropdown";
 
 const nodeTypes = {
   text: TextNode,
@@ -22,6 +23,7 @@ const nodeTypes = {
 
 export default function WhiteBoard() {
   const [nodes, setNodes, onNodesChange] = useNodesState<Node>([]);
+  const [selectedNodes, setSelectedNodes] = useState<Node[]>([]);
 
   const handleAddNode = useCallback(
     (newNode: Node) => {
@@ -37,15 +39,66 @@ export default function WhiteBoard() {
     [setEdges],
   );
 
+  const handleNodesChange = useCallback((changes: any) => {
+    onNodesChange(changes);
+    setSelectedNodes(nodes.filter(node => node.selected));
+  }, [nodes, onNodesChange]);
+
+  const handleAIAction = async (action: 'complete' | 'summarize' | 'rephrase') => {
+    const textNodes = selectedNodes.filter(node => node.type === 'text');
+    if (textNodes.length === 0) return;
+  
+    const nodeToUpdate = textNodes[0]; // first selected text node
+    const currentText = nodeToUpdate.data.label as string;
+  
+    try {
+      const response = await fetch(`http://localhost:8080/api/llm/rephrase`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ user_text: [currentText] }),
+      });
+  
+      if (!response.ok) {
+        throw new Error(`Server error: ${response.statusText}`);
+      }
+  
+      const data = await response.json();
+  
+      setNodes((nds) =>
+        nds.map((node) =>
+          node.id === nodeToUpdate.id
+            ? { 
+                ...node,
+                data: { 
+                  ...node.data,
+                  label: data.llm_response || '' // update node text from API response
+                }
+              }
+            : node
+        )
+      );
+    } catch (error) {
+      console.error("Error calling LLM service:", error);
+    }
+  };
+  
+
+
   return (
     <div style={{ width: "100vw", height: "100vh" }}>
       <div className="fixed left-4 top-1/2 -translate-y-1/2 z-10 ">
         <Sidebar onAddNode={handleAddNode} />
       </div>
+
+      <AIActionDropdown 
+        selectedNodes={selectedNodes}
+        onAIAction={handleAIAction}
+      />
+
       <ReactFlow
         nodes={nodes}
         edges={edges}
-        onNodesChange={onNodesChange}
+        onNodesChange={handleNodesChange}
         onEdgesChange={onEdgesChange}
         onConnect={onConnect}
         nodeTypes={nodeTypes}
