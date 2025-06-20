@@ -1,7 +1,7 @@
 "use client";
 
-import WhiteBoard from "@/components/WhiteBoard";
+import {redirect} from "next/navigation";
 
 export default function Home() {
-  return <WhiteBoard />;
+  redirect('/dashboard');
 }

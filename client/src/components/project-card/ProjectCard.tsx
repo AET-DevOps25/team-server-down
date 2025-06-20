@@ -1,12 +1,32 @@
+'use client'
 import { FileText } from "lucide-react";
-import Project from "@/types/ProjectType";
 import ProjectEditPopover from "@/components/project-card/project-card-components/ProjectEditPopover";
 import { useState, useRef, useEffect } from "react";
+import {useMutation, useQueryClient} from "@tanstack/react-query";
+import {deleteWhiteboard, updateWhiteboardTitle, Whiteboard} from "@/app/dashboard/whiteboardApi";
+import formatDate from "@/util/formatDate";
+import { useRouter } from 'next/navigation';
 
-export default function ProjectCard({ project }: { project: Project }) {
+export default function ProjectCard({ project }: { project: Whiteboard }) {
+  const router = useRouter();
+
   const [isEditing, setIsEditing] = useState(false);
   const [editedTitle, setEditedTitle] = useState(project.title);
   const inputRef = useRef<HTMLInputElement>(null);
+
+  const queryClient = useQueryClient();
+
+
+  const updateTitleMutation = useMutation({
+    mutationFn: (title: string) => updateWhiteboardTitle(project.id, title),
+    onSuccess: () => queryClient.invalidateQueries({queryKey: ["whiteboards", project.userId]}),
+  });
+
+  const deleteMutation = useMutation({
+    mutationFn: (id: number) => deleteWhiteboard(id),
+    onSuccess: () => queryClient.invalidateQueries({queryKey: ["whiteboards", project.userId]}),
+  });
+
 
   useEffect(() => {
     if (!isEditing) return;
@@ -16,7 +36,7 @@ export default function ProjectCard({ project }: { project: Project }) {
         inputRef.current &&
         !inputRef.current.contains(event.target as Node)
       ) {
-        handleSave();
+        setIsEditing(false);
       }
     };
 
@@ -36,8 +56,15 @@ export default function ProjectCard({ project }: { project: Project }) {
     setEditedTitle(project.title);
   };
 
+  const handleDelete = () => {
+    deleteMutation.mutate(project.id);
+  }
+
   const handleSave = () => {
-    project.title = editedTitle.trim() || project.title;
+    const trimmedTitle = editedTitle.trim();
+    if (trimmedTitle && trimmedTitle !== project.title) {
+      updateTitleMutation.mutate(trimmedTitle);
+    }
     setIsEditing(false);
   };
 
@@ -51,7 +78,8 @@ export default function ProjectCard({ project }: { project: Project }) {
   };
 
   return (
-    <div className="group relative bg-white rounded-lg border-2 border-gray-200 hover:border-gray-300 transition-all duration-200 cursor-pointer hover:shadow-md">
+    <div className="group relative bg-white rounded-lg border-2 border-gray-200 hover:border-gray-300 transition-all duration-200 cursor-pointer hover:shadow-md"
+    onClick={() => router.push(`/board/${project.id}`)}>
       <div className="aspect-video p-4 flex items-center justify-center bg-gray-50 rounded-t-lg">
         {/*theoretically the img of the white board*/}
         <div className="w-full h-full bg-gray-100 rounded flex items-center justify-center">
@@ -77,9 +105,13 @@ export default function ProjectCard({ project }: { project: Project }) {
               </h3>
             )}
           </div>
-          <p className="text-sm text-gray-500">{project.lastEdited}</p>
+
+          <div className="text-sm text-gray-500">
+            <span>Last edited: </span>
+            <span >{formatDate(project.lastEditedTime)}</span>
+          </div>
         </div>
-        <ProjectEditPopover onRename={handleRename} />
+        <ProjectEditPopover onRename={handleRename} onDelete={handleDelete}/>
       </div>
     </div>
   );

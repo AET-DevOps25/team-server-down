@@ -1,5 +1,5 @@
 export default interface Project {
-  id: string;
+  id: number;
   title: string;
   lastEdited: string;
   preview?: string;
