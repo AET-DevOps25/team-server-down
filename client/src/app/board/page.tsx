@@ -1,7 +1,6 @@
 "use client";
-
 import { redirect } from "next/navigation";
 
-export default function Home() {
+export default function BoardPage() {
   redirect("/dashboard");
 }
