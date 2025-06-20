@@ -1,28 +1,27 @@
-# RootApi
+# AccountApi
 
 All URIs are relative to *http://server:9091*
 
 |Method | HTTP request | Description|
 |------------- | ------------- | -------------|
-|[**root**](#root) | **GET** / | Root endpoint|
+|[**getCurrentUser**](#getcurrentuser) | **GET** /me | |
 
-# **root**
-> string root()
+# **getCurrentUser**
+> string getCurrentUser()
 
-Returns a simple Hello World message.
 
 ### Example
 
 ```typescript
 import {
-    RootApi,
+    AccountApi,
     Configuration
 } from './api';
 
 const configuration = new Configuration();
-const apiInstance = new RootApi(configuration);
+const apiInstance = new AccountApi(configuration);
 
-const { status, data } = await apiInstance.root();
+const { status, data } = await apiInstance.getCurrentUser();
 ```
 
 ### Parameters

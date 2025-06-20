@@ -1,10 +1,10 @@
 "use client";
 
 import WhiteBoard from "@/components/WhiteBoard";
-import {useGetRoot} from "@/hooks/api/root.api";
+import {useGetMe} from "@/hooks/api/account.api";
 
 export default function Home() {
-  const {data} = useGetRoot()
+  const {data} = useGetMe()
   console.log(data)
 
   return <WhiteBoard />;
