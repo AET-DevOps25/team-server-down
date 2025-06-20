@@ -1,4 +1,5 @@
 namespace: "tsd-staging"
+environment: staging
 
 client:
   image:
@@ -30,11 +31,15 @@ server:
     - name: DB_PORT
       value: "5432"
     - name: DB_NAME
-      value: postgres
+      value: main
     - name: DB_USER
       value: postgres
     - name: DB_PASSWORD
-      value: postgres
+      value: password
+    - name: ALLOWED_ORIGIN
+      value: "https://staging.whiteboard.student.k8s.aet.cit.tum.de"
+    - name: IDP_URI
+      value: '{{ printf "%s-keycloak" .Release.Name }}'
 
   replicaCount: 1
 
@@ -43,12 +48,13 @@ ingress:
   enabled: true
   className: "nginx"
   annotations:
-    cert-manager.io/cluster-issuer: "letsencrypt-prod"
+    cert-manager.io/cluster-issuer: "letsencrypt-staging"
     nginx.ingress.kubernetes.io/rewrite-target: /
   tls:
     hosts:
       - "staging.whiteboard.student.k8s.aet.cit.tum.de"
       - "staging.api.whiteboard.student.k8s.aet.cit.tum.de"
+      - "staging.auth.whiteboard.student.k8s.aet.cit.tum.de"
     secretName: "staging-whiteboard-devops25-tls"
   rules:
     - host: "staging.whiteboard.student.k8s.aet.cit.tum.de"
@@ -67,8 +73,53 @@ ingress:
             name: server-service
             port:
               number: 8080
+    - host: "staging.auth.whiteboard.student.k8s.aet.cit.tum.de"
+      paths:
+        - path: /
+          pathType: Prefix
+          service:
+            name: keycloak-http
+            port:
+              number: 80
 
 postgresql:
   auth:
     username: postgres
-    password: postgres
+    password: password
+  primary:
+    extraEnvVars:
+      - name: POSTGRES_USER
+        value: postgres
+      - name: POSTGRES_PASSWORD
+        value: password
+      - name: POSTGRES_MULTIPLE_DATABASES
+        value: "main,keycloak"
+    extraVolumes:
+      - name: db-init
+        configMap:
+          name: postgresql-configmap
+    extraVolumeMounts:
+      - name: db-init
+        mountPath: /docker-entrypoint-initdb.d
+
+keycloak:
+  ingress:
+    enabled: true
+  auth:
+    adminUser: admin
+    adminPassword: password
+  postgresql:
+    enabled: false
+  externalDatabase:
+    host: '{{ printf "%s-postgresql" .Release.Name }}'
+    user: postgres
+    password: password
+    database: keycloak
+    port: 5432
+  extraVolumes:
+    - name: realm-export
+      configMap:
+        name: keycloak-configmap
+  extraVolumeMounts:
+    - name: realm-export
+      mountPath: /opt/bitnami/keycloak/data/import

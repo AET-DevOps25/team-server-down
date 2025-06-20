@@ -6,12 +6,10 @@ services:
     build:
       context: ./docker/keycloak
       dockerfile: Dockerfile
-      target: development
     ports:
       - "8080:8080"
     command:
       - start-dev
-      - --db=postgres
       - --import-realm
       - -Dkeycloak.migration.strategy=OVERWRITE_EXISTING
       - --transaction-xa-enabled=false
@@ -19,7 +17,6 @@ services:
       db:
         condition: service_healthy
     environment:
-      KC_DB: postgres
       KC_DB_URL: jdbc:postgresql://db:5432/keycloak
       KC_DB_USERNAME: root
       KC_DB_PASSWORD: password
@@ -28,6 +25,7 @@ services:
       KEYCLOAK_ADMIN_PASSWORD: password
       KC_HTTP_ENABLED: true
       KC_HOSTNAME_STRICT: false
+      KC_HEALTH_ENABLED: true
     volumes:
       - ./docker/keycloak/realm-export.json:/opt/keycloak/data/import/realm-export.json:ro
     networks:

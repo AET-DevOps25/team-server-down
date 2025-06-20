@@ -5,6 +5,7 @@ on:
     branches:
       - main
       - develop
+      - 39-setup-keycloak
 
 jobs:
   build-and-push:

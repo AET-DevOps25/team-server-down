@@ -3,6 +3,7 @@ name: Build Docker Images
 on:
   push:
     - mainx
+    - 39-setup-keycloak
 
 jobs:
   test:
