@@ -60,8 +60,7 @@ jobs:
           images: ghcr.io/${{ github.repository }}/${{ matrix.service }}
           tags: |
             type=raw,value=latest
-            type=ref,event=branch
-            type=ref,event=pr
+            type=sha
 
       - name: Build and push Docker Image
         uses: docker/build-push-action@v5
