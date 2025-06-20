@@ -58,10 +58,10 @@ jobs:
         uses: docker/metadata-action@v5
         with:
           images: ghcr.io/${{ github.repository }}/${{ matrix.service }}
-          tags: |
-            type=raw,value=latest,enable={{is_default_branch}}
-            type=ref,event=branch
-            type=ref,event=pr
+#          tags: |
+#            type=raw,value=latest,enable={{is_default_branch}}
+#            type=ref,event=branch
+#            type=ref,event=pr
 
       - name: Build and push Docker Image
         uses: docker/build-push-action@v5
