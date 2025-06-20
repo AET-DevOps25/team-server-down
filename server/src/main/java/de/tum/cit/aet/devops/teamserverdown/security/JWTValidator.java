@@ -18,11 +18,11 @@ import java.security.interfaces.RSAPublicKey;
 import java.security.spec.RSAPublicKeySpec;
 import java.util.Base64;
 
-public class JWTUtil {
+public class JWTValidator {
   private static final String JWKS_URL =
       "http://keycloak:8080/realms/development/protocol/openid-connect/certs";
 
-  public String validateToken(String token) throws JWTVerificationException {
+  public DecodedJWT validateToken(String token) throws JWTVerificationException {
     DecodedJWT decoded = JWT.decode(token);
     String kid = decoded.getKeyId();
 
@@ -32,8 +32,7 @@ public class JWTUtil {
 
       Algorithm algorithm = Algorithm.RSA256(publicKey, null);
       JWTVerifier verifier = JWT.require(algorithm).build();
-      DecodedJWT jwt = verifier.verify(token);
-      return jwt.getSubject();
+      return verifier.verify(token);
     } catch (Exception e) {
       throw new JWTVerificationException("Invalid token", e);
     }

@@ -1,5 +1,6 @@
 package de.tum.cit.aet.devops.teamserverdown.security;
 
+import de.tum.cit.aet.devops.teamserverdown.model.User;
 import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.core.MethodParameter;
 import org.springframework.stereotype.Component;
@@ -12,7 +13,7 @@ public class CurrentUserArgumentResolver implements HandlerMethodArgumentResolve
   @Override
   public boolean supportsParameter(MethodParameter parameter) {
     return parameter.hasParameterAnnotation(CurrentUser.class)
-        && parameter.getParameterType().equals(AuthenticatedUser.class);
+        && parameter.getParameterType().equals(User.class);
   }
 
   @Override
@@ -22,6 +23,6 @@ public class CurrentUserArgumentResolver implements HandlerMethodArgumentResolve
       NativeWebRequest webRequest,
       org.springframework.web.bind.support.WebDataBinderFactory binderFactory) {
     HttpServletRequest request = (HttpServletRequest) webRequest.getNativeRequest();
-    return request.getAttribute("authenticatedUser");
+    return request.getAttribute("user");
   }
 }

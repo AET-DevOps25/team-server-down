@@ -2225,24 +2225,5 @@
   "clientPolicies": {
     "policies": []
   },
-  "users": [
-    {
-      "username": "leon.liang",
-      "firstName": "Leon",
-      "lastName": "Liang",
-      "email": "mail@leonliang.lu",
-      "enabled": true,
-      "credentials": [
-        {
-          "type": "password",
-          "value": "123"
-        }
-      ],
-      "clientRoles": {
-        "account": [
-          "user"
-        ]
-      }
-    }
-  ]
+  "users": []
 }

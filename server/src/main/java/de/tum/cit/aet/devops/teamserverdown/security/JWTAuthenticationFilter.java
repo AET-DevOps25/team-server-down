@@ -1,6 +1,9 @@
 package de.tum.cit.aet.devops.teamserverdown.security;
 
 import com.auth0.jwt.exceptions.JWTVerificationException;
+import com.auth0.jwt.interfaces.DecodedJWT;
+import de.tum.cit.aet.devops.teamserverdown.model.User;
+import de.tum.cit.aet.devops.teamserverdown.services.UserService;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
@@ -11,7 +14,12 @@ import org.springframework.web.filter.OncePerRequestFilter;
 
 @Component
 public class JWTAuthenticationFilter extends OncePerRequestFilter {
-  private final JWTUtil jwtUtil = new JWTUtil();
+  private final JWTValidator jwtValidator = new JWTValidator();
+  private final UserService userService;
+
+  public JWTAuthenticationFilter(UserService userService) {
+    this.userService = userService;
+  }
 
   @Override
   protected void doFilterInternal(
@@ -21,8 +29,10 @@ public class JWTAuthenticationFilter extends OncePerRequestFilter {
     if (authHeader != null && authHeader.startsWith("Bearer ")) {
       String token = authHeader.substring(7);
       try {
-        String userId = jwtUtil.validateToken(token);
-        request.setAttribute("authenticatedUser", new AuthenticatedUser(userId));
+        DecodedJWT decoded = jwtValidator.validateToken(token);
+        User user = userService.getOrCreateUser(decoded);
+
+        request.setAttribute("user", user);
       } catch (JWTVerificationException e) {
         response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
         response.getWriter().write("Invalid JWT token");
