@@ -74,7 +74,7 @@ jobs:
 
       - name: Deploy App with Helm
         run: |
-          helm upgrade whiteboard ./helm/whiteboard-app/ \
+          helm upgrade whiteboard ./infrastructure/whiteboard-app/ \
             -f ${{ env.VALUES_FILE }} \
             -n ${{ env.NAMESPACE }} \
             --install \
