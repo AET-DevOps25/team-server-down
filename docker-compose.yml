@@ -50,6 +50,7 @@ services:
       DB_USER: ${DB_USER:-root}
       DB_PASSWORD: ${DB_PASSWORD:-password}
       ALLOWED_ORIGIN: ${ALLOWED_ORIGIN:-http://localhost:3000}
+      IDP_URI: ${IDP_URL:-http://keycloak:8080/realms/development}
     depends_on:
       db:
         condition: service_healthy
