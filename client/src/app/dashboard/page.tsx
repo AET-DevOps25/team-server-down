@@ -1,14 +1,14 @@
 "use client";
-import React, { useState } from "react";
-
-import Project from "@/types/ProjectType";
+import React from "react";
 import ProjectCard from "@/components/project-card/ProjectCard";
-import {useMutation, useQuery, useQueryClient} from "@tanstack/react-query";
-import {createWhiteboard, getWhiteboards} from "@/app/dashboard/whiteboardApi";
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
+import {
+  createWhiteboard,
+  getWhiteboards,
+} from "@/app/dashboard/whiteboardApi";
 import CreateProjectCard from "@/components/project-card/CreateProjectCard";
 import { useRouter } from "next/navigation";
 
-// fetch old porjects here
 const Dashboard = () => {
   const router = useRouter();
   const queryClient = useQueryClient();
@@ -22,18 +22,14 @@ const Dashboard = () => {
   const createMutation = useMutation({
     mutationFn: () => createWhiteboard(userId, "Untitled"),
     onSuccess: (newProject) => {
-      queryClient.invalidateQueries({queryKey: ["whiteboards", userId]});
+      queryClient.invalidateQueries({ queryKey: ["whiteboards", userId] });
       router.push(`/board/${newProject.id}`);
     },
   });
 
   const handleCreateProject = () => {
     createMutation.mutate();
-  }
-
-
-
-
+  };
 
   return (
     <div className="min-h-screen text-white">
@@ -43,7 +39,7 @@ const Dashboard = () => {
         </div>
 
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
-          <CreateProjectCard createProject={handleCreateProject}/>
+          <CreateProjectCard createProject={handleCreateProject} />
           {projects.map((project) => (
             <ProjectCard key={project.id} project={project} />
           ))}
