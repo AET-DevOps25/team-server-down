@@ -40,7 +40,7 @@ jobs:
             echo "TAG=latest" >> $GITHUB_ENV
             echo "NAMESPACE=tsd-prod" >> $GITHUB_ENV
             echo "VALUES_FILE=./helm/whiteboard-app/production.values.yaml" >> $GITHUB_ENV
-          elif [[ "${GITHUB_REF##*/}" == "develop" ]]; then
+          else
             echo "TAG=develop" >> $GITHUB_ENV
             echo "NAMESPACE=tsd-staging" >> $GITHUB_ENV
             echo "VALUES_FILE=./helm/whiteboard-app/staging.values.yaml" >> $GITHUB_ENV
