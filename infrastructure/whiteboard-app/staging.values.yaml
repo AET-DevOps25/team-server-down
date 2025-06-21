@@ -105,6 +105,11 @@ postgresql:
 keycloak:
   ingress:
     enabled: true
+  command:
+    - "/opt/bitnami/scripts/keycloak/entrypoint.sh"
+    - "/opt/bitnami/scripts/keycloak/run.sh"
+    - "--import-realm"
+    - "--import-realm-file=/opt/bitnami/keycloak/data/import/realm-export.json"
   auth:
     adminUser: admin
     adminPassword: password
