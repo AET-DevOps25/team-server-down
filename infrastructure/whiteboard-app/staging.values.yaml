@@ -22,8 +22,8 @@ server:
 
   service:
     type: ClusterIP
-    port: 8080
-    targetPort: 8080
+    port: 9091
+    targetPort: 9091
 
   env:
     - name: DB_HOST
