@@ -19,6 +19,7 @@ function requestRefreshAccessToken(token: JWT) {
 }
 
 const authOptions: NextAuthOptions = {
+    secret: process.env.NEXTAUTH_SECRET,
     providers: [
         KeycloakProvider({
             clientId: process.env.KEYCLOAK_CLIENT_ID ?? "",
