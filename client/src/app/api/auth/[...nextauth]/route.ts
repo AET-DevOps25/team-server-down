@@ -6,7 +6,7 @@ import jwt from "jsonwebtoken";
 function requestRefreshAccessToken(token: JWT) {
     return fetch(`${process.env.KEYCLOAK_ISSUER}/protocol/openid-connect/token`, {
         headers: { "Content-Type": "application/x-www-form-urlencoded" },
-        // @ts-ignore
+        // @ts-expect-error
         body: new URLSearchParams({
             client_id: process.env.KEYCLOAK_CLIENT_ID,
             client_secret: process.env.KEYCLOAK_CLIENT_SECRET,
@@ -42,12 +42,12 @@ const authOptions: NextAuthOptions = {
 
                 if (account.access_token) {
                     const decodedToken = jwt.decode(account.access_token);
-                    // @ts-ignore
+                    // @ts-expect-error
                     token.roles = decodedToken.resource_access.account.roles;
                 }
                 return token;
             }
-            // @ts-ignore
+            // @ts-expect-error
             if (Date.now() < token.expiresAt * 1000 - 60 * 1000) {
                 return token;
             } else {
@@ -59,7 +59,7 @@ const authOptions: NextAuthOptions = {
                     if (!response.ok) throw tokens;
 
                     const updatedToken: JWT = {
-                        ...token, // Keep the previous token properties
+                        ...token,
                         idToken: tokens.id_token,
                         accessToken: tokens.access_token,
                         expiresAt: Math.floor(
@@ -75,11 +75,11 @@ const authOptions: NextAuthOptions = {
             }
         },
         async session({ session, token }) {
-            // @ts-ignore
+            // @ts-expect-error
             session.accessToken = token.accessToken;
-            // @ts-ignore
+            // @ts-expect-error
             session.refreshToken = token.refreshToken;
-            // @ts-ignore
+            // @ts-expect-error
             session.roles = token.roles;
             return session;
         },

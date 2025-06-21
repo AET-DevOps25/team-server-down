@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 
-export async function GET(req: NextRequest, res: NextResponse) {
+export async function GET(req: NextRequest) {
     try {
         const refreshToken = req.headers.get("refresh_token");
 
@@ -32,7 +32,7 @@ export async function GET(req: NextRequest, res: NextResponse) {
     } catch (error) {
         return NextResponse.json({
             success: false,
-            message: "Error Sign out",
+            message: `Error signing out: ${error}`,
         });
     }
 }
