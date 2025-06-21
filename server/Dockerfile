@@ -10,7 +10,7 @@ COPY src/ src/
 EXPOSE 8080
 EXPOSE 5005
 
-CMD gradle build --continuous & gradle bootRun
+CMD ["gradle", "bootRun", "--no-daemon", "--continuous"]
 
 FROM gradle:8.13.0-jdk21 AS builder
 

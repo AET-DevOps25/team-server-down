@@ -1,10 +1,11 @@
-name: Build and Publish Docker Image to GHCR
+name: Deploy application to Kubernetes
 
 on:
   push:
     branches:
       - main
       - develop
+      - 39-setup-keycloak
 
 jobs:
   build-and-push:
@@ -38,11 +39,11 @@ jobs:
           if [[ "${GITHUB_REF##*/}" == "main" ]]; then
             echo "TAG=latest" >> $GITHUB_ENV
             echo "NAMESPACE=tsd-prod" >> $GITHUB_ENV
-            echo "VALUES_FILE=./helm/whiteboard-app/production.values.yaml" >> $GITHUB_ENV
-          elif [[ "${GITHUB_REF##*/}" == "develop" ]]; then
+            echo "VALUES_FILE=./infrastructure/whiteboard-app/production.values.yaml" >> $GITHUB_ENV
+          else
             echo "TAG=develop" >> $GITHUB_ENV
             echo "NAMESPACE=tsd-staging" >> $GITHUB_ENV
-            echo "VALUES_FILE=./helm/whiteboard-app/staging.values.yaml" >> $GITHUB_ENV
+            echo "VALUES_FILE=./infrastructure/whiteboard-app/staging.values.yaml" >> $GITHUB_ENV
           fi
 
       - name: Client -> Build and push Docker image
@@ -51,7 +52,7 @@ jobs:
           context: ./client
           file: ./client/Dockerfile
           push: true
-          tags: ghcr.io/${{ env.REPO }}/client:${{ env.TAG }}
+          tags: ghcr.io/${{ env.REPO }}/client:develop
           platforms: linux/amd64
 
       - name: Server -> Build and push Docker image
@@ -60,7 +61,7 @@ jobs:
           context: ./server
           file: ./server/Dockerfile
           push: true
-          tags: ghcr.io/${{ env.REPO }}/server:${{ env.TAG }}
+          tags: ghcr.io/${{ env.REPO }}/server:develop
           platforms: linux/amd64
 
 
@@ -74,7 +75,7 @@ jobs:
 
       - name: Deploy App with Helm
         run: |
-          helm upgrade whiteboard ./helm/whiteboard-app/ \
+          helm upgrade whiteboard ./infrastructure/whiteboard-app/ \
             -f ${{ env.VALUES_FILE }} \
             -n ${{ env.NAMESPACE }} \
             --install \

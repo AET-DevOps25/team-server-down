@@ -1,6 +1,6 @@
 # RootApi
 
-All URIs are relative to *http://server:8080*
+All URIs are relative to *http://server:9091*
 
 |Method | HTTP request | Description|
 |------------- | ------------- | -------------|

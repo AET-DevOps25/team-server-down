@@ -1,5 +1,5 @@
-
 namespace: "tsd-prod"
+environment: production
 
 client:
   image:

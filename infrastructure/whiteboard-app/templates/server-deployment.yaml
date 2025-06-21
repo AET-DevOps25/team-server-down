@@ -10,6 +10,8 @@ spec:
       app: whiteboard-server-selector
   template:
     metadata:
+      annotations:
+        deploy-timestamp: "{{ now }}"
       labels:
         app: whiteboard-server-selector
     spec:

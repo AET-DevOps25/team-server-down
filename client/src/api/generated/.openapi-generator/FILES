@@ -4,6 +4,7 @@ api.ts
 base.ts
 common.ts
 configuration.ts
+docs/AccountApi.md
 docs/RootApi.md
 git_push.sh
 index.ts
