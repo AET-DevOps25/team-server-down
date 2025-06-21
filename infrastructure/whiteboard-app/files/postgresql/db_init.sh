@@ -5,7 +5,7 @@ set -u
 
 function create_user_and_database() {
 	local database=$1
-	echo "  Creating user and database '$database'"
+	echo "Creating user and database '$database'"
 
   export PGPASSWORD="$POSTGRES_PASSWORD"
 	psql -v ON_ERROR_STOP=1 --username "$POSTGRES_USER" --dbname=postgres <<-EOSQL

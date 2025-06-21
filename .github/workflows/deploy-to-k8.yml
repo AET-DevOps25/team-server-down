@@ -1,4 +1,4 @@
-name: Build and Publish Docker Image to GHCR
+name: Deploy application to Kubernetes
 
 on:
   push:
@@ -52,7 +52,7 @@ jobs:
           context: ./client
           file: ./client/Dockerfile
           push: true
-          tags: ghcr.io/${{ env.REPO }}/client:${{ env.TAG }}
+          tags: ghcr.io/${{ env.REPO }}/client:develop
           platforms: linux/amd64
 
       - name: Server -> Build and push Docker image
@@ -61,7 +61,7 @@ jobs:
           context: ./server
           file: ./server/Dockerfile
           push: true
-          tags: ghcr.io/${{ env.REPO }}/server:${{ env.TAG }}
+          tags: ghcr.io/${{ env.REPO }}/server:develop
           platforms: linux/amd64
 
 
