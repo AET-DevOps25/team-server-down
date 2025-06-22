@@ -49,5 +49,4 @@ spotless {
 
 sonarLint {
     isGeneratedCodeIgnored = true
-    ignoreFailures = true
 }
