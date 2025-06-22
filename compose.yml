@@ -39,7 +39,7 @@ services:
       dockerfile: Dockerfile
       target: development
     healthcheck:
-      test: ["CMD", "curl", "-f", "http://localhost:9001/"]
+      test: ["CMD", "curl", "-f", "http://localhost:9091/"]
       interval: 10s
       timeout: 3s
     environment:
