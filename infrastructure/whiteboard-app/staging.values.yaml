@@ -65,6 +65,7 @@ ingress:
     cert-manager.io/cluster-issuer: "letsencrypt-prod"
     nginx.ingress.kubernetes.io/rewrite-target: /
     nginx.ingress.kubernetes.io/use-forwarded-headers: "true"
+    nginx.ingress.kubernetes.io/proxy-buffer-size: "8k"
   tls:
     hosts:
       - "staging.whiteboard.student.k8s.aet.cit.tum.de"
@@ -120,21 +121,21 @@ postgresql:
 keycloak:
   ingress:
     enabled: true
-    hostname:
+    hostname: staging.auth.whiteboard.student.k8s.aet.cit.tum.de
   auth:
     adminUser: admin
     adminPassword: password
   postgresql:
     enabled: false
   externalDatabase:
-    host:
+    host: '{{ printf "%s-postgresql" .Release.Name }}'
     user: postgres
     password: password
     database: keycloak
     port: 5432
-  env:
-    - name: KC_DB_URL
-      value: '{{ printf "jdbc:postgresql://%s-postgresql:5432/keycloak" .Release.Name }}'
+  extraEnvVars:
+    - name: KEYCLOAK_EXTRA_ARGS
+      value: "--import-realm"
     - name: KC_DB_USERNAME
       value: postgres
     - name: KC_DB_PASSWORD
@@ -155,10 +156,10 @@ keycloak:
       value: "false"
     - name: KC_PROXY_HEADERS
       value: xforwarded
-  volumes:
+  extraVolumes:
     - name: realm-export
       configMap:
         name: keycloak-configmap
-  volumeMounts:
+  extraVolumeMounts:
     - name: realm-export
       mountPath: /opt/bitnami/keycloak/data/import
