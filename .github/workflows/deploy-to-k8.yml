@@ -1,11 +1,10 @@
-name: Deploy application to Kubernetes
+name: Deploy to Kubernetes
 
 on:
   push:
     branches:
       - main
       - develop
-      - 39-setup-keycloak
 
 jobs:
   build-and-push:
@@ -40,10 +39,12 @@ jobs:
             echo "TAG=latest" >> $GITHUB_ENV
             echo "NAMESPACE=tsd-prod" >> $GITHUB_ENV
             echo "VALUES_FILE=./infrastructure/whiteboard-app/production.values.yaml" >> $GITHUB_ENV
-          else
+            echo "ENV=production" >> $GITHUB_ENV
+          elif [[ "${GITHUB_REF##*/}" == "develop" ]]; then
             echo "TAG=develop" >> $GITHUB_ENV
             echo "NAMESPACE=tsd-staging" >> $GITHUB_ENV
             echo "VALUES_FILE=./infrastructure/whiteboard-app/staging.values.yaml" >> $GITHUB_ENV
+            echo "ENV=staging" >> $GITHUB_ENV
           fi
 
       - name: Client -> Build and push Docker image
@@ -52,7 +53,8 @@ jobs:
           context: ./client
           file: ./client/Dockerfile
           push: true
-          tags: ghcr.io/${{ env.REPO }}/client:develop
+          tags: ghcr.io/${{ env.REPO }}/client:${{ env.TAG }}
+          build-args: ENV=${{ env.ENV }}
           platforms: linux/amd64
 
       - name: Server -> Build and push Docker image
@@ -61,7 +63,8 @@ jobs:
           context: ./server
           file: ./server/Dockerfile
           push: true
-          tags: ghcr.io/${{ env.REPO }}/server:develop
+          tags: ghcr.io/${{ env.REPO }}/server:${{ env.TAG }}
+          build-args: ENV=${{ env.ENV }}
           platforms: linux/amd64
 
       - name: Set up Kubeconfig

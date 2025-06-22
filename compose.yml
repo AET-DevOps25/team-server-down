@@ -64,8 +64,7 @@ services:
     restart: always
     build:
       context: ./client
-      dockerfile: Dockerfile
-      target: deps
+      dockerfile: Dockerfile.local
     entrypoint: npm run dev
     volumes:
       - ./client:/app
@@ -73,6 +72,14 @@ services:
     healthcheck:
       test: "curl -f http://localhost:3000 || exit 1"
       interval: 5s
+    environment:
+      NEXT_PUBLIC_API_URL: ${NEXT_PUBLIC_API_URL:-http://localhost:9091}
+      NEXTAUTH_URL: ${NEXTAUTH_URL:-http://localhost:3000/api/auth/}
+      NEXTAUTH_SECRET: ${NEXTAUTH_SECRET:-feZJWB3mcQ93VBmqHKQI5er5NEIxcDPb3wtT/KaLB9s=}
+      KEYCLOAK_CLIENT_ID: ${KEYCLOAK_CLIENT_ID:-webclient}
+      KEYCLOAK_ISSUER: ${KEYCLOAK_ISSUER:-http://keycloak:8080/realms/development}
+      KEYCLOAK_END_SESSION_ENDPOINT: ${KEYCLOAK_END_SESSION_ENDPOINT:-http://keycloak:8080/realms/development/protocol/openid-connect/logout}
+      KEYCLOAK_CLIENT_SECRET: ${KEYCLOAK_CLIENT_SECRET:-SXiMvr1GG10bk2J63ODZC9SOaoAZ4dbe}
     ports:
       - "3000:3000"
     networks:
@@ -84,8 +91,8 @@ services:
       context: ./docker/postgresql
       dockerfile: Dockerfile
     environment:
-      POSTGRES_USER: root
-      POSTGRES_PASSWORD: password
+      POSTGRES_USER: ${POSTGRES_USER:-root}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-password}
     healthcheck:
       test: [ "CMD-SHELL", "sh -c 'pg_isready -U root -d main'" ]
       interval: 10s
