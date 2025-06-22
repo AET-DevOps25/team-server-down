@@ -42,13 +42,13 @@ export default function StylePopover({
   return (
     <Popover>
       <PopoverTrigger asChild>
-        <button className="flex items-center justify-center  w-4 h-4  hover:cursor-pointer">
+        <button className="flex h-4 w-4 items-center justify-center hover:cursor-pointer">
           {buttonIcon}
         </button>
       </PopoverTrigger>
 
-      <PopoverContent className="w-64 p-3 mt-3" align="start">
-        <div className="font-medium text-sm mt-1 mb-4">{title}</div>
+      <PopoverContent className="mt-3 w-64 p-3" align="start">
+        <div className="mt-1 mb-4 text-sm font-medium">{title}</div>
 
         {sliders && (
           <div className="my-5 space-y-4">

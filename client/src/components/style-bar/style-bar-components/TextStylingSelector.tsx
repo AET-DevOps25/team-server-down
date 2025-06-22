@@ -26,7 +26,7 @@ function TextStylingButton({
   return (
     <button
       onClick={onToggle}
-      className={`p-1 rounded hover:bg-gray-100 transition-colors ${
+      className={`rounded p-1 transition-colors hover:bg-gray-100 ${
         isToggle ? "bg-gray-200" : "bg-transparent"
       }`}
       title="Bold"

@@ -77,14 +77,14 @@ const StyleBar = ({ nodeProperties, onUpdateNode }: StyleBarProps) => {
   };
 
   return (
-    <div className="flex items-center bg-white border border-gray-200 rounded-md shadow-lg py-1.5 px-3 gap-4">
+    <div className="flex items-center gap-4 rounded-md border border-gray-200 bg-white px-3 py-1.5 shadow-lg">
       <StylePopover
         title="Background Style"
         color={bgColor}
         onChangeColor={onChangeBgColor}
         buttonIcon={
           <div
-            className="w-4 h-4 rounded-full border-[0.5px] border-gray-200"
+            className="h-4 w-4 rounded-full border-[0.5px] border-gray-200"
             style={
               bgColor !== "none"
                 ? { backgroundColor: bgColor }
@@ -111,14 +111,14 @@ const StyleBar = ({ nodeProperties, onUpdateNode }: StyleBarProps) => {
         onChangeColor={onChangeBorderColor}
         buttonIcon={
           <div
-            className="w-4 h-4 rounded-full border-[0.5px] border-gray-200 flex items-center justify-center"
+            className="flex h-4 w-4 items-center justify-center rounded-full border-[0.5px] border-gray-200"
             style={
               borderColor !== "none"
                 ? { backgroundColor: borderColor }
                 : checkerboardStyle
             }
           >
-            <div className="w-2 h-2 rounded-full border-[0.5px] border-gray-200 bg-white" />
+            <div className="h-2 w-2 rounded-full border-[0.5px] border-gray-200 bg-white" />
           </div>
         }
         sliders={[
@@ -143,17 +143,17 @@ const StyleBar = ({ nodeProperties, onUpdateNode }: StyleBarProps) => {
         ]}
       />
 
-      <div className="w-px h-5 bg-gray-300 mx-0.5" />
+      <div className="mx-0.5 h-5 w-px bg-gray-300" />
 
       <StylePopover
         title="Text Color"
         color={textColor}
         onChangeColor={onChangeTextColor}
         buttonIcon={
-          <div className="flex flex-col text-base items-center justify-center">
+          <div className="flex flex-col items-center justify-center text-base">
             <span className="-mt-1">A</span>
             <div
-              className="w-4 h-1 -mt-1 border-[0.5px] border-gray-200"
+              className="-mt-1 h-1 w-4 border-[0.5px] border-gray-200"
               style={
                 textColor !== "none"
                   ? { backgroundColor: textColor }
@@ -164,14 +164,14 @@ const StyleBar = ({ nodeProperties, onUpdateNode }: StyleBarProps) => {
         }
       />
 
-      <div className="w-px h-5 bg-gray-300 mx-0.5" />
+      <div className="mx-0.5 h-5 w-px bg-gray-300" />
 
       <FontSizeSelector
         fontSize={fontSize}
         onChangeFontSize={onChangeFontSize}
       />
 
-      <div className="w-px h-5 bg-gray-300 mx-0.5" />
+      <div className="mx-0.5 h-5 w-px bg-gray-300" />
 
       <TextStylingSelector
         isBold={isBold}
@@ -184,7 +184,7 @@ const StyleBar = ({ nodeProperties, onUpdateNode }: StyleBarProps) => {
         onToggleStrikethrough={onToggleStrikethrough}
       />
 
-      <div className="w-px h-5 bg-gray-300 mx-0.5" />
+      <div className="mx-0.5 h-5 w-px bg-gray-300" />
 
       <FontFamilySelector
         fontFamily={fontFamily}

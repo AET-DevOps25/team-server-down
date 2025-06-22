@@ -56,11 +56,11 @@ const ShapeNode = ({ id, data, selected }: ShapeNodeParams) => {
         minHeight={100}
       />
 
-      <div className={`w-full h-full flex justify-center relative`}>
+      <div className={`relative flex h-full w-full justify-center`}>
         {Shape && (
-          <div className="p-0.5 absolute inset-0 flex items-center justify-center pointer-events-none w-full h-full ">
+          <div className="pointer-events-none absolute inset-0 flex h-full w-full items-center justify-center p-0.5">
             <Shape
-              className={`w-full h-full `}
+              className={`h-full w-full`}
               style={{
                 fill: nodeProperties.color,
                 fillOpacity: nodeProperties.opacity,
@@ -74,7 +74,7 @@ const ShapeNode = ({ id, data, selected }: ShapeNodeParams) => {
         )}
 
         <input
-          className={`w-4/5 min-h-[100px] bg-transparent text-center z-10 focus:outline-none`}
+          className={`z-10 min-h-[100px] w-4/5 bg-transparent text-center focus:outline-none`}
           style={{
             color: nodeProperties.textColor,
             fontSize: `${nodeProperties.fontSize}px`,

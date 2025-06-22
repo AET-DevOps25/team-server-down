@@ -20,7 +20,7 @@ const ColorOption = ({
   isSelected?: boolean;
 }) => (
   <div
-    className={`w-6 h-6 rounded-full cursor-pointer border ${isSelected ? "border-black ring-2 ring-offset-2 ring-black" : "border-gray-200"}`}
+    className={`h-6 w-6 cursor-pointer rounded-full border ${isSelected ? "border-black ring-2 ring-black ring-offset-2" : "border-gray-200"}`}
     style={{ backgroundColor: color }}
     onClick={onClick}
   />
@@ -34,8 +34,8 @@ const TransparentOption = ({
   isSelected?: boolean;
 }) => (
   <div
-    className={`w-6 h-6 rounded-full cursor-pointer flex items-center justify-center relative ${
-      isSelected ? "ring-2 ring-offset-2 ring-black" : ""
+    className={`relative flex h-6 w-6 cursor-pointer items-center justify-center rounded-full ${
+      isSelected ? "ring-2 ring-black ring-offset-2" : ""
     }`}
     style={checkerboardStyle}
     onClick={onClick}
@@ -62,7 +62,7 @@ const ColorPickerPanel: React.FC<Props> = ({
       </TabsList>
 
       <TabsContent value="palette" className="mt-2">
-        <div className="grid grid-cols-5 gap-2 mb-2">
+        <div className="mb-2 grid grid-cols-5 gap-2">
           {!isTextPopOver && (
             <TransparentOption
               onClick={() => handleColorChange("none")}
@@ -89,13 +89,13 @@ const ColorPickerPanel: React.FC<Props> = ({
           onChange={handleColorChange}
           className="w-full"
         />
-        <div className="flex items-center w-full gap-2">
+        <div className="flex w-full items-center gap-2">
           <span className="text-sm text-gray-500">#</span>
           <HexColorInput
             color={localColor}
             onChange={handleColorChange}
             prefixed={false}
-            className="w-full px-2 py-1 border border-gray-300 rounded-md text-sm"
+            className="w-full rounded-md border border-gray-300 px-2 py-1 text-sm"
           />
         </div>
       </TabsContent>

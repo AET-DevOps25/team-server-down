@@ -8,10 +8,8 @@ export default function Providers({ children }: PropsWithChildren) {
   const [queryClient] = React.useState(() => new QueryClient());
 
   return (
-      <SessionProvider refetchInterval={4 * 60}>
-        <QueryClientProvider client={queryClient}>
-            {children}
-        </QueryClientProvider>
-      </SessionProvider>
+    <SessionProvider refetchInterval={4 * 60}>
+      <QueryClientProvider client={queryClient}>{children}</QueryClientProvider>
+    </SessionProvider>
   );
 }

@@ -30,9 +30,7 @@ export default function RootLayout({
         className={`${geistSans.variable} ${geistMono.variable} antialiased`}
       >
         <Providers>
-            <SessionGuard>
-                {children}
-            </SessionGuard>
+          <SessionGuard>{children}</SessionGuard>
         </Providers>
       </body>
     </html>
