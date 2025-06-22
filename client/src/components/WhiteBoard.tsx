@@ -39,7 +39,7 @@ export default function WhiteBoard() {
 
   return (
     <div style={{ width: "100vw", height: "100vh" }}>
-      <div className="fixed left-4 top-1/2 -translate-y-1/2 z-10 ">
+      <div className="fixed top-1/2 left-4 z-10 -translate-y-1/2">
         <Sidebar onAddNode={handleAddNode} />
       </div>
       <ReactFlow

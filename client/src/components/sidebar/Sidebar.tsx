@@ -87,14 +87,14 @@ export default function Sidebar({ onAddNode }: SidebarProps) {
   };
 
   return (
-    <div className="flex flex-col h-auto w-16 bg-white/50 backdrop-blur-sm p-3 rounded-xl shadow-lg border border-gray-200/50 items-center justify-center">
+    <div className="flex h-auto w-16 flex-col items-center justify-center rounded-xl border border-gray-200/50 bg-white/50 p-3 shadow-lg backdrop-blur-sm">
       {additionalItems.map((item, index) => {
         const IconComponent = item.icon;
         return (
           <button
             key={`additional-${index}`}
             onClick={handleAddTextNode}
-            className="flex items-center justify-center w-10 h-10 rounded-lg transition-all duration-200 hover:bg-gray-200 text-gray-600 hover:text-gray-800"
+            className="flex h-10 w-10 items-center justify-center rounded-lg text-gray-600 transition-all duration-200 hover:bg-gray-200 hover:text-gray-800"
             title={item.label}
           >
             <IconComponent size={20} strokeWidth={1.5} />
@@ -102,20 +102,20 @@ export default function Sidebar({ onAddNode }: SidebarProps) {
         );
       })}
 
-      <div className="w-8 h-px bg-gray-300 my-2"></div>
+      <div className="my-2 h-px w-8 bg-gray-300"></div>
 
-      <div className="flex flex-col items-center py-4 space-y-2">
+      <div className="flex flex-col items-center space-y-2 py-4">
         {menuItems.map((item, index) => {
           const IconComponent = item.icon;
           return (
             <button
               key={index}
               onClick={() => handleAddShapeNode(item)}
-              className="flex items-center justify-center w-10 h-10 rounded-lg transition-all duration-200 hover:bg-gray-200 hover:text-gray-800"
+              className="flex h-10 w-10 items-center justify-center rounded-lg transition-all duration-200 hover:bg-gray-200 hover:text-gray-800"
               title={item.label}
             >
               <IconComponent
-                className="w-5 h-5 fill-transparent stroke-gray-600 hover:stroke-gray-800"
+                className="h-5 w-5 fill-transparent stroke-gray-600 hover:stroke-gray-800"
                 style={{ strokeWidth: 3 }}
               />
             </button>

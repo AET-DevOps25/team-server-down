@@ -31,5 +31,9 @@ jobs:
         run: npx prettier --check "src/**/*.{ts,tsx}"
         working-directory: client
 
+      - name: Run Type Check
+        run: npx --package=typescript@latest -- tsc --build .
+        working-directory: client
+
 
 

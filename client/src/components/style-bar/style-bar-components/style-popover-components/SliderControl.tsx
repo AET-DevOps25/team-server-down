@@ -30,7 +30,7 @@ export default function SliderControl({
         className="m-0"
       />
 
-      <div className="flex flex-row items-center justify-between mt-1 font-light text-xs ">
+      <div className="mt-1 flex flex-row items-center justify-between text-xs font-light">
         <p>{title}</p>
         <p>
           {value}

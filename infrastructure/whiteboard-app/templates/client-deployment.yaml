@@ -26,3 +26,8 @@ spec:
               memory: "50Mi"
           ports:
             - containerPort: {{ .Values.client.service.targetPort }}
+          env:
+            {{- range .Values.client.env }}
+              - name: {{ .name }}
+                value: {{ tpl .value $ | quote }}
+            {{- end }}

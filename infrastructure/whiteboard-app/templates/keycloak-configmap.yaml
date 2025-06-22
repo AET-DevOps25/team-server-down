@@ -1,0 +1,9 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: keycloak-configmap
+data:
+  realm-export.json: |-
+{{- $env := .Values.environment }}
+{{- $filename := printf "files/keycloak/realm-export-%s.json" $env }}
+{{ .Files.Get $filename | indent 4 }}

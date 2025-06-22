@@ -38,9 +38,9 @@ export default function FontSizeSelector({
         value={fontSize.toString()}
         onValueChange={(value) => onChangeFontSize(parseInt(value))}
       >
-        <SelectTrigger className="w-[40px] text-center px-2 border-0 ring-0 shadow-none bg-transparent hover:bg-gray-50 focus:ring-0 [&>svg]:hidden">
+        <SelectTrigger className="w-[40px] border-0 bg-transparent px-2 text-center shadow-none ring-0 hover:bg-gray-50 focus:ring-0 [&>svg]:hidden">
           <SelectValue>
-            <span className="font-medium  text-gray-700">{fontSize}</span>
+            <span className="font-medium text-gray-700">{fontSize}</span>
           </SelectValue>
         </SelectTrigger>
         <SelectContent className="min-w-[60px]">
@@ -56,20 +56,20 @@ export default function FontSizeSelector({
         </SelectContent>
       </Select>
 
-      <div className="flex flex-col ml-1">
+      <div className="ml-1 flex flex-col">
         <button
           onClick={increaseFontSize}
-          className="focus:outline-none hover:cursor-pointer"
+          className="hover:cursor-pointer focus:outline-none"
           disabled={fontSize === fontSizes[fontSizes.length - 1]}
         >
-          <ChevronUp className="text-gray-700 w-3 h-3" />
+          <ChevronUp className="h-3 w-3 text-gray-700" />
         </button>
         <button
           onClick={decreaseFontSize}
-          className="focus:outline-none hover:cursor-pointer "
+          className="hover:cursor-pointer focus:outline-none"
           disabled={fontSize === fontSizes[0]}
         >
-          <ChevronDown className="text-gray-700 w-3 h-3" />
+          <ChevronDown className="h-3 w-3 text-gray-700" />
         </button>
       </div>
     </div>
