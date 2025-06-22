@@ -12,3 +12,7 @@ spring:
   flyway:
     enabled: true
     validate-on-migrate: true
+
+llm:
+  service:
+    url: http://genai:8000

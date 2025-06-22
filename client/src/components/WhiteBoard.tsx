@@ -48,11 +48,20 @@ export default function WhiteBoard() {
     const textNodes = selectedNodes.filter(node => node.type === 'text');
     if (textNodes.length === 0) return;
   
-    const nodeToUpdate = textNodes[0]; // first selected text node
+    const nodeToUpdate = textNodes[0];
     const currentText = nodeToUpdate.data.label as string;
   
+    const endpointMap: Record<typeof action, string> = {
+      complete: 'completion',
+      summarize: 'summarization',
+      rephrase: 'rephrase'
+    };
+  
+    const endpoint = endpointMap[action];
+    const url = `http://localhost:8080/${endpoint}`;
+  
     try {
-      const response = await fetch(`http://localhost:8080/api/llm/rephrase`, {
+      const response = await fetch(url, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ user_text: [currentText] }),
@@ -67,11 +76,14 @@ export default function WhiteBoard() {
       setNodes((nds) =>
         nds.map((node) =>
           node.id === nodeToUpdate.id
-            ? { 
+            ? {
                 ...node,
-                data: { 
+                data: {
                   ...node.data,
-                  label: data.llm_response || '' // update node text from API response
+                  label:
+                    action === 'complete'
+                      ? `${currentText} ${data.llm_response || ''}`
+                      : data.llm_response || ''
                 }
               }
             : node
@@ -81,6 +93,7 @@ export default function WhiteBoard() {
       console.error("Error calling LLM service:", error);
     }
   };
+  
   
 
 

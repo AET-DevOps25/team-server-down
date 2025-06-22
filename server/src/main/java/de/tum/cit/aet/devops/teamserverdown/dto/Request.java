@@ -1,19 +1,21 @@
 package de.tum.cit.aet.devops.teamserverdown.dto;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
 import java.util.List;
 
-public class Request { 
-    private List<String> user_text;
+public class Request {
+  @JsonProperty("user_text")
+  private List<String> userText;
 
-    public Request(List<String> user_text) {
-        this.user_text = user_text;
-    }
+  public Request(@JsonProperty("user_text") List<String> userText) {
+    this.userText = userText;
+  }
 
-    public List<String> getUser_text() {
-        return user_text;
-    }
+  public List<String> getUserText() {
+    return userText;
+  }
 
-    public void setUser_text(List<String> user_text) {
-        this.user_text = user_text;
-    }
+  public void setUserText(List<String> userText) {
+    this.userText = userText;
+  }
 }

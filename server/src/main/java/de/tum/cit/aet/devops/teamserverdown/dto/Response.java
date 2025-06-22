@@ -1,20 +1,22 @@
 package de.tum.cit.aet.devops.teamserverdown.dto;
 
-public class Response { 
-    private String llm_response;
+import com.fasterxml.jackson.annotation.JsonProperty;
 
-    public Response() {
-    }
+public class Response {
+  @JsonProperty("llm_response")
+  private String llmResponse;
 
-    public Response(String llm_response) {
-        this.llm_response = llm_response;
-    }
+  public Response() {}
 
-    public String getLlm_response() {
-        return llm_response;
-    }
+  public Response(@JsonProperty("llm_response") String llmResponse) {
+    this.llmResponse = llmResponse;
+  }
 
-    public void setLlm_response(String llm_response) {
-        this.llm_response = llm_response;
-    }
+  public String getLlmResponse() {
+    return llmResponse;
+  }
+
+  public void setLlmResponse(String llmResponse) {
+    this.llmResponse = llmResponse;
+  }
 }
