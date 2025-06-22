@@ -53,7 +53,7 @@ server:
     - name: ALLOWED_ORIGIN
       value: "https://staging.whiteboard.student.k8s.aet.cit.tum.de"
     - name: IDP_URI
-      value: '{{ printf "http://%s-keycloak:8080/realms/staging" .Release.Name }}'
+      value: "https://staging.auth.whiteboard.student.k8s.aet.cit.tum.de/realms/staging"
 
   replicaCount: 1
 

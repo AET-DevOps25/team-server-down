@@ -1,6 +1,6 @@
 package de.tum.cit.aet.devops.teamserverdown.config;
 
-//import de.tum.cit.aet.devops.teamserverdown.security.CurrentUser;
+import de.tum.cit.aet.devops.teamserverdown.security.CurrentUser;
 import io.swagger.v3.oas.models.ExternalDocumentation;
 import io.swagger.v3.oas.models.OpenAPI;
 import io.swagger.v3.oas.models.Operation;
@@ -31,31 +31,31 @@ public class OpenAPIConfiguration {
                 .url("https://github.com/AET-DevOps25/team-server-down"));
   }
 
-//  @Bean
-//  public OperationCustomizer hideCurrentUser() {
-//    return (Operation operation, HandlerMethod handlerMethod) -> {
-//      if (operation.getParameters() == null) {
-//        return operation;
-//      }
-//
-//      MethodParameter[] methodParameters = handlerMethod.getMethodParameters();
-//      List<Parameter> openApiParams = operation.getParameters();
-//
-//      Iterator<Parameter> paramIterator = openApiParams.iterator();
-//      while (paramIterator.hasNext()) {
-//        Parameter openApiParam = paramIterator.next();
-//        for (MethodParameter methodParam : methodParameters) {
-//          if (methodParam.hasParameterAnnotation(CurrentUser.class)) {
-//            String methodParamName = methodParam.getParameterName();
-//            if (methodParamName == null || openApiParam.getName().equals(methodParamName)) {
-//              paramIterator.remove();
-//              break;
-//            }
-//          }
-//        }
-//      }
-//
-//      return operation;
-//    };
-//  }
+  @Bean
+  public OperationCustomizer hideCurrentUser() {
+    return (Operation operation, HandlerMethod handlerMethod) -> {
+      if (operation.getParameters() == null) {
+        return operation;
+      }
+
+      MethodParameter[] methodParameters = handlerMethod.getMethodParameters();
+      List<Parameter> openApiParams = operation.getParameters();
+
+      Iterator<Parameter> paramIterator = openApiParams.iterator();
+      while (paramIterator.hasNext()) {
+        Parameter openApiParam = paramIterator.next();
+        for (MethodParameter methodParam : methodParameters) {
+          if (methodParam.hasParameterAnnotation(CurrentUser.class)) {
+            String methodParamName = methodParam.getParameterName();
+            if (methodParamName == null || openApiParam.getName().equals(methodParamName)) {
+              paramIterator.remove();
+              break;
+            }
+          }
+        }
+      }
+
+      return operation;
+    };
+  }
 }

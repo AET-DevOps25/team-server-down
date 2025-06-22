@@ -30,9 +30,9 @@ public class JWTAuthenticationFilter extends OncePerRequestFilter {
       String token = authHeader.substring(7);
       try {
         DecodedJWT decoded = jwtValidator.validateToken(token);
-//        User user = userService.getOrCreateUser(decoded);
+        User user = userService.getOrCreateUser(decoded);
 
-//        request.setAttribute("user", user);
+        request.setAttribute("user", user);
       } catch (JWTVerificationException e) {
         response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
         response.getWriter().write("Invalid JWT token");
