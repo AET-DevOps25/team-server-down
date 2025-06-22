@@ -6,14 +6,11 @@ client:
     repository: ghcr.io/aet-devops25/team-server-down/client
     tag: develop
     pullPolicy: Always
-
   service:
     type: ClusterIP
     port: 3000
     targetPort: 3000
-
   replicaCount: 1
-
   env:
     - name: KEYCLOAK_CLIENT_SECRET
       value: SXiMvr1GG10bk2J63ODZC9SOaoAZ4dbe
@@ -33,12 +30,10 @@ server:
     repository: ghcr.io/aet-devops25/team-server-down/server
     tag: develop
     pullPolicy: Always
-
   service:
     type: ClusterIP
     port: 9091
     targetPort: 9091
-
   env:
     - name: DB_HOST
       value: '{{ printf "%s-postgresql" .Release.Name }}'
@@ -54,9 +49,54 @@ server:
       value: "https://staging.whiteboard.student.k8s.aet.cit.tum.de"
     - name: IDP_URI
       value: "https://staging.auth.whiteboard.student.k8s.aet.cit.tum.de/realms/staging"
-
   replicaCount: 1
 
+postgresql:
+  primary:
+    extraEnvVars:
+      - name: POSTGRES_USER
+        value: postgres
+      - name: POSTGRES_PASSWORD
+        value: password
+      - name: POSTGRES_MULTIPLE_DATABASES
+        value: "main,keycloak"
+    extraVolumes:
+      - name: db-init
+        configMap:
+          name: postgresql-configmap
+    extraVolumeMounts:
+      - name: db-init
+        mountPath: /docker-entrypoint-initdb.d
+
+keycloak:
+  ingress:
+    enabled: true
+    hostname: staging.auth.whiteboard.student.k8s.aet.cit.tum.de
+  auth:
+    adminUser: admin
+    adminPassword: password
+  postgresql:
+    enabled: false
+  externalDatabase:
+    host: '{{ printf "%s-postgresql" .Release.Name }}'
+    user: postgres
+    password: password
+    database: keycloak
+    port: 5432
+  extraEnvVars:
+    - name: KEYCLOAK_EXTRA_ARGS
+      value: "--import-realm"
+    - name: KC_PROXY
+      value: edge
+    - name: KC_PROXY_HEADERS
+      value: xforwarded
+  extraVolumes:
+    - name: realm-export
+      configMap:
+        name: keycloak-configmap
+  extraVolumeMounts:
+    - name: realm-export
+      mountPath: /opt/bitnami/keycloak/data/import
 
 ingress:
   enabled: true
@@ -97,69 +137,3 @@ ingress:
             name: '{{ printf "%s-keycloak" .Release.Name }}'
             port:
               number: 80
-
-postgresql:
-  auth:
-    username: postgres
-    password: password
-  primary:
-    extraEnvVars:
-      - name: POSTGRES_USER
-        value: postgres
-      - name: POSTGRES_PASSWORD
-        value: password
-      - name: POSTGRES_MULTIPLE_DATABASES
-        value: "main,keycloak"
-    extraVolumes:
-      - name: db-init
-        configMap:
-          name: postgresql-configmap
-    extraVolumeMounts:
-      - name: db-init
-        mountPath: /docker-entrypoint-initdb.d
-
-keycloak:
-  ingress:
-    enabled: true
-    hostname: staging.auth.whiteboard.student.k8s.aet.cit.tum.de
-  auth:
-    adminUser: admin
-    adminPassword: password
-  postgresql:
-    enabled: false
-  externalDatabase:
-    host: '{{ printf "%s-postgresql" .Release.Name }}'
-    user: postgres
-    password: password
-    database: keycloak
-    port: 5432
-  extraEnvVars:
-    - name: KEYCLOAK_EXTRA_ARGS
-      value: "--import-realm"
-    - name: KC_DB_USERNAME
-      value: postgres
-    - name: KC_DB_PASSWORD
-      value: password
-    - name: KEYCLOAK_ADMIN
-      value: admin
-    - name: KEYCLOAK_ADMIN_PASSWORD
-      value: password
-    - name: KC_PROXY
-      value: passthrough
-    - name: KC_HTTP_ENABLED
-      value: "true"
-    - name: KC_HOSTNAME
-      value: staging.auth.whiteboard.student.k8s.aet.cit.tum.de
-    - name: KC_HOSTNAME_STRICT
-      value: "false"
-    - name: KC_HOSTNAME_STRICT_HTTPS
-      value: "false"
-    - name: KC_PROXY_HEADERS
-      value: xforwarded
-  extraVolumes:
-    - name: realm-export
-      configMap:
-        name: keycloak-configmap
-  extraVolumeMounts:
-    - name: realm-export
-      mountPath: /opt/bitnami/keycloak/data/import
