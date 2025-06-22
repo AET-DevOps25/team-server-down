@@ -6,7 +6,7 @@ globalAxios.interceptors.request.use(async (request) => {
   const session = await getSession();
 
   if (session) {
-    // @ts-expect-error
+    // @ts-ignore
     request.headers["Authorization"] = `Bearer ${session.accessToken}`;
   }
   return request;

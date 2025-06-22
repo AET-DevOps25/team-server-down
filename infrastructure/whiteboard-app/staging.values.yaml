@@ -14,6 +14,20 @@ client:
 
   replicaCount: 1
 
+  env:
+    - name: KEYCLOAK_CLIENT_SECRET
+      value: SXiMvr1GG10bk2J63ODZC9SOaoAZ4dbe
+    - name: NEXTAUTH_URL
+      value: https://staging.whiteboard.student.k8s.aet.cit.tum.de/api/auth/
+    - name: NEXTAUTH_SECRET
+      value: feZJWB3mcQ93VBmqHKQI5er5NEIxcDPb3wtT/KaLB9s=
+    - name: KEYCLOAK_CLIENT_ID
+      value: webclient
+    - name: KEYCLOAK_ISSUER
+      value: https://staging.auth.whiteboard.student.k8s.aet.cit.tum.de/realms/staging
+    - name: KEYCLOAK_END_SESSION_ENDPOINT
+      value: https://staging.auth.whiteboard.student.k8s.aet.cit.tum.de/realms/staging/protocol/openid-connect/logout
+
 server:
   image:
     repository: ghcr.io/aet-devops25/team-server-down/server
@@ -48,8 +62,9 @@ ingress:
   enabled: true
   className: "nginx"
   annotations:
-    cert-manager.io/cluster-issuer: "letsencrypt-staging"
+    cert-manager.io/cluster-issuer: "letsencrypt-prod"
     nginx.ingress.kubernetes.io/rewrite-target: /
+    nginx.ingress.kubernetes.io/use-forwarded-headers: "true"
   tls:
     hosts:
       - "staging.whiteboard.student.k8s.aet.cit.tum.de"
@@ -78,7 +93,7 @@ ingress:
         - path: /
           pathType: Prefix
           service:
-            name: keycloak-http
+            name: '{{ printf "%s-keycloak" .Release.Name }}'
             port:
               number: 80
 
@@ -105,26 +120,45 @@ postgresql:
 keycloak:
   ingress:
     enabled: true
-  command:
-    - "/opt/bitnami/scripts/keycloak/entrypoint.sh"
-    - "/opt/bitnami/scripts/keycloak/run.sh"
-    - "--import-realm"
-    - "--import-realm-file=/opt/bitnami/keycloak/data/import/realm-export.json"
+    hostname:
   auth:
     adminUser: admin
     adminPassword: password
   postgresql:
     enabled: false
   externalDatabase:
-    host: '{{ printf "%s-postgresql" .Release.Name }}'
+    host:
     user: postgres
     password: password
     database: keycloak
     port: 5432
-  extraVolumes:
+  env:
+    - name: KC_DB_URL
+      value: '{{ printf "jdbc:postgresql://%s-postgresql:5432/keycloak" .Release.Name }}'
+    - name: KC_DB_USERNAME
+      value: postgres
+    - name: KC_DB_PASSWORD
+      value: password
+    - name: KEYCLOAK_ADMIN
+      value: admin
+    - name: KEYCLOAK_ADMIN_PASSWORD
+      value: password
+    - name: KC_PROXY
+      value: passthrough
+    - name: KC_HTTP_ENABLED
+      value: "true"
+    - name: KC_HOSTNAME
+      value: staging.auth.whiteboard.student.k8s.aet.cit.tum.de
+    - name: KC_HOSTNAME_STRICT
+      value: "false"
+    - name: KC_HOSTNAME_STRICT_HTTPS
+      value: "false"
+    - name: KC_PROXY_HEADERS
+      value: xforwarded
+  volumes:
     - name: realm-export
       configMap:
         name: keycloak-configmap
-  extraVolumeMounts:
+  volumeMounts:
     - name: realm-export
       mountPath: /opt/bitnami/keycloak/data/import

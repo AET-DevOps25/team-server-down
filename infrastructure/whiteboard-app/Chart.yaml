@@ -8,5 +8,5 @@ dependencies:
     version: 16.2.5
     repository: "https://charts.bitnami.com/bitnami"
   - name: keycloak
-    version: 24.0.1
+    version: 21.0.1
     repository: "https://charts.bitnami.com/bitnami"

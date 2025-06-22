@@ -19,7 +19,7 @@ const eslintConfig = [
       "@typescript-eslint/ban-ts-comment": [
         "error",
         {
-          "ts-expect-error": "allow-without-description",
+          "ts-ignore": false,
         },
       ],
     }

@@ -10,8 +10,6 @@ spec:
       app: whiteboard-client-selector
   template:
     metadata:
-      annotations:
-        deploy-timestamp: "{{ now }}"
       labels:
         app: whiteboard-client-selector
     spec:
@@ -28,3 +26,8 @@ spec:
               memory: "50Mi"
           ports:
             - containerPort: {{ .Values.client.service.targetPort }}
+          env:
+            {{- range .Values.client.env }}
+              - name: {{ .name }}
+                value: {{ tpl .value $ | quote }}
+            {{- end }}

@@ -8,7 +8,7 @@ export default function SessionGuard({ children }: { children: ReactNode }) {
         required: true,
     });
     useEffect(() => {
-        // @ts-expect-error
+        // @ts-ignore
         if (data?.error === "RefreshAccessTokenError") {
             signIn("keycloak");
         }

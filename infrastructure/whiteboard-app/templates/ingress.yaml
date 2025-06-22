@@ -27,7 +27,7 @@ spec:
             pathType: {{ .pathType }}
             backend:
               service:
-                name: {{ .service.name | quote }}
+                name: {{ tpl .service.name $ | quote }}
                 port:
                   number: {{ .service.port.number }}
             {{- end}}
