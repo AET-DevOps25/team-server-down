@@ -775,12 +775,12 @@
       "clientAuthenticatorType": "client-secret",
       "secret": "SXiMvr1GG10bk2J63ODZC9SOaoAZ4dbe",
       "redirectUris": [
-        "http://localhost:3000/api/auth/callback/keycloak",
-        "http://localhost:8000/*"
+        "https://whiteboard.student.k8s.aet.cit.tum.de/api/auth/callback/keycloak",
+        "https://api.whiteboard.student.k8s.aet.cit.tum.de/*"
       ],
       "webOrigins": [
-        "http://localhost:8000",
-        "http://localhost:3000"
+        "https://api.whiteboard.student.k8s.aet.cit.tum.de",
+        "https://whiteboard.student.k8s.aet.cit.tum.de"
       ],
       "notBefore": 0,
       "bearerOnly": false,
@@ -796,7 +796,7 @@
         "oidc.ciba.grant.enabled": "false",
         "client.secret.creation.time": "1708880081",
         "backchannel.logout.session.required": "true",
-        "post.logout.redirect.uris": "http://localhost:3000",
+        "post.logout.redirect.uris": "https://whiteboard.student.k8s.aet.cit.tum.de##https://api.whiteboard.student.k8s.aet.cit.tum.de",
         "display.on.consent.screen": "false",
         "oauth2.device.authorization.grant.enabled": "true",
         "backchannel.logout.revoke.offline.tokens": "false"
