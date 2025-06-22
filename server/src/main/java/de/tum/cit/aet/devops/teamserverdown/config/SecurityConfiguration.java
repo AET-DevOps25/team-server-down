@@ -2,7 +2,7 @@ package de.tum.cit.aet.devops.teamserverdown.config;
 
 import java.util.List;
 
-import de.tum.cit.aet.devops.teamserverdown.security.JWTAuthenticationFilter;
+//import de.tum.cit.aet.devops.teamserverdown.security.JWTAuthenticationFilter;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
@@ -18,11 +18,11 @@ import org.springframework.web.filter.CorsFilter;
 @EnableWebSecurity
 public class SecurityConfiguration {
 
-  private final JWTAuthenticationFilter jwtAuthenticationFilter;
-
-  public SecurityConfiguration(JWTAuthenticationFilter jwtAuthenticationFilter) {
-    this.jwtAuthenticationFilter = jwtAuthenticationFilter;
-  }
+//  private final JWTAuthenticationFilter jwtAuthenticationFilter;
+//
+//  public SecurityConfiguration(JWTAuthenticationFilter jwtAuthenticationFilter) {
+//    this.jwtAuthenticationFilter = jwtAuthenticationFilter;
+//  }
 
   @Bean
   public SecurityFilterChain securityFilterChain(
@@ -31,8 +31,8 @@ public class SecurityConfiguration {
     http.cors(cors -> {})
         .httpBasic(AbstractHttpConfigurer::disable)
         .formLogin(AbstractHttpConfigurer::disable)
-        .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
-        .addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class);
+        .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS));
+//        .addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class);
 
     return http.build();
   }
