@@ -3,9 +3,9 @@ package de.tum.cit.aet.devops.teamserverdown.model;
 import jakarta.persistence.*;
 
 @Entity
-@Table(name = "\"user\"", indexes = {
-        @Index(name = "idx_user_email", columnList = "email")
-})
+@Table(
+    name = "\"user\"",
+    indexes = {@Index(name = "idx_user_email", columnList = "email")})
 public class User {
   @Id
   @GeneratedValue(strategy = GenerationType.IDENTITY)

@@ -3,7 +3,6 @@ plugins {
     id 'org.springframework.boot' version '3.4.4'
     id 'org.flywaydb.flyway' version '9.22.3'
     id 'com.diffplug.spotless' version '5.0.0'
-    id 'name.remal.sonarlint' version '6.0.0-rc-2'
 }
 
 apply plugin: 'io.spring.dependency-management'
@@ -45,8 +44,4 @@ spotless {
     java {
         googleJavaFormat()
     }
-}
-
-sonarLint {
-    isGeneratedCodeIgnored = true
 }
