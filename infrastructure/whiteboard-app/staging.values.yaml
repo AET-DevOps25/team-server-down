@@ -49,7 +49,7 @@ server:
       value: "https://staging.whiteboard.student.k8s.aet.cit.tum.de"
     - name: IDP_INTERNAL_URI
       value: "https://staging.auth.whiteboard.student.k8s.aet.cit.tum.de/realms/staging"
-    - name: IDP_EXTERNAL_URL
+    - name: IDP_EXTERNAL_URI
       value: "https://staging.auth.whiteboard.student.k8s.aet.cit.tum.de/realms/staging"
   replicaCount: 1
 

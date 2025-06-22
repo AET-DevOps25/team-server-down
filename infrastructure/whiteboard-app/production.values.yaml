@@ -49,7 +49,7 @@ server:
       value: "https://whiteboard.student.k8s.aet.cit.tum.de"
     - name: IDP_INTERNAL_URI
       value: "https://auth.whiteboard.student.k8s.aet.cit.tum.de/realms/production"
-    - name: IDP_EXTERNAL_URL
+    - name: IDP_EXTERNAL_URI
       value: "https://auth.whiteboard.student.k8s.aet.cit.tum.de/realms/production"
   replicaCount: 1
 
