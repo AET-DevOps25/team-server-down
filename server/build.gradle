@@ -32,6 +32,12 @@ dependencies {
     implementation 'org.springframework.boot:spring-boot-starter-security'
     implementation 'org.hibernate.validator:hibernate-validator'
     implementation 'com.auth0:java-jwt:4.5.0'
+    testImplementation "org.mockito:mockito-core"
+    testImplementation "org.mockito:mockito-junit-jupiter"
+    testImplementation 'org.springframework.boot:spring-boot-starter-test'
+    testImplementation 'org.springframework.boot:spring-boot-test'
+    testImplementation 'org.springframework.boot:spring-boot-test-autoconfigure'
+    testImplementation 'org.springframework:spring-test'
     testImplementation 'org.junit.jupiter:junit-jupiter:5.11.0'
     developmentOnly 'org.springframework.boot:spring-boot-devtools'
 }

@@ -14,10 +14,11 @@ import org.springframework.web.filter.OncePerRequestFilter;
 
 @Component
 public class JWTAuthenticationFilter extends OncePerRequestFilter {
-  private final JWTValidator jwtValidator = new JWTValidator();
+  private final JWTValidator jwtValidator;
   private final UserService userService;
 
-  public JWTAuthenticationFilter(UserService userService) {
+  public JWTAuthenticationFilter(JWTValidator jwtValidator, UserService userService) {
+    this.jwtValidator = jwtValidator;
     this.userService = userService;
   }
 
