@@ -151,12 +151,6 @@ jobs:
       - name: Install Helm
         uses: azure/setup-helm@v3
 
-      - name: Create Namespace
-        run: |
-          kubectl create namespace "${{ env.NAMESPACE }}" || true
-        env:
-          KUBECONFIG: ${{ env.KUBECONFIG }}
-
       - name: Deploy App with Helm
         run: |
           helm upgrade whiteboard ./infrastructure/whiteboard-app/ \
@@ -172,3 +166,45 @@ jobs:
             --set client.url="${{ env.CLIENT_URL }}" \
             --set server.url="${{ env.SERVER_URL }}" \
             --set auth.url="${{ env.AUTH_URL }}"
+
+  comment-pr:
+    needs: deploy
+    runs-on: ubuntu-latest
+    if: github.event_name == 'pull_request'
+    steps:
+      - name: Comment on Pull Request with URLs
+        uses: actions/github-script@v6
+        with:
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+          script: |
+            const prNumber = context.payload.pull_request.number;
+            const clientUrl = `https://${process.env.CLIENT_URL}`;
+            const serverUrl = `https://${process.env.SERVER_URL}`;
+            const authUrl = `https://${process.env.AUTH_URL}`;
+            
+            // Check existing comments to avoid duplicates
+            const { data: comments } = await github.rest.issues.listComments({
+            ...context.repo,
+            issue_number: prNumber,
+            });
+            
+            const commentExists = comments.some(comment => 
+            comment.body.includes('### Deployment URL')
+            );
+            
+            if (!commentExists) {
+            const body = `
+            ### Deployment URL
+            - [${clientUrl}](${clientUrl})
+            - [${serverUrl}](${serverUrl})
+            - [${authUrl}](${authUrl})
+            `;
+          
+            await github.rest.issues.createComment({
+              ...context.repo,
+              issue_number: prNumber,
+              body,
+            });
+            } else {
+              console.log('Comment already exists, skipping...');
+            }
