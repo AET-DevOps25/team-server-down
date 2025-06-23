@@ -16,7 +16,7 @@ jobs:
 
       - name: Set variables
         run: |
-          BRANCH=${GITHUB_REF##*/}
+          BRANCH="${GITHUB_HEAD_REF:-${GITHUB_REF##*/}}"
           if [[ "$BRANCH" == "main" ]]; then
             echo "NAMESPACE=tsd-prod" >> $GITHUB_ENV
             echo "IMAGE_TAG=lastest" >> $GITHUB_ENV

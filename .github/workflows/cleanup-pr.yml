@@ -12,7 +12,7 @@ jobs:
     steps:
       - name: Set variables
         run: |
-          BRANCH=${GITHUB_HEAD_REF:-${GITHUB_REF##*/}}
+          BRANCH="${GITHUB_HEAD_REF:-${GITHUB_REF##*/}}"
           BRANCH_SAFE=${BRANCH//\//-}
           echo "NAMESPACE=tsd-$BRANCH_SAFE" >> $GITHUB_ENV
 

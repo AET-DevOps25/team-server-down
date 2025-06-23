@@ -25,7 +25,7 @@ jobs:
       - name: Set variables
         id: set-vars
         run: |
-          BRANCH=${GITHUB_REF##*/}
+          BRANCH="${GITHUB_HEAD_REF:-${GITHUB_REF##*/}}"
           echo "repo=${GITHUB_REPOSITORY,,}" >> $GITHUB_OUTPUT
           if [[ "$BRANCH" == "main" ]]; then
             echo "tag=latest" >> $GITHUB_OUTPUT
