@@ -153,14 +153,14 @@ jobs:
             CLIENT_URL=whiteboard.student.k8s.aet.cit.tum.de
             SERVER_URL=api.whiteboard.student.k8s.aet.cit.tum.de
             AUTH_URL=auth.whiteboard.student.k8s.aet.cit.tum.de
-            echo "NAMESPACE=tsd-prod" >> $GITHUB_ENV
+            echo "NAMESPACE=production" >> $GITHUB_ENV
             echo "IMAGE_TAG=latest" >> $GITHUB_ENV
             echo "VALUES_FILE=./infrastructure/whiteboard-app/production.values.yaml" >> $GITHUB_ENV
           elif [[ "$BRANCH" == "develop" ]]; then
             CLIENT_URL=staging.whiteboard.student.k8s.aet.cit.tum.de
             SERVER_URL=staging.api.whiteboard.student.k8s.aet.cit.tum.de
             AUTH_URL=staging.auth.whiteboard.student.k8s.aet.cit.tum.de
-            echo "NAMESPACE=tsd-staging" >> $GITHUB_ENV
+            echo "NAMESPACE=staging" >> $GITHUB_ENV
             echo "IMAGE_TAG=develop" >> $GITHUB_ENV
             echo "VALUES_FILE=./infrastructure/whiteboard-app/staging.values.yaml" >> $GITHUB_ENV
           else
@@ -168,7 +168,7 @@ jobs:
             CLIENT_URL=$BRANCH_SAFE.whiteboard.student.k8s.aet.cit.tum.de
             SERVER_URL=$BRANCH_SAFE.api.whiteboard.student.k8s.aet.cit.tum.de
             AUTH_URL=$BRANCH_SAFE.auth.whiteboard.student.k8s.aet.cit.tum.de
-            echo "NAMESPACE=tsd-$BRANCH_SAFE" >> $GITHUB_ENV
+            echo "NAMESPACE=$BRANCH_SAFE" >> $GITHUB_ENV
             echo "IMAGE_TAG=$BRANCH_SAFE" >> $GITHUB_ENV
             echo "VALUES_FILE=./infrastructure/whiteboard-app/pullrequest.values.yaml" >> $GITHUB_ENV
           fi
@@ -193,7 +193,7 @@ jobs:
         run: |
           helm upgrade whiteboard ./infrastructure/whiteboard-app/ \
             -f ${{ env.VALUES_FILE }} \
-            -n ${{ env.NAMESPACE }} \
+            -n tsd-${{ env.NAMESPACE }} \
             --create-namespace \
             --install \
             --atomic \
