@@ -6,12 +6,8 @@ RUN npm ci
 
 COPY . .
 
-ARG ENV=production
-RUN if [ "$ENV" = "staging" ]; then \
-      cp .env.staging .env; \
-    elif [ "$ENV" = "production" ]; then \
-      cp .env.prod .env; \
-    fi
+ARG API_URL
+ENV NEXT_PUBLIC_API_URL=${API_URL}
 
 RUN npm run build
 
