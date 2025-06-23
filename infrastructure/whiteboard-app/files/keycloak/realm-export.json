@@ -775,7 +775,7 @@
       "clientAuthenticatorType": "client-secret",
       "secret": "SXiMvr1GG10bk2J63ODZC9SOaoAZ4dbe",
       "redirectUris": [
-        "https://{{ .Values.client.url }}/*",
+        "https://{{ .Values.client.url }}/api/auth/callback/keycloak",
         "https://{{ .Values.server.url }}/*"
       ],
       "webOrigins": [
