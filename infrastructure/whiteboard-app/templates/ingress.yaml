@@ -12,9 +12,9 @@ metadata:
 spec:
   tls:
     - hosts:
-        {{- range .Values.ingress.tls.hosts }}
-        - {{ tpl . $ | quote }}
-        {{- end }}
+      {{- range .Values.ingress.tls.hosts }}
+      - {{ tpl . $ }}
+      {{- end }}
       secretName: {{ .Values.ingress.tls.secretName }}
   ingressClassName: nginx
   rules:
