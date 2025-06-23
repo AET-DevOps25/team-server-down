@@ -13,9 +13,9 @@ spec:
   tls:
     - hosts:
       {{- range .Values.ingress.tls.hosts }}
-      - {{ tpl . $ }}
+        - {{ tpl . $ }}
       {{- end }}
-      secretName: {{ .Values.ingress.tls.secretName }}
+      secretName: {{ tpl .Values.ingress.tls.secretName $ }}
   ingressClassName: nginx
   rules:
       {{- range .Values.ingress.rules }}
