@@ -18,9 +18,25 @@ jobs:
       repo: ${{ steps.set-vars.outputs.repo }}
       tag: ${{ steps.set-vars.outputs.tag }}
       api_url: ${{ steps.set-vars.outputs.api_url }}
+      merge_commit: ${{ steps.merge-base-branch.outputs.merge_commit }}
     steps:
       - name: Checkout
         uses: actions/checkout@v3
+        with:
+          fetch-depth: 0
+          ref: ${{ github.head_ref }}
+
+      - name: Fetch base branch
+        if: github.event_name == 'pull_request'
+        run: |
+          git fetch origin ${{ github.base_ref }}
+
+      - name: Merge base branch into PR branch
+        id: merge-base-branch
+        if: github.event_name == 'pull_request'
+        run: |
+          git merge origin/${{ github.base_ref }} --no-ff --no-edit
+          echo "merge_commit=$(git rev-parse HEAD)" >> $GITHUB_OUTPUT
 
       - name: Set variables
         id: set-vars
@@ -44,6 +60,9 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v3
+        with:
+          fetch-depth: 0
+          ref: ${{ needs.setup.outputs.merge_commit }}
 
       - name: Set up Docker Buildx
         uses: docker/setup-buildx-action@v2
@@ -78,6 +97,9 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v3
+        with:
+          fetch-depth: 0
+          ref: ${{ needs.setup.outputs.merge_commit }}
 
       - name: Set up Docker Buildx
         uses: docker/setup-buildx-action@v2
@@ -119,6 +141,9 @@ jobs:
     steps:
       - name: Checkout repository
         uses: actions/checkout@v3
+        with:
+          fetch-depth: 0
+          ref: ${{ needs.setup.outputs.merge_commit }}
 
       - name: Set variables
         id: set-vars
