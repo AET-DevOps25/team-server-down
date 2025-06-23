@@ -775,12 +775,12 @@
       "clientAuthenticatorType": "client-secret",
       "secret": "SXiMvr1GG10bk2J63ODZC9SOaoAZ4dbe",
       "redirectUris": [
-        "{{ .client.url }}/*",
-        "{{ .server.url }}/*"
+        "{{ .Values.client.url }}/*",
+        "{{ .Values.server.url }}/*"
       ],
       "webOrigins": [
-        "{{ .client.url }}/*",
-        "{{ .server.url }}/*"
+        "{{ .Values.client.url }}/*",
+        "{{ .Values.server.url }}/*"
       ],
       "notBefore": 0,
       "bearerOnly": false,
@@ -796,7 +796,7 @@
         "oidc.ciba.grant.enabled": "false",
         "client.secret.creation.time": "1708880081",
         "backchannel.logout.session.required": "true",
-        "post.logout.redirect.uris": "{{ .client.url }}##{{ .server.url }}",
+        "post.logout.redirect.uris": "{{ .Values.client.url }}##{{ .Values.server.url }}",
         "display.on.consent.screen": "false",
         "oauth2.device.authorization.grant.enabled": "true",
         "backchannel.logout.revoke.offline.tokens": "false"
