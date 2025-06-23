@@ -776,10 +776,10 @@
       "secret": "SXiMvr1GG10bk2J63ODZC9SOaoAZ4dbe",
       "redirectUris": [
         "http://localhost:3000/api/auth/callback/keycloak",
-        "http://localhost:8000/*"
+        "http://localhost:9091/*"
       ],
       "webOrigins": [
-        "http://localhost:8000",
+        "http://localhost:9091",
         "http://localhost:3000"
       ],
       "notBefore": 0,
@@ -796,7 +796,7 @@
         "oidc.ciba.grant.enabled": "false",
         "client.secret.creation.time": "1708880081",
         "backchannel.logout.session.required": "true",
-        "post.logout.redirect.uris": "http://localhost:3000",
+        "post.logout.redirect.uris": "http://localhost:3000##http://localhost:9091",
         "display.on.consent.screen": "false",
         "oauth2.device.authorization.grant.enabled": "true",
         "backchannel.logout.revoke.offline.tokens": "false"
