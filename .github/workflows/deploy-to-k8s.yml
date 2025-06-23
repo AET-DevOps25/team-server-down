@@ -191,7 +191,7 @@ jobs:
 
       - name: Deploy App with Helm
         run: |
-          helm upgrade whiteboard ./infrastructure/whiteboard-app/ \
+          helm upgrade whiteboard-${{ env.NAMESPACE }} ./infrastructure/whiteboard-app/ \
             -f ${{ env.VALUES_FILE }} \
             -n tsd-${{ env.NAMESPACE }} \
             --create-namespace \
