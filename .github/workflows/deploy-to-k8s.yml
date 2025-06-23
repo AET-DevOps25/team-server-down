@@ -205,6 +205,4 @@ jobs:
               issue_number: prNumber,
               body,
             });
-            } else {
-              console.log('Comment already exists, skipping...');
             }
