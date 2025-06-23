@@ -1,6 +1,0 @@
-apiVersion: v1
-kind: Namespace
-metadata:
-  name: "tsd-{{ .Values.namespace }}"
-  annotations:
-    field.cattle.io/projectId: c-m-nhcfjg9h:p-llclz
