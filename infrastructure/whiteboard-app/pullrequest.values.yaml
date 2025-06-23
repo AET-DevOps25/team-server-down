@@ -1,4 +1,4 @@
-namespace: "tsd-{{ .Values.namespace }}"
+namespace: 'tsd-{{ .Values.namespace }}'
 
 client:
   image:
@@ -14,15 +14,15 @@ client:
     - name: KEYCLOAK_CLIENT_SECRET
       value: SXiMvr1GG10bk2J63ODZC9SOaoAZ4dbe
     - name: NEXTAUTH_URL
-      value: "{{ .Values.client.url }}/api/auth/"
+      value: '{{ .Values.client.url }}/api/auth/'
     - name: NEXTAUTH_SECRET
       value: feZJWB3mcQ93VBmqHKQI5er5NEIxcDPb3wtT/KaLB9s=
     - name: KEYCLOAK_CLIENT_ID
       value: webclient
     - name: KEYCLOAK_ISSUER
-      value: "{{ .Values.auth.url }}/realms/{{ .Values.namespace }}"
+      value: '{{ .Values.auth.url }}/realms/{{ .Values.namespace }}'
     - name: KEYCLOAK_END_SESSION_ENDPOINT
-      value: "{{ .Values.auth.url }}/realms/{{ .Values.namespace }}/protocol/openid-connect/logout"
+      value: '{{ .Values.auth.url }}/realms/{{ .Values.namespace }}/protocol/openid-connect/logout'
 
 server:
   image:
@@ -45,11 +45,11 @@ server:
     - name: DB_PASSWORD
       value: password
     - name: ALLOWED_ORIGIN
-      value: "{{ .Values.client.url }}"
+      value: '{{ .Values.client.url }}'
     - name: IDP_INTERNAL_URI
-      value: "{{ .Values.auth.url }}/realms/{{ .Values.namespace }}"
+      value: '{{ .Values.auth.url }}/realms/{{ .Values.namespace }}'
     - name: IDP_EXTERNAL_URI
-      value: "{{ .Values.auth.url }}/realms/{{ .Values.namespace }}"
+      value: '{{ .Values.auth.url }}/realms/{{ .Values.namespace }}'
   replicaCount: 1
 
 postgresql:
@@ -72,7 +72,7 @@ postgresql:
 keycloak:
   ingress:
     enabled: true
-    hostname: "{{ .Values.auth.url }}"
+    hostname: '{{ .Values.auth.url }}'
   auth:
     adminUser: admin
     adminPassword: password
@@ -109,12 +109,12 @@ ingress:
     nginx.ingress.kubernetes.io/proxy-buffer-size: "8k"
   tls:
     hosts:
-      - "{{ .Values.client.url }}"
-      - "{{ .Values.server.url }}"
-      - "{{ .Values.auth.url }}"
+      - '{{ .Values.client.url }}'
+      - '{{ .Values.server.url }}'
+      - '{{ .Values.auth.url }}'
     secretName: "{{ .Values.namespace }}-whiteboard-devops25-tls"
   rules:
-    - host: "{{ .Values.client.url }}"
+    - host: '{{ .Values.client.url }}'
       paths:
         - path: /
           pathType: Prefix
@@ -122,7 +122,7 @@ ingress:
               name: client-service
               port:
                 number: 3000
-    - host: "{{ .Values.server.url }}"
+    - host: '{{ .Values.server.url }}'
       paths:
         - path: /
           pathType: Prefix
@@ -130,7 +130,7 @@ ingress:
             name: server-service
             port:
               number: 9091
-    - host: "{{ .Values.auth.url }}"
+    - host: '{{ .Values.auth.url }}'
       paths:
         - path: /
           pathType: Prefix
