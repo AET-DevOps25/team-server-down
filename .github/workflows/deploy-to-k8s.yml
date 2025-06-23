@@ -186,12 +186,19 @@ jobs:
           echo "${{ secrets.KUBECONFIG }}" > kubeconfig
           echo "KUBECONFIG=$(pwd)/kubeconfig" >> $GITHUB_ENV
 
+      - name: Set release name
+        id: release-name
+        run: |
+          PR_NUMBER=${{ github.event.pull_request.number }}
+          RELEASE_NAME="whiteboard-pr-${PR_NUMBER}"
+          echo "RELEASE_NAME=${RELEASE_NAME}" >> $GITHUB_ENV
+
       - name: Install Helm
         uses: azure/setup-helm@v3
 
       - name: Deploy App with Helm
         run: |
-          helm upgrade whiteboard-${{ env.NAMESPACE }} ./infrastructure/whiteboard-app/ \
+          helm upgrade whiteboard-${{ env.RELEASE_NAME }} ./infrastructure/whiteboard-app/ \
             -f ${{ env.VALUES_FILE }} \
             -n tsd-${{ env.NAMESPACE }} \
             --create-namespace \
