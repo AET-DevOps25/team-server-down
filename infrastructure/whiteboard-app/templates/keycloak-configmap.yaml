@@ -4,6 +4,5 @@ metadata:
   name: keycloak-configmap
 data:
   realm-export.json: |-
-{{- $env := .Values.environment }}
-{{- $filename := printf "files/keycloak/realm-export-%s.json" $env }}
-{{ .Files.Get $filename | indent 4 }}
+{{- $realmJson := .Files.Get "files/keycloak/realm-export.json" }}
+{{- tpl $realmJson . | indent 4 }}

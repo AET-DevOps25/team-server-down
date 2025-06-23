@@ -1,9 +1,9 @@
-environment: staging
+namespace: "tsd-{{ .Values.namespace }}"
 
 client:
   image:
     repository: ghcr.io/aet-devops25/team-server-down/client
-    tag: develop
+    tag: ""
     pullPolicy: Always
   service:
     type: ClusterIP
@@ -14,20 +14,20 @@ client:
     - name: KEYCLOAK_CLIENT_SECRET
       value: SXiMvr1GG10bk2J63ODZC9SOaoAZ4dbe
     - name: NEXTAUTH_URL
-      value: https://staging.whiteboard.student.k8s.aet.cit.tum.de/api/auth/
+      value: "{{ .Values.client.url }}/api/auth/"
     - name: NEXTAUTH_SECRET
       value: feZJWB3mcQ93VBmqHKQI5er5NEIxcDPb3wtT/KaLB9s=
     - name: KEYCLOAK_CLIENT_ID
       value: webclient
     - name: KEYCLOAK_ISSUER
-      value: https://staging.auth.whiteboard.student.k8s.aet.cit.tum.de/realms/staging
+      value: "{{ .Values.auth.url }}/realms/{{ .Values.namespace }}"
     - name: KEYCLOAK_END_SESSION_ENDPOINT
-      value: https://staging.auth.whiteboard.student.k8s.aet.cit.tum.de/realms/staging/protocol/openid-connect/logout
+      value: "{{ .Values.auth.url }}/realms/{{ .Values.namespace }}/protocol/openid-connect/logout"
 
 server:
   image:
     repository: ghcr.io/aet-devops25/team-server-down/server
-    tag: develop
+    tag: ""
     pullPolicy: Always
   service:
     type: ClusterIP
@@ -45,9 +45,11 @@ server:
     - name: DB_PASSWORD
       value: password
     - name: ALLOWED_ORIGIN
-      value: "https://staging.whiteboard.student.k8s.aet.cit.tum.de"
-    - name: IDP_URI
-      value: "https://staging.auth.whiteboard.student.k8s.aet.cit.tum.de/realms/staging"
+      value: "{{ .Values.client.url }}"
+    - name: IDP_INTERNAL_URI
+      value: "{{ .Values.auth.url }}/realms/{{ .Values.namespace }}"
+    - name: IDP_EXTERNAL_URI
+      value: "{{ .Values.auth.url }}/realms/{{ .Values.namespace }}"
   replicaCount: 1
 
 postgresql:
@@ -70,7 +72,7 @@ postgresql:
 keycloak:
   ingress:
     enabled: true
-    hostname: staging.auth.whiteboard.student.k8s.aet.cit.tum.de
+    hostname: "{{ .Values.auth.url }}"
   auth:
     adminUser: admin
     adminPassword: password
@@ -107,20 +109,20 @@ ingress:
     nginx.ingress.kubernetes.io/proxy-buffer-size: "8k"
   tls:
     hosts:
-      - "staging.whiteboard.student.k8s.aet.cit.tum.de"
-      - "staging.api.whiteboard.student.k8s.aet.cit.tum.de"
-      - "staging.auth.whiteboard.student.k8s.aet.cit.tum.de"
-    secretName: "staging-whiteboard-devops25-tls"
+      - "{{ .Values.client.url }}"
+      - "{{ .Values.server.url }}"
+      - "{{ .Values.auth.url }}"
+    secretName: "{{ .Values.namespace }}-whiteboard-devops25-tls"
   rules:
-    - host: "staging.whiteboard.student.k8s.aet.cit.tum.de"
+    - host: "{{ .Values.client.url }}"
       paths:
         - path: /
           pathType: Prefix
           service:
-            name: client-service
-            port:
-              number: 3000
-    - host: "staging.api.whiteboard.student.k8s.aet.cit.tum.de"
+              name: client-service
+              port:
+                number: 3000
+    - host: "{{ .Values.server.url }}"
       paths:
         - path: /
           pathType: Prefix
@@ -128,7 +130,7 @@ ingress:
             name: server-service
             port:
               number: 9091
-    - host: "staging.auth.whiteboard.student.k8s.aet.cit.tum.de"
+    - host: "{{ .Values.auth.url }}"
       paths:
         - path: /
           pathType: Prefix
