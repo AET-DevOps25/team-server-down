@@ -153,8 +153,7 @@ jobs:
 
       - name: Create Namespace
         run: |
-          kubectl get namespace "${{ env.NAMESPACE }}" \
-            || kubectl create namespace "${{ env.NAMESPACE }}"
+          kubectl create namespace "${{ env.NAMESPACE }}" || true
         env:
           KUBECONFIG: ${{ env.KUBECONFIG }}
 
