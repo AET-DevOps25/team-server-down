@@ -1,5 +1,3 @@
-namespace: 'tsd-{{ .Values.namespace }}'
-
 client:
   image:
     repository: ghcr.io/aet-devops25/team-server-down/client
