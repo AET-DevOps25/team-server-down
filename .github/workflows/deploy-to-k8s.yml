@@ -160,9 +160,9 @@ jobs:
             --install \
             --atomic \
             --kubeconfig ${{ env.KUBECONFIG }} \
-            --set namespace=${{ env.NAMESPACE }} \
-            --set server.image.tag=${{ env.IMAGE_TAG }} \
-            --set client.image.tag=${{ env.IMAGE_TAG }} \
-            --set client.url=${{ env.CLIENT_URL }} \
-            --set server.url=${{ env.SERVER_URL }} \
-            --set auth.url=${{ env.AUTH_URL }}
+            --set namespace="${{ env.NAMESPACE }}" \
+            --set server.image.tag="${{ env.IMAGE_TAG }}" \
+            --set client.image.tag="${{ env.IMAGE_TAG }}" \
+            --set client.url="${{ env.CLIENT_URL }}" \
+            --set server.url="${{ env.SERVER_URL }}" \
+            --set auth.url="${{ env.AUTH_URL }}"
