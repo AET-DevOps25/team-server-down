@@ -112,7 +112,7 @@ ingress:
       - '{{ .Values.client.url }}'
       - '{{ .Values.server.url }}'
       - '{{ .Values.auth.url }}'
-    secretName: "{{ .Values.namespace }}-whiteboard-devops25-tls"
+    secretName: '{{ .Values.namespace }}-whiteboard-devops25-tls'
   rules:
     - host: '{{ .Values.client.url }}'
       paths:
