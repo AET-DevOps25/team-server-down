@@ -151,6 +151,13 @@ jobs:
       - name: Install Helm
         uses: azure/setup-helm@v3
 
+      - name: Create Namespace
+        run: |
+          kubectl get namespace "${{ env.NAMESPACE }}" \
+            || kubectl create namespace "${{ env.NAMESPACE }}"
+        env:
+          KUBECONFIG: ${{ env.KUBECONFIG }}
+
       - name: Deploy App with Helm
         run: |
           helm upgrade whiteboard ./infrastructure/whiteboard-app/ \
