@@ -1,4 +1,4 @@
-name: Build and Publish Docker Image to GHCR
+name: Deploy to Kubernetes
 
 on:
   push:
@@ -38,11 +38,13 @@ jobs:
           if [[ "${GITHUB_REF##*/}" == "main" ]]; then
             echo "TAG=latest" >> $GITHUB_ENV
             echo "NAMESPACE=tsd-prod" >> $GITHUB_ENV
-            echo "VALUES_FILE=./helm/whiteboard-app/production.values.yaml" >> $GITHUB_ENV
+            echo "VALUES_FILE=./infrastructure/whiteboard-app/production.values.yaml" >> $GITHUB_ENV
+            echo "ENV=production" >> $GITHUB_ENV
           elif [[ "${GITHUB_REF##*/}" == "develop" ]]; then
             echo "TAG=develop" >> $GITHUB_ENV
             echo "NAMESPACE=tsd-staging" >> $GITHUB_ENV
-            echo "VALUES_FILE=./helm/whiteboard-app/staging.values.yaml" >> $GITHUB_ENV
+            echo "VALUES_FILE=./infrastructure/whiteboard-app/staging.values.yaml" >> $GITHUB_ENV
+            echo "ENV=staging" >> $GITHUB_ENV
           fi
 
       - name: Client -> Build and push Docker image
@@ -52,6 +54,7 @@ jobs:
           file: ./client/Dockerfile
           push: true
           tags: ghcr.io/${{ env.REPO }}/client:${{ env.TAG }}
+          build-args: ENV=${{ env.ENV }}
           platforms: linux/amd64
 
       - name: Server -> Build and push Docker image
@@ -61,8 +64,8 @@ jobs:
           file: ./server/Dockerfile
           push: true
           tags: ghcr.io/${{ env.REPO }}/server:${{ env.TAG }}
+          build-args: ENV=${{ env.ENV }}
           platforms: linux/amd64
-
 
       - name: Set up Kubeconfig
         run: |
@@ -74,7 +77,7 @@ jobs:
 
       - name: Deploy App with Helm
         run: |
-          helm upgrade whiteboard ./helm/whiteboard-app/ \
+          helm upgrade whiteboard ./infrastructure/whiteboard-app/ \
             -f ${{ env.VALUES_FILE }} \
             -n ${{ env.NAMESPACE }} \
             --install \

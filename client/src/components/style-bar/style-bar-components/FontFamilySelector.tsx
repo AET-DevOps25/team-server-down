@@ -21,14 +21,14 @@ export default function FontFamilySelector({
   return (
     <div className="flex items-center">
       <Select value={fontFamily} onValueChange={onChangeFontFamily}>
-        <SelectTrigger className=" w-[90px]  h-8 border-0 ring-0 shadow-none bg-transparent hover:bg-gray-50 focus:ring-0">
+        <SelectTrigger className="h-8 w-[90px] border-0 bg-transparent shadow-none ring-0 hover:bg-gray-50 focus:ring-0">
           <SelectValue>
             <span style={{ fontFamily: getFontStyle(fontFamily) }}>
               {fontFamily}
             </span>
           </SelectValue>
         </SelectTrigger>
-        <SelectContent className="w-50 max-h-80 p-1">
+        <SelectContent className="max-h-80 w-50 p-1">
           <SelectGroup>
             {Object.entries(allFonts).map(([fontName, fontFamily]) => (
               <SelectItem
