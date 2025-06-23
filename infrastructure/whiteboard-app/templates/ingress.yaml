@@ -12,9 +12,9 @@ metadata:
 spec:
   tls:
     - hosts:
-          {{- range .Values.ingress.tls.hosts }}
+        {{- range .Values.ingress.tls.hosts }}
         - {{ tpl . $ | quote }}
-          {{- end }}
+        {{- end }}
       secretName: {{ .Values.ingress.tls.secretName }}
   ingressClassName: nginx
   rules:
@@ -22,7 +22,7 @@ spec:
     - host: {{ .host }}
       http:
         paths:
-            {{- range .paths }}
+          {{- range .paths }}
           - path: {{ .path }}
             pathType: {{ .pathType }}
             backend:
@@ -30,6 +30,6 @@ spec:
                 name: {{ tpl .service.name $ | quote }}
                 port:
                   number: {{ .service.port.number }}
-            {{- end}}
+          {{- end}}
       {{- end }}
 {{- end }}
