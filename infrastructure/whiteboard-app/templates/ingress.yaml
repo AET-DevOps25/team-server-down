@@ -3,7 +3,7 @@ apiVersion: networking.k8s.io/v1
 kind: Ingress
 metadata:
   name: "whiteboard-ingress"
-  namespace: {{ .Values.namespace  }}
+  namespace: {{ tpl .Values.namespace $ }}
   {{- $annotations := .Values.ingress.annotations | default dict }}
   {{- if $annotations }}
   annotations:
@@ -19,7 +19,7 @@ spec:
   ingressClassName: nginx
   rules:
       {{- range .Values.ingress.rules }}
-    - host: {{ .host }}
+    - host: {{ tpl .host $ }}
       http:
         paths:
           {{- range .paths }}

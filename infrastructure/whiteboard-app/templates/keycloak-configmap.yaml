@@ -5,4 +5,4 @@ metadata:
 data:
   realm-export.json: |-
 {{- $realmJson := .Files.Get "files/keycloak/realm-export.json" }}
-{{- tpl $realmJson . | indent 4 }}
+{{ tpl $realmJson . | indent 4 }}
