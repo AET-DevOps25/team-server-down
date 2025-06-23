@@ -117,7 +117,7 @@ ingress:
         - path: /
           pathType: Prefix
           service:
-              name: client-service
+              name: '{{ printf "%s-client" .Release.Name }}'
               port:
                 number: 3000
     - host: '{{ .Values.server.url }}'
@@ -125,7 +125,7 @@ ingress:
         - path: /
           pathType: Prefix
           service:
-            name: server-service
+            name: '{{ printf "%s-server" .Release.Name }}'
             port:
               number: 9091
     - host: '{{ .Values.auth.url }}'
