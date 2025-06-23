@@ -22,7 +22,7 @@ import org.springframework.stereotype.Service;
 @Service
 public class JWTValidator {
   private static final String JWKS_URL =
-      System.getenv("IDP_URI") + "/protocol/openid-connect/certs";
+      System.getenv("IDP_INTERNAL_URI") + "/protocol/openid-connect/certs";
 
   public DecodedJWT validateToken(String token) throws JWTVerificationException {
     DecodedJWT decoded = JWT.decode(token);

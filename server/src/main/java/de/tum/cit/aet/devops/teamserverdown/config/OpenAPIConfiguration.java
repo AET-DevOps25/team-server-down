@@ -1,11 +1,13 @@
 package de.tum.cit.aet.devops.teamserverdown.config;
 
 import de.tum.cit.aet.devops.teamserverdown.security.CurrentUser;
+import io.swagger.v3.oas.models.Components;
 import io.swagger.v3.oas.models.ExternalDocumentation;
 import io.swagger.v3.oas.models.OpenAPI;
 import io.swagger.v3.oas.models.Operation;
 import io.swagger.v3.oas.models.info.Info;
 import io.swagger.v3.oas.models.parameters.Parameter;
+import io.swagger.v3.oas.models.security.*;
 import java.util.Iterator;
 import java.util.List;
 import org.springdoc.core.customizers.OperationCustomizer;
@@ -19,6 +21,28 @@ public class OpenAPIConfiguration {
 
   @Bean
   public OpenAPI openAPI() {
+    final String securitySchemeName = "keycloak";
+
+    Scopes scopes =
+        new Scopes()
+            .addString("openid", "OpenID Connect scope")
+            .addString("profile", "Access profile information");
+
+    SecurityScheme securityScheme =
+        new SecurityScheme()
+            .type(SecurityScheme.Type.OAUTH2)
+            .description("Keycloak OAuth2 login")
+            .flows(
+                new OAuthFlows()
+                    .authorizationCode(
+                        new OAuthFlow()
+                            .authorizationUrl(
+                                System.getenv("IDP_EXTERNAL_URI") + "/protocol/openid-connect/auth")
+                            .tokenUrl(
+                                System.getenv("IDP_EXTERNAL_URI")
+                                    + "/protocol/openid-connect/token")
+                            .scopes(scopes)));
+
     return new OpenAPI()
         .info(
             new Info()
@@ -28,7 +52,9 @@ public class OpenAPIConfiguration {
         .externalDocs(
             new ExternalDocumentation()
                 .description("README.md")
-                .url("https://github.com/AET-DevOps25/team-server-down"));
+                .url("https://github.com/AET-DevOps25/team-server-down"))
+        .components(new Components().addSecuritySchemes(securitySchemeName, securityScheme))
+        .addSecurityItem(new SecurityRequirement().addList(securitySchemeName));
   }
 
   @Bean
