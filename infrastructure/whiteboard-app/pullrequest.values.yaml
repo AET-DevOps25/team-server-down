@@ -69,7 +69,8 @@ postgresql:
 
 keycloak:
   ingress:
-    enabled: false
+    enabled: true
+    hostname: ""
   auth:
     adminUser: admin
     adminPassword: password
@@ -84,8 +85,6 @@ keycloak:
   extraEnvVars:
     - name: KEYCLOAK_EXTRA_ARGS
       value: "--import-realm"
-    - name: KC_HOSTNAME
-      value: '{{ .Values.auth.url }}'
     - name: KC_PROXY
       value: edge
     - name: KC_PROXY_HEADERS

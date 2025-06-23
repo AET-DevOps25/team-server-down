@@ -210,7 +210,8 @@ jobs:
             --set client.image.tag="${{ env.IMAGE_TAG }}" \
             --set client.url="${{ env.CLIENT_URL }}" \
             --set server.url="${{ env.SERVER_URL }}" \
-            --set auth.url="${{ env.AUTH_URL }}"
+            --set auth.url="${{ env.AUTH_URL }}" \
+            --set keycloak.ingress.hostname="${{ env.AUTH_URL }}"
 
   comment-pr:
     needs: deploy
