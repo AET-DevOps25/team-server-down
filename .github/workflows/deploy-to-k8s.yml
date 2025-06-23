@@ -1,0 +1,250 @@
+name: Deploy to Kubernetes
+
+on:
+  push:
+    branches:
+      - main
+      - develop
+  pull_request:
+    types: [ opened, synchronize, reopened ]
+    branches:
+      - develop
+
+jobs:
+  setup:
+    runs-on: ubuntu-latest
+    if: github.event.pull_request.draft == false
+    outputs:
+      repo: ${{ steps.set-vars.outputs.repo }}
+      tag: ${{ steps.set-vars.outputs.tag }}
+      api_url: ${{ steps.set-vars.outputs.api_url }}
+      merge_commit: ${{ steps.merge-base-branch.outputs.merge_commit }}
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+        with:
+          fetch-depth: 0
+          ref: ${{ github.head_ref }}
+
+      - name: Fetch base branch
+        if: github.event_name == 'pull_request'
+        run: |
+          git fetch origin ${{ github.base_ref }}
+
+      - name: Merge base branch into PR branch
+        id: merge-base-branch
+        if: github.event_name == 'pull_request'
+        run: |
+          git merge origin/${{ github.base_ref }} --no-ff --no-edit
+          echo "merge_commit=$(git rev-parse HEAD)" >> $GITHUB_OUTPUT
+
+      - name: Set variables
+        id: set-vars
+        run: |
+          BRANCH="${GITHUB_HEAD_REF:-${GITHUB_REF##*/}}"
+          echo "repo=${GITHUB_REPOSITORY,,}" >> $GITHUB_OUTPUT
+          if [[ "$BRANCH" == "main" ]]; then
+            echo "tag=latest" >> $GITHUB_OUTPUT
+            echo "api_url=https://api.whiteboard.student.k8s.aet.cit.tum.de" >> $GITHUB_OUTPUT
+          elif [[ "$BRANCH" == "develop" ]]; then
+            echo "tag=develop" >> $GITHUB_OUTPUT
+            echo "api_url=https://staging.api.whiteboard.student.k8s.aet.cit.tum.de" >> $GITHUB_OUTPUT
+          else
+            BRANCH_SAFE=${BRANCH//\//-}
+            echo "tag=$BRANCH_SAFE" >> $GITHUB_OUTPUT
+            echo "api_url=https://$BRANCH_SAFE.api.whiteboard.student.k8s.aet.cit.tum.de" >> $GITHUB_OUTPUT
+          fi
+
+  build-client:
+    needs: setup
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+        with:
+          fetch-depth: 0
+          ref: ${{ needs.setup.outputs.merge_commit }}
+
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v2
+
+      - name: Log in to GHCR
+        uses: docker/login-action@v2
+        with:
+          registry: ghcr.io
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Cache Docker layers
+        uses: actions/cache@v3
+        with:
+          path: /tmp/.buildx-cache-client
+          key: ${{ runner.os }}-client-${{ github.sha }}
+          restore-keys: |
+            ${{ runner.os }}-client-
+
+      - name: Build and push client image
+        uses: docker/build-push-action@v3
+        with:
+          context: ./client
+          file: ./client/Dockerfile
+          push: true
+          tags: ghcr.io/${{ needs.setup.outputs.repo }}/client:${{ needs.setup.outputs.tag }}
+          build-args: API_URL=${{ needs.setup.outputs.api_url }}
+          platforms: linux/amd64
+
+  build-server:
+    needs: setup
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+        with:
+          fetch-depth: 0
+          ref: ${{ needs.setup.outputs.merge_commit }}
+
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v2
+
+      - name: Log in to GHCR
+        uses: docker/login-action@v2
+        with:
+          registry: ghcr.io
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Cache Docker layers
+        uses: actions/cache@v3
+        with:
+          path: /tmp/.buildx-cache-server
+          key: ${{ runner.os }}-server-${{ github.sha }}
+          restore-keys: |
+            ${{ runner.os }}-server-
+
+      - name: Build and push server image
+        uses: docker/build-push-action@v3
+        with:
+          context: ./server
+          file: ./server/Dockerfile
+          push: true
+          tags: ghcr.io/${{ needs.setup.outputs.repo }}/server:${{ needs.setup.outputs.tag }}
+          build-args: API_URL=${{ needs.setup.outputs.api_url }}
+          platforms: linux/amd64
+
+  deploy:
+    needs:
+      - build-client
+      - build-server
+    runs-on: ubuntu-latest
+    outputs:
+      client_url: ${{ steps.set-vars.outputs.CLIENT_URL }}
+      server_url: ${{ steps.set-vars.outputs.SERVER_URL }}
+      auth_url: ${{ steps.set-vars.outputs.AUTH_URL }}
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v3
+        with:
+          fetch-depth: 0
+          ref: ${{ needs.setup.outputs.merge_commit }}
+
+      - name: Set variables
+        id: set-vars
+        run: |
+          BRANCH="${GITHUB_HEAD_REF:-${GITHUB_REF##*/}}"
+          if [[ "$BRANCH" == "main" ]]; then
+            CLIENT_URL=whiteboard.student.k8s.aet.cit.tum.de
+            SERVER_URL=api.whiteboard.student.k8s.aet.cit.tum.de
+            AUTH_URL=auth.whiteboard.student.k8s.aet.cit.tum.de
+            echo "NAMESPACE=tsd-prod" >> $GITHUB_ENV
+            echo "IMAGE_TAG=latest" >> $GITHUB_ENV
+            echo "VALUES_FILE=./infrastructure/whiteboard-app/production.values.yaml" >> $GITHUB_ENV
+          elif [[ "$BRANCH" == "develop" ]]; then
+            CLIENT_URL=staging.whiteboard.student.k8s.aet.cit.tum.de
+            SERVER_URL=staging.api.whiteboard.student.k8s.aet.cit.tum.de
+            AUTH_URL=staging.auth.whiteboard.student.k8s.aet.cit.tum.de
+            echo "NAMESPACE=tsd-staging" >> $GITHUB_ENV
+            echo "IMAGE_TAG=develop" >> $GITHUB_ENV
+            echo "VALUES_FILE=./infrastructure/whiteboard-app/staging.values.yaml" >> $GITHUB_ENV
+          else
+            BRANCH_SAFE=${BRANCH//\//-}
+            CLIENT_URL=$BRANCH_SAFE.whiteboard.student.k8s.aet.cit.tum.de
+            SERVER_URL=$BRANCH_SAFE.api.whiteboard.student.k8s.aet.cit.tum.de
+            AUTH_URL=$BRANCH_SAFE.auth.whiteboard.student.k8s.aet.cit.tum.de
+            echo "NAMESPACE=tsd-$BRANCH_SAFE" >> $GITHUB_ENV
+            echo "IMAGE_TAG=$BRANCH_SAFE" >> $GITHUB_ENV
+            echo "VALUES_FILE=./infrastructure/whiteboard-app/pullrequest.values.yaml" >> $GITHUB_ENV
+          fi
+          
+          echo "CLIENT_URL=$CLIENT_URL" >> $GITHUB_ENV
+          echo "SERVER_URL=$SERVER_URL" >> $GITHUB_ENV
+          echo "AUTH_URL=$AUTH_URL" >> $GITHUB_ENV
+          
+          echo "CLIENT_URL=$CLIENT_URL" >> $GITHUB_OUTPUT
+          echo "SERVER_URL=$SERVER_URL" >> $GITHUB_OUTPUT
+          echo "AUTH_URL=$AUTH_URL" >> $GITHUB_OUTPUT
+
+      - name: Set up Kubeconfig
+        run: |
+          echo "${{ secrets.KUBECONFIG }}" > kubeconfig
+          echo "KUBECONFIG=$(pwd)/kubeconfig" >> $GITHUB_ENV
+
+      - name: Install Helm
+        uses: azure/setup-helm@v3
+
+      - name: Deploy App with Helm
+        run: |
+          helm upgrade whiteboard ./infrastructure/whiteboard-app/ \
+            -f ${{ env.VALUES_FILE }} \
+            -n ${{ env.NAMESPACE }} \
+            --create-namespace \
+            --install \
+            --atomic \
+            --kubeconfig ${{ env.KUBECONFIG }} \
+            --set namespace="${{ env.NAMESPACE }}" \
+            --set server.image.tag="${{ env.IMAGE_TAG }}" \
+            --set client.image.tag="${{ env.IMAGE_TAG }}" \
+            --set client.url="${{ env.CLIENT_URL }}" \
+            --set server.url="${{ env.SERVER_URL }}" \
+            --set auth.url="${{ env.AUTH_URL }}"
+
+  comment-pr:
+    needs: deploy
+    runs-on: ubuntu-latest
+    if: github.event_name == 'pull_request'
+    env:
+      CLIENT_URL: ${{ needs.deploy.outputs.client_url }}
+      SERVER_URL: ${{ needs.deploy.outputs.server_url }}
+      AUTH_URL: ${{ needs.deploy.outputs.auth_url }}
+    steps:
+      - name: Comment on Pull Request with URLs
+        uses: actions/github-script@v6
+        with:
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+          script: |
+            const prNumber = context.payload.pull_request.number;
+            const clientUrl = `https://${process.env.CLIENT_URL}`;
+            const serverUrl = `https://${process.env.SERVER_URL}`;
+            const authUrl = `https://${process.env.AUTH_URL}`;
+            
+            // Check existing comments to avoid duplicates
+            const { data: comments } = await github.rest.issues.listComments({
+            ...context.repo,
+            issue_number: prNumber,
+            });
+            
+            const commentExists = comments.some(comment => 
+            comment.body.includes('### Deployment URLs')
+            );
+            
+            if (!commentExists) {
+            const body = `
+            ### Deployment URLs
+            - **Client:** [${clientUrl}](${clientUrl})
+            - **Server:** [${serverUrl}](${serverUrl})
+            - **Keycloak:** [${authUrl}](${authUrl})
+            `;
+          
+            await github.rest.issues.createComment({
+              ...context.repo,
+              issue_number: prNumber,
+              body,
+            });
+            }

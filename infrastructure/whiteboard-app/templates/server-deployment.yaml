@@ -2,7 +2,6 @@ apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: whiteboard-server
-  namespace: {{ .Values.namespace  }}
 spec:
   replicas: {{ .Values.server.replicaCount }}
   selector:
