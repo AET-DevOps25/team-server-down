@@ -1,6 +1,6 @@
 # AccountApi
 
-All URIs are relative to *http://server:9091*
+All URIs are relative to *http://localhost:9091*
 
 |Method | HTTP request | Description|
 |------------- | ------------- | -------------|

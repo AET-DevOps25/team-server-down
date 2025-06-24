@@ -3,7 +3,6 @@ apiVersion: networking.k8s.io/v1
 kind: Ingress
 metadata:
   name: "whiteboard-ingress"
-  namespace: {{ .Values.namespace  }}
   {{- $annotations := .Values.ingress.annotations | default dict }}
   {{- if $annotations }}
   annotations:
@@ -12,17 +11,17 @@ metadata:
 spec:
   tls:
     - hosts:
-          {{- range .Values.ingress.tls.hosts }}
-        - {{ . }}
-          {{- end }}
-      secretName: {{ .Values.ingress.tls.secretName }}
+      {{- range .Values.ingress.tls.hosts }}
+        - {{ tpl . $ }}
+      {{- end }}
+      secretName: {{ tpl .Values.ingress.tls.secretName $ }}
   ingressClassName: nginx
   rules:
       {{- range .Values.ingress.rules }}
-    - host: {{ .host }}
+    - host: {{ tpl .host $ }}
       http:
         paths:
-            {{- range .paths }}
+          {{- range .paths }}
           - path: {{ .path }}
             pathType: {{ .pathType }}
             backend:
@@ -30,6 +29,6 @@ spec:
                 name: {{ tpl .service.name $ | quote }}
                 port:
                   number: {{ .service.port.number }}
-            {{- end}}
+          {{- end}}
       {{- end }}
 {{- end }}

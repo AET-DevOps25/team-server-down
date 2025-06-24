@@ -7,8 +7,8 @@ import io.swagger.v3.oas.models.OpenAPI;
 import io.swagger.v3.oas.models.info.Info;
 import io.swagger.v3.oas.models.parameters.Parameter;
 import io.swagger.v3.oas.models.security.*;
-import java.util.Iterator;
-import java.util.List;
+import io.swagger.v3.oas.models.servers.Server;
+import java.util.*;
 import org.springdoc.core.customizers.OperationCustomizer;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -21,10 +21,7 @@ public class OpenAPIConfiguration {
   public OpenAPI openAPI() {
     final String securitySchemeName = "keycloak";
 
-    Scopes scopes =
-        new Scopes()
-            .addString("openid", "OpenID Connect scope")
-            .addString("profile", "Access profile information");
+    Scopes scopes = new Scopes();
 
     SecurityScheme securityScheme =
         new SecurityScheme()
@@ -47,6 +44,7 @@ public class OpenAPIConfiguration {
                 .title("Team Server Down")
                 .description("DevOps Application")
                 .version("v0.0.1"))
+        .servers(List.of(new Server().url(System.getenv("SERVER_URL"))))
         .externalDocs(
             new ExternalDocumentation()
                 .description("README.md")
@@ -73,12 +71,7 @@ public class OpenAPIConfiguration {
           if (methodParam.hasParameterAnnotation(CurrentUser.class)) {
             Class<?> paramType = methodParam.getParameterType();
 
-            // Check if OpenAPI param's schema ref or type matches the CurrentUser param type name
             String paramTypeName = paramType.getSimpleName();
-            String methodParamName = methodParam.getParameterName();
-            System.out.println("Param anam: " + paramTypeName);
-            System.out.println("openApiParam.getName(): " + openApiParam.getName());
-            System.out.println("methodParam: " + methodParamName);
 
             if (openApiParam.getName().equalsIgnoreCase(paramTypeName)
                 || (openApiParam.getSchema() != null
@@ -87,7 +80,6 @@ public class OpenAPIConfiguration {
               break;
             }
 
-            // Another check: sometimes parameter names are unavailable, try to check by type string
             if (openApiParam.getSchema() != null
                 && openApiParam.getSchema().get$ref() != null
                 && openApiParam.getSchema().get$ref().contains(paramType.getSimpleName())) {

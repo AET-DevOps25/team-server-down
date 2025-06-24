@@ -1,6 +1,6 @@
 {
   "id": "b36292b9-c4ed-4b3b-84b6-e9274821b709",
-  "realm": "staging",
+  "realm": "{{ .Values.namespace }}",
   "displayName": "",
   "displayNameHtml": "",
   "notBefore": 0,
@@ -50,7 +50,7 @@
     "realm": [
       {
         "id": "500d1053-80ba-47b9-8206-986de9ae2289",
-        "name": "default-roles-staging",
+        "name": "default-roles-{{ .Values.namespace }}",
         "description": "${role_default-roles}",
         "composite": true,
         "composites": {
@@ -409,7 +409,7 @@
   "groups": [],
   "defaultRole": {
     "id": "500d1053-80ba-47b9-8206-986de9ae2289",
-    "name": "default-roles-staging",
+    "name": "default-roles-{{ .Values.namespace }}",
     "description": "${role_default-roles}",
     "composite": true,
     "clientRole": false,
@@ -482,13 +482,13 @@
       "clientId": "account",
       "name": "${client_account}",
       "rootUrl": "${authBaseUrl}",
-      "baseUrl": "/realms/staging/account/",
+      "baseUrl": "/realms/{{ .Values.namespace }}/account/",
       "surrogateAuthRequired": false,
       "enabled": true,
       "alwaysDisplayInConsole": false,
       "clientAuthenticatorType": "client-secret",
       "redirectUris": [
-        "/realms/staging/account/*"
+        "/realms/{{ .Values.namespace }}/account/*"
       ],
       "webOrigins": [],
       "notBefore": 0,
@@ -526,13 +526,13 @@
       "clientId": "account-console",
       "name": "${client_account-console}",
       "rootUrl": "${authBaseUrl}",
-      "baseUrl": "/realms/staging/account/",
+      "baseUrl": "/realms/{{ .Values.namespace }}/account/",
       "surrogateAuthRequired": false,
       "enabled": true,
       "alwaysDisplayInConsole": false,
       "clientAuthenticatorType": "client-secret",
       "redirectUris": [
-        "/realms/staging/account/*"
+        "/realms/{{ .Values.namespace }}/account/*"
       ],
       "webOrigins": [],
       "notBefore": 0,
@@ -701,13 +701,13 @@
       "clientId": "security-admin-console",
       "name": "${client_security-admin-console}",
       "rootUrl": "${authAdminUrl}",
-      "baseUrl": "/admin/staging/console/",
+      "baseUrl": "/admin/{{ .Values.namespace }}/console/",
       "surrogateAuthRequired": false,
       "enabled": true,
       "alwaysDisplayInConsole": false,
       "clientAuthenticatorType": "client-secret",
       "redirectUris": [
-        "/admin/staging/console/*"
+        "/admin/{{ .Values.namespace }}/console/*"
       ],
       "webOrigins": [
         "+"
@@ -775,12 +775,12 @@
       "clientAuthenticatorType": "client-secret",
       "secret": "SXiMvr1GG10bk2J63ODZC9SOaoAZ4dbe",
       "redirectUris": [
-        "https://staging.whiteboard.student.k8s.aet.cit.tum.de/api/auth/callback/keycloak",
-        "https://staging.api.whiteboard.student.k8s.aet.cit.tum.de/*"
+        "https://{{ .Values.client.url }}/api/auth/callback/keycloak",
+        "https://{{ .Values.server.url }}/*"
       ],
       "webOrigins": [
-        "https://staging.api.whiteboard.student.k8s.aet.cit.tum.de",
-        "https://staging.whiteboard.student.k8s.aet.cit.tum.de"
+        "https://{{ .Values.client.url }}",
+        "https://{{ .Values.server.url }}"
       ],
       "notBefore": 0,
       "bearerOnly": false,
@@ -796,7 +796,7 @@
         "oidc.ciba.grant.enabled": "false",
         "client.secret.creation.time": "1708880081",
         "backchannel.logout.session.required": "true",
-        "post.logout.redirect.uris": "https://staging.whiteboard.student.k8s.aet.cit.tum.de##https://staging.api.whiteboard.student.k8s.aet.cit.tum.de",
+        "post.logout.redirect.uris": "https://{{ .Values.client.url }}##https://{{ .Values.server.url }}",
         "display.on.consent.screen": "false",
         "oauth2.device.authorization.grant.enabled": "true",
         "backchannel.logout.revoke.offline.tokens": "false"

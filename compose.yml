@@ -51,6 +51,7 @@ services:
       ALLOWED_ORIGIN: ${ALLOWED_ORIGIN:-http://localhost:3000}
       IDP_INTERNAL_URI: ${IDP_INTERNAL_URI:-http://keycloak:8080/realms/development}
       IDP_EXTERNAL_URI: ${IDP_EXTERNAL_URI:-http://localhost:8080/realms/development}
+      SERVER_URL: ${SERVER_URL:-http://localhost:9091}
     depends_on:
       db:
         condition: service_healthy

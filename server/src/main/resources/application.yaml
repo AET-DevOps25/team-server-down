@@ -1,6 +1,10 @@
 server:
   port: 9091
 
+springdoc:
+  swagger-ui:
+    oauth2-redirect-url: ${SERVER_URL}/swagger-ui/oauth2-redirect.html
+
 spring:
   security:
     oauth2:

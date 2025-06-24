@@ -1,7 +1,7 @@
 client:
   image:
     repository: ghcr.io/aet-devops25/team-server-down/client
-    tag: latest
+    tag: ""
     pullPolicy: Always
   service:
     type: ClusterIP
@@ -12,20 +12,20 @@ client:
     - name: KEYCLOAK_CLIENT_SECRET
       value: SXiMvr1GG10bk2J63ODZC9SOaoAZ4dbe
     - name: NEXTAUTH_URL
-      value: https://whiteboard.student.k8s.aet.cit.tum.de/api/auth/
+      value: 'https://{{ .Values.client.url }}/api/auth/'
     - name: NEXTAUTH_SECRET
       value: feZJWB3mcQ93VBmqHKQI5er5NEIxcDPb3wtT/KaLB9s=
     - name: KEYCLOAK_CLIENT_ID
       value: webclient
     - name: KEYCLOAK_ISSUER
-      value: https://auth.whiteboard.student.k8s.aet.cit.tum.de/realms/production
+      value: 'https://{{ .Values.auth.url }}/realms/{{ .Values.namespace }}'
     - name: KEYCLOAK_END_SESSION_ENDPOINT
-      value: https://auth.whiteboard.student.k8s.aet.cit.tum.de/realms/production/protocol/openid-connect/logout
+      value: 'https://{{ .Values.auth.url }}/realms/{{ .Values.namespace }}/protocol/openid-connect/logout'
 
 server:
   image:
     repository: ghcr.io/aet-devops25/team-server-down/server
-    tag: latest
+    tag: ""
     pullPolicy: Always
   service:
     type: ClusterIP
@@ -37,19 +37,19 @@ server:
     - name: DB_PORT
       value: "5432"
     - name: DB_NAME
-      value: postgres
+      value: main
     - name: DB_USER
       value: postgres
     - name: DB_PASSWORD
-      value: postgres
+      value: password
     - name: ALLOWED_ORIGIN
-      value: "https://whiteboard.student.k8s.aet.cit.tum.de"
+      value: 'https://{{ .Values.client.url }}'
     - name: IDP_INTERNAL_URI
-      value: "https://auth.whiteboard.student.k8s.aet.cit.tum.de/realms/production"
+      value: 'https://{{ .Values.auth.url }}/realms/{{ .Values.namespace }}'
     - name: IDP_EXTERNAL_URI
-      value: "https://auth.whiteboard.student.k8s.aet.cit.tum.de/realms/production"
+      value: 'https://{{ .Values.auth.url }}/realms/{{ .Values.namespace }}'
     - name: SERVER_URL
-      value: "https://api.whiteboard.student.k8s.aet.cit.tum.de"
+      value: 'https://{{ .Values.server.url }}'
   replicaCount: 1
 
 postgresql:
@@ -91,7 +91,7 @@ keycloak:
     - name: KC_PROXY_HEADERS
       value: xforwarded
     - name: KC_HOSTNAME
-      value: auth.whiteboard.student.k8s.aet.cit.tum.de
+      value: '{{ .Values.auth.url }}'
   extraVolumes:
     - name: realm-export
       configMap:
@@ -110,28 +110,28 @@ ingress:
     nginx.ingress.kubernetes.io/proxy-buffer-size: "8k"
   tls:
     hosts:
-      - "whiteboard.student.k8s.aet.cit.tum.de"
-      - "api.whiteboard.student.k8s.aet.cit.tum.de"
-      - "auth.whiteboard.student.k8s.aet.cit.tum.de"
-    secretName: "whiteboard-devops25-tls"
+      - '{{ .Values.client.url }}'
+      - '{{ .Values.server.url }}'
+      - '{{ .Values.auth.url }}'
+    secretName: '{{ .Values.namespace }}-whiteboard-devops25-tls'
   rules:
-    - host: "whiteboard.student.k8s.aet.cit.tum.de"
+    - host: '{{ .Values.client.url }}'
       paths:
         - path: /
           pathType: Prefix
           service:
-            name: client-service
-            port:
-              number: 3000
-    - host: "api.whiteboard.student.k8s.aet.cit.tum.de"
+              name: '{{ printf "%s-client" .Release.Name }}'
+              port:
+                number: 3000
+    - host: '{{ .Values.server.url }}'
       paths:
         - path: /
           pathType: Prefix
           service:
-            name: server-service
+            name: '{{ printf "%s-server" .Release.Name }}'
             port:
-              number: 8080
-    - host: "auth.whiteboard.student.k8s.aet.cit.tum.de"
+              number: 9091
+    - host: '{{ .Values.auth.url }}'
       paths:
         - path: /
           pathType: Prefix
