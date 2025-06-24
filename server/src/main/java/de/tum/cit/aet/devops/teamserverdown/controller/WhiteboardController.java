@@ -31,7 +31,7 @@ public class WhiteboardController {
 
   @PostMapping
   @Operation(summary = "Create whiteboard", description = "Creates a new whiteboard for a user.")
-  public Whiteboard createWhiteboard(@CurrentUser User user,  @RequestParam String title) {
+  public Whiteboard createWhiteboard(@CurrentUser User user, @RequestParam String title) {
 
     logger.info("Creating whiteboard for userId={} with title='{}'", user.getId(), title);
 

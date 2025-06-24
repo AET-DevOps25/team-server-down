@@ -19,8 +19,6 @@ public class AccountTest {
 
   @Test
   void testGetCurrentUser() throws Exception {
-    mockMvc
-        .perform(get("/me").header("Authorization", "Bearer Token"))
-        .andExpect(status().isOk())
+    mockMvc.perform(get("/me").header("Authorization", "Bearer Token")).andExpect(status().isOk());
   }
 }
