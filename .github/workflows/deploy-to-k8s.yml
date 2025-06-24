@@ -189,16 +189,26 @@ jobs:
       - name: Set release name
         id: release-name
         run: |
-          PR_NUMBER=${{ github.event.pull_request.number }}
-          RELEASE_NAME="whiteboard-pr-${PR_NUMBER}"
+          BRANCH="${GITHUB_HEAD_REF:-${GITHUB_REF##*/}}"
+      
+          if [[ "$BRANCH" == "main" ]]; then
+          RELEASE_NAME="whiteboard-production"
+          elif [[ "$BRANCH" == "develop" ]]; then
+          RELEASE_NAME="whiteboard-staging"
+          else
+          BRANCH_SAFE=${BRANCH//\//-}
+          RELEASE_NAME="whiteboard-${BRANCH_SAFE}"
+          fi
+      
           echo "RELEASE_NAME=${RELEASE_NAME}" >> $GITHUB_ENV
+          echo "release-name=${RELEASE_NAME}" >> $GITHUB_OUTPUT
 
       - name: Install Helm
         uses: azure/setup-helm@v3
 
       - name: Deploy App with Helm
         run: |
-          helm upgrade whiteboard-${{ env.RELEASE_NAME }} ./infrastructure/whiteboard-app/ \
+          helm upgrade ${{ env.RELEASE_NAME }} ./infrastructure/whiteboard-app/ \
             -f ${{ env.VALUES_FILE }} \
             -n tsd-${{ env.NAMESPACE }} \
             --create-namespace \

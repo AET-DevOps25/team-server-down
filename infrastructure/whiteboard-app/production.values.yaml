@@ -48,6 +48,8 @@ server:
       value: "https://auth.whiteboard.student.k8s.aet.cit.tum.de/realms/production"
     - name: IDP_EXTERNAL_URI
       value: "https://auth.whiteboard.student.k8s.aet.cit.tum.de/realms/production"
+    - name: SERVER_URL
+      value: "https://api.whiteboard.student.k8s.aet.cit.tum.de"
   replicaCount: 1
 
 postgresql:

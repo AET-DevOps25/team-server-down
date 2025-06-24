@@ -48,6 +48,8 @@ server:
       value: "https://staging.auth.whiteboard.student.k8s.aet.cit.tum.de/realms/staging"
     - name: IDP_EXTERNAL_URI
       value: "https://staging.auth.whiteboard.student.k8s.aet.cit.tum.de/realms/staging"
+    - name: SERVER_URL
+      value: "https://staging.api.whiteboard.student.k8s.aet.cit.tum.de"
   replicaCount: 1
 
 postgresql:
