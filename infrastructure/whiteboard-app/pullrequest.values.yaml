@@ -48,6 +48,8 @@ server:
       value: 'https://{{ .Values.auth.url }}/realms/{{ .Values.namespace }}'
     - name: IDP_EXTERNAL_URI
       value: 'https://{{ .Values.auth.url }}/realms/{{ .Values.namespace }}'
+    - name: SERVER_URL
+      value: 'https://{{ .Values.server.url }}'
   replicaCount: 1
 
 postgresql:
@@ -69,8 +71,7 @@ postgresql:
 
 keycloak:
   ingress:
-    enabled: true
-    hostname: '{{ .Values.auth.url }}'
+    enabled: false
   auth:
     adminUser: admin
     adminPassword: password
@@ -89,6 +90,8 @@ keycloak:
       value: edge
     - name: KC_PROXY_HEADERS
       value: xforwarded
+    - name: KC_HOSTNAME
+      value: '{{ .Values.auth.url }}'
   extraVolumes:
     - name: realm-export
       configMap:
@@ -117,7 +120,7 @@ ingress:
         - path: /
           pathType: Prefix
           service:
-              name: client-service
+              name: '{{ printf "%s-client" .Release.Name }}'
               port:
                 number: 3000
     - host: '{{ .Values.server.url }}'
@@ -125,7 +128,7 @@ ingress:
         - path: /
           pathType: Prefix
           service:
-            name: server-service
+            name: '{{ printf "%s-server" .Release.Name }}'
             port:
               number: 9091
     - host: '{{ .Values.auth.url }}'

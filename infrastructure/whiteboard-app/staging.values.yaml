@@ -44,8 +44,12 @@ server:
       value: password
     - name: ALLOWED_ORIGIN
       value: "https://staging.whiteboard.student.k8s.aet.cit.tum.de"
-    - name: IDP_URI
+    - name: IDP_INTERNAL_URI
       value: "https://staging.auth.whiteboard.student.k8s.aet.cit.tum.de/realms/staging"
+    - name: IDP_EXTERNAL_URI
+      value: "https://staging.auth.whiteboard.student.k8s.aet.cit.tum.de/realms/staging"
+    - name: SERVER_URL
+      value: "https://staging.api.whiteboard.student.k8s.aet.cit.tum.de"
   replicaCount: 1
 
 postgresql:
@@ -67,8 +71,7 @@ postgresql:
 
 keycloak:
   ingress:
-    enabled: true
-    hostname: staging.auth.whiteboard.student.k8s.aet.cit.tum.de
+    enabled: false
   auth:
     adminUser: admin
     adminPassword: password
@@ -87,6 +90,8 @@ keycloak:
       value: edge
     - name: KC_PROXY_HEADERS
       value: xforwarded
+    - name: KC_HOSTNAME
+      value: staging.auth.whiteboard.student.k8s.aet.cit.tum.de
   extraVolumes:
     - name: realm-export
       configMap:
