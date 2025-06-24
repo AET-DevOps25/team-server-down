@@ -1,6 +1,7 @@
 package de.tum.cit.aet.devops.teamserverdown.config;
 
 import de.tum.cit.aet.devops.teamserverdown.security.CurrentUser;
+import io.swagger.v3.oas.models.servers.Server;
 import io.swagger.v3.oas.models.Components;
 import io.swagger.v3.oas.models.ExternalDocumentation;
 import io.swagger.v3.oas.models.OpenAPI;
@@ -43,6 +44,7 @@ public class OpenAPIConfiguration {
                 .title("Team Server Down")
                 .description("DevOps Application")
                 .version("v0.0.1"))
+        .servers(List.of(new Server().url("https://" + System.getenv("SERVER_URL"))))
         .externalDocs(
             new ExternalDocumentation()
                 .description("README.md")
