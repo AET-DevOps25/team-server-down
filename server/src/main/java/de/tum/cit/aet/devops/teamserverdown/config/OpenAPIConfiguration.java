@@ -1,7 +1,6 @@
 package de.tum.cit.aet.devops.teamserverdown.config;
 
 import de.tum.cit.aet.devops.teamserverdown.security.CurrentUser;
-import io.swagger.v3.oas.models.servers.Server;
 import io.swagger.v3.oas.models.Components;
 import io.swagger.v3.oas.models.ExternalDocumentation;
 import io.swagger.v3.oas.models.OpenAPI;
@@ -9,6 +8,7 @@ import io.swagger.v3.oas.models.Operation;
 import io.swagger.v3.oas.models.info.Info;
 import io.swagger.v3.oas.models.parameters.Parameter;
 import io.swagger.v3.oas.models.security.*;
+import io.swagger.v3.oas.models.servers.Server;
 import java.util.Iterator;
 import java.util.List;
 import org.springdoc.core.customizers.OperationCustomizer;
