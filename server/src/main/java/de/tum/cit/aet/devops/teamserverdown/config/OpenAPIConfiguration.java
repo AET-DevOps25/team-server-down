@@ -35,8 +35,7 @@ public class OpenAPIConfiguration {
                                 System.getenv("IDP_EXTERNAL_URI") + "/protocol/openid-connect/auth")
                             .tokenUrl(
                                 System.getenv("IDP_EXTERNAL_URI")
-                                    + "/protocol/openid-connect/token")
-                    ));
+                                    + "/protocol/openid-connect/token")));
 
     return new OpenAPI()
         .info(
