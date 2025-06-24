@@ -48,6 +48,10 @@ export const AccountApiAxiosParamCreator = function (configuration?: Configurati
             const localVarHeaderParameter = {} as any;
             const localVarQueryParameter = {} as any;
 
+            // authentication keycloak required
+            // oauth required
+            await setOAuthToObject(localVarHeaderParameter, "keycloak", [], configuration)
+
 
     
             setSearchParams(localVarUrlObj, localVarQueryParameter);
@@ -145,6 +149,10 @@ export const RootApiAxiosParamCreator = function (configuration?: Configuration)
             const localVarRequestOptions = { method: 'GET', ...baseOptions, ...options};
             const localVarHeaderParameter = {} as any;
             const localVarQueryParameter = {} as any;
+
+            // authentication keycloak required
+            // oauth required
+            await setOAuthToObject(localVarHeaderParameter, "keycloak", [], configuration)
 
 
     

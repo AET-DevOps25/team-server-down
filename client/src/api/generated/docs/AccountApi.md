@@ -1,6 +1,6 @@
 # AccountApi
 
-All URIs are relative to *http://server:9091*
+All URIs are relative to *http://localhost:9091*
 
 |Method | HTTP request | Description|
 |------------- | ------------- | -------------|
@@ -34,7 +34,7 @@ This endpoint does not have any parameters.
 
 ### Authorization
 
-No authorization required
+[keycloak](../README.md#keycloak)
 
 ### HTTP request headers
 
