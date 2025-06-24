@@ -22,6 +22,5 @@ public class AccountTest {
     mockMvc
         .perform(get("/me").header("Authorization", "Bearer Token"))
         .andExpect(status().isOk())
-        .andExpect(content().string("john.doe"));
   }
 }

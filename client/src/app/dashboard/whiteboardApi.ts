@@ -6,7 +6,7 @@ export type Whiteboard = {
   userId: number;
 };
 
-const BASE_URL = "http://localhost:8080";
+const BASE_URL = "http://localhost:9091";
 
 export async function getWhiteboards(userId: number): Promise<Whiteboard[]> {
   const res = await fetch(`${BASE_URL}/whiteboards?userId=${userId}`);

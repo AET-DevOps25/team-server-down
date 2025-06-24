@@ -35,7 +35,7 @@ This endpoint does not have any parameters.
 
 ### Authorization
 
-No authorization required
+[keycloak](../README.md#keycloak)
 
 ### HTTP request headers
 

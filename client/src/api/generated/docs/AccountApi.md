@@ -7,7 +7,7 @@ All URIs are relative to *http://server:9091*
 |[**getCurrentUser**](#getcurrentuser) | **GET** /me | |
 
 # **getCurrentUser**
-> string getCurrentUser()
+> User getCurrentUser()
 
 
 ### Example
@@ -30,11 +30,11 @@ This endpoint does not have any parameters.
 
 ### Return type
 
-**string**
+**User**
 
 ### Authorization
 
-No authorization required
+[keycloak](../README.md#keycloak)
 
 ### HTTP request headers
 

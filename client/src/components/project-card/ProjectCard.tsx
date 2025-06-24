@@ -6,23 +6,23 @@ import { useMutation, useQueryClient } from "@tanstack/react-query";
 import {
   deleteWhiteboard,
   updateWhiteboardTitle,
-  Whiteboard,
 } from "@/app/dashboard/whiteboardApi";
 import formatDate from "@/util/formatDate";
 import { useRouter } from "next/navigation";
 import DeletionAlertDialog from "@/components/project-card/project-card-components/DeletionAlertDialog";
+import {Whiteboard} from "@/api/generated";
 
 export default function ProjectCard({ project }: { project: Whiteboard }) {
   const router = useRouter();
 
   const [isEditing, setIsEditing] = useState(false);
-  const [editedTitle, setEditedTitle] = useState(project.title);
+  const [editedTitle, setEditedTitle] = useState(project.title!);
   const inputRef = useRef<HTMLInputElement>(null);
 
   const queryClient = useQueryClient();
 
   const updateTitleMutation = useMutation({
-    mutationFn: (title: string) => updateWhiteboardTitle(project.id, title),
+    mutationFn: (title: string) => updateWhiteboardTitle(project.id!, title),
     onSuccess: () =>
       queryClient.invalidateQueries({
         queryKey: ["whiteboards", project.userId],
@@ -62,11 +62,11 @@ export default function ProjectCard({ project }: { project: Whiteboard }) {
 
   const handleRename = () => {
     setIsEditing(true);
-    setEditedTitle(project.title);
+    setEditedTitle(project.title!);
   };
 
   const handleDelete = () => {
-    deleteMutation.mutate(project.id);
+    deleteMutation.mutate(project.id!);
   };
 
   const handleSave = () => {
@@ -81,7 +81,7 @@ export default function ProjectCard({ project }: { project: Whiteboard }) {
     if (e.key === "Enter") {
       handleSave();
     } else if (e.key === "Escape") {
-      setEditedTitle(project.title);
+      setEditedTitle(project.title!);
       setIsEditing(false);
     }
   };
@@ -119,7 +119,7 @@ export default function ProjectCard({ project }: { project: Whiteboard }) {
 
           <div className="text-sm text-gray-500">
             <span>Last edited: </span>
-            <span>{formatDate(project.lastEditedTime)}</span>
+            <span>{formatDate(project.lastEditedTime!)}</span>
           </div>
         </div>
         <div onClick={(e) => e.stopPropagation()}>
