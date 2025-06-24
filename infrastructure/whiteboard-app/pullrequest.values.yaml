@@ -48,6 +48,8 @@ server:
       value: 'https://{{ .Values.auth.url }}/realms/{{ .Values.namespace }}'
     - name: IDP_EXTERNAL_URI
       value: 'https://{{ .Values.auth.url }}/realms/{{ .Values.namespace }}'
+    - name: SERVER_URL
+      value: 'https://{{ .Values.server.url }}'
   replicaCount: 1
 
 postgresql:
