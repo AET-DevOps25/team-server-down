@@ -4,7 +4,6 @@ import de.tum.cit.aet.devops.teamserverdown.security.CurrentUser;
 import io.swagger.v3.oas.models.Components;
 import io.swagger.v3.oas.models.ExternalDocumentation;
 import io.swagger.v3.oas.models.OpenAPI;
-import io.swagger.v3.oas.models.Operation;
 import io.swagger.v3.oas.models.info.Info;
 import io.swagger.v3.oas.models.parameters.Parameter;
 import io.swagger.v3.oas.models.security.*;
@@ -14,7 +13,6 @@ import org.springdoc.core.customizers.OperationCustomizer;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.core.MethodParameter;
-import org.springframework.web.method.HandlerMethod;
 
 @Configuration
 public class OpenAPIConfiguration {
@@ -59,7 +57,7 @@ public class OpenAPIConfiguration {
 
   @Bean
   public OperationCustomizer hideCurrentUser() {
-    return (Operation operation, HandlerMethod handlerMethod) -> {
+    return (operation, handlerMethod) -> {
       if (operation.getParameters() == null) {
         return operation;
       }
@@ -70,17 +68,29 @@ public class OpenAPIConfiguration {
       Iterator<Parameter> paramIterator = openApiParams.iterator();
       while (paramIterator.hasNext()) {
         Parameter openApiParam = paramIterator.next();
+
         for (MethodParameter methodParam : methodParameters) {
           if (methodParam.hasParameterAnnotation(CurrentUser.class)) {
-            String methodParamName = methodParam.getParameterName();
-            if (methodParamName == null || openApiParam.getName().equals(methodParamName)) {
+            Class<?> paramType = methodParam.getParameterType();
+
+            String paramTypeName = paramType.getSimpleName();
+
+            if (openApiParam.getName().equalsIgnoreCase(paramTypeName)
+                || (openApiParam.getSchema() != null
+                    && paramTypeName.equalsIgnoreCase(openApiParam.getSchema().getType()))) {
+              paramIterator.remove();
+              break;
+            }
+
+            if (openApiParam.getSchema() != null
+                && openApiParam.getSchema().get$ref() != null
+                && openApiParam.getSchema().get$ref().contains(paramType.getSimpleName())) {
               paramIterator.remove();
               break;
             }
           }
         }
       }
-
       return operation;
     };
   }
