@@ -23,11 +23,6 @@ public class OpenAPIConfiguration {
   public OpenAPI openAPI() {
     final String securitySchemeName = "keycloak";
 
-    Scopes scopes =
-        new Scopes()
-            .addString("openid", "OpenID Connect scope")
-            .addString("profile", "Access profile information");
-
     SecurityScheme securityScheme =
         new SecurityScheme()
             .type(SecurityScheme.Type.OAUTH2)
@@ -41,7 +36,7 @@ public class OpenAPIConfiguration {
                             .tokenUrl(
                                 System.getenv("IDP_EXTERNAL_URI")
                                     + "/protocol/openid-connect/token")
-                            .scopes(scopes)));
+                    ));
 
     return new OpenAPI()
         .info(
