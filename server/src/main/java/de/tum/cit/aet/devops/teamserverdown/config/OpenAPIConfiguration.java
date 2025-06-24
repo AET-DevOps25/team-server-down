@@ -44,7 +44,7 @@ public class OpenAPIConfiguration {
                 .title("Team Server Down")
                 .description("DevOps Application")
                 .version("v0.0.1"))
-        .servers(List.of(new Server().url("https://" + System.getenv("SERVER_URL"))))
+        .servers(List.of(new Server().url(System.getenv("SERVER_URL"))))
         .externalDocs(
             new ExternalDocumentation()
                 .description("README.md")
