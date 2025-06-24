@@ -136,4 +136,4 @@ ingress:
           service:
             name: '{{ printf "%s-keycloak" .Release.Name }}'
             port:
-              number: 8080
+              number: 80
