@@ -192,12 +192,12 @@ jobs:
           BRANCH="${GITHUB_HEAD_REF:-${GITHUB_REF##*/}}"
       
           if [[ "$BRANCH" == "main" ]]; then
-          RELEASE_NAME="whiteboard-production"
+            RELEASE_NAME="whiteboard-production"
           elif [[ "$BRANCH" == "develop" ]]; then
-          RELEASE_NAME="whiteboard-staging"
+            RELEASE_NAME="whiteboard-staging"
           else
-          BRANCH_SAFE=${BRANCH//\//-}
-          RELEASE_NAME="whiteboard-${BRANCH_SAFE}"
+            PR_NUMBER=${{ github.event.pull_request.number }}
+            RELEASE_NAME="whiteboard-pr-${PR_NUMBER}"
           fi
       
           echo "RELEASE_NAME=${RELEASE_NAME}" >> $GITHUB_ENV
