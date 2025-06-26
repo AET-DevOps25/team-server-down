@@ -1,9 +1,51 @@
-import { useQuery } from "@tanstack/react-query";
-import { accountApiFactory } from "@/api";
+import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
+import { useRouter } from "next/navigation";
+import { whiteboardApiFactory } from "@/api";
 
-export const useGetWhiteboards = () => {
+export function useWhiteboards() {
   return useQuery({
-    queryKey: ["me"],
-    queryFn: accountApiFactory.getCurrentUser,
+    queryKey: ["whiteboards"],
+    queryFn: async () => {
+      const { data } = await whiteboardApiFactory.getUserWhiteboards();
+      return data;
+    },
+  });
+}
+
+export function useCreateWhiteboard() {
+  const queryClient = useQueryClient();
+  const router = useRouter();
+
+  return useMutation({
+    mutationFn: (title: string = "Untitled") =>
+      whiteboardApiFactory.createWhiteboard(title),
+    onSuccess: (response) => {
+      const newProject = response.data;
+      queryClient.invalidateQueries({ queryKey: ["whiteboards"] });
+      router.push(`/board/${newProject.id}`);
+    },
+  });
+}
+
+export const useDeleteWhiteboard = () => {
+  const queryClient = useQueryClient();
+
+  return useMutation({
+    mutationFn: (id: number) => whiteboardApiFactory.deleteWhiteboard(id),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["whiteboards"] });
+    },
+  });
+};
+
+export const useUpdateWhiteboardTitle = (whiteboardId: number) => {
+  const queryClient = useQueryClient();
+
+  return useMutation({
+    mutationFn: (title: string) =>
+      whiteboardApiFactory.updateTitle(whiteboardId, title),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["whiteboards"] });
+    },
   });
 };

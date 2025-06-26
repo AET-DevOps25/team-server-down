@@ -1,13 +1,13 @@
 # WhiteboardApi
 
-All URIs are relative to *http://server:9091*
+All URIs are relative to *http://localhost:9091*
 
 |Method | HTTP request | Description|
 |------------- | ------------- | -------------|
 |[**createWhiteboard**](#createwhiteboard) | **POST** /whiteboards | Create whiteboard|
-|[**deleteWhiteboard**](#deletewhiteboard) | **DELETE** /whiteboards/{id} | Delete whiteboard|
-|[**getWhiteboardByIdAndUserId**](#getwhiteboardbyidanduserid) | **GET** /whiteboards/{id} | |
-|[**getWhiteboardsByUserId**](#getwhiteboardsbyuserid) | **GET** /whiteboards | Get whiteboards by user ID|
+|[**deleteWhiteboard**](#deletewhiteboard) | **DELETE** /whiteboards/{id} | |
+|[**getUserWhiteboards**](#getuserwhiteboards) | **GET** /whiteboards | Get whiteboards by user ID|
+|[**getWhiteboardById**](#getwhiteboardbyid) | **GET** /whiteboards/{id} | |
 |[**updateTitle**](#updatetitle) | **PUT** /whiteboards/{id}/title | Update title|
 
 # **createWhiteboard**
@@ -64,7 +64,6 @@ const { status, data } = await apiInstance.createWhiteboard(
 # **deleteWhiteboard**
 > deleteWhiteboard()
 
-Deletes a whiteboard by its ID if the user owns it.
 
 ### Example
 
@@ -77,7 +76,7 @@ import {
 const configuration = new Configuration();
 const apiInstance = new WhiteboardApi(configuration);
 
-let id: number; //ID of the whiteboard (default to undefined)
+let id: number; // (default to undefined)
 
 const { status, data } = await apiInstance.deleteWhiteboard(
     id
@@ -88,7 +87,7 @@ const { status, data } = await apiInstance.deleteWhiteboard(
 
 |Name | Type | Description  | Notes|
 |------------- | ------------- | ------------- | -------------|
-| **id** | [**number**] | ID of the whiteboard | defaults to undefined|
+| **id** | [**number**] |  | defaults to undefined|
 
 
 ### Return type
@@ -112,9 +111,10 @@ void (empty response body)
 
 [[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to Model list]](../README.md#documentation-for-models) [[Back to README]](../README.md)
 
-# **getWhiteboardByIdAndUserId**
-> Whiteboard getWhiteboardByIdAndUserId()
+# **getUserWhiteboards**
+> Array<Whiteboard> getUserWhiteboards()
 
+Returns a list of whiteboards for the current user.
 
 ### Example
 
@@ -127,23 +127,16 @@ import {
 const configuration = new Configuration();
 const apiInstance = new WhiteboardApi(configuration);
 
-let id: number; //ID of the whiteboard (default to undefined)
-
-const { status, data } = await apiInstance.getWhiteboardByIdAndUserId(
-    id
-);
+const { status, data } = await apiInstance.getUserWhiteboards();
 ```
 
 ### Parameters
-
-|Name | Type | Description  | Notes|
-|------------- | ------------- | ------------- | -------------|
-| **id** | [**number**] | ID of the whiteboard | defaults to undefined|
+This endpoint does not have any parameters.
 
 
 ### Return type
 
-**Whiteboard**
+**Array<Whiteboard>**
 
 ### Authorization
 
@@ -162,10 +155,9 @@ const { status, data } = await apiInstance.getWhiteboardByIdAndUserId(
 
 [[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to Model list]](../README.md#documentation-for-models) [[Back to README]](../README.md)
 
-# **getWhiteboardsByUserId**
-> Array<Whiteboard> getWhiteboardsByUserId()
+# **getWhiteboardById**
+> Whiteboard getWhiteboardById()
 
-Returns a list of whiteboards for the given user ID.
 
 ### Example
 
@@ -178,16 +170,23 @@ import {
 const configuration = new Configuration();
 const apiInstance = new WhiteboardApi(configuration);
 
-const { status, data } = await apiInstance.getWhiteboardsByUserId();
+let id: number; //ID of the whiteboard (default to undefined)
+
+const { status, data } = await apiInstance.getWhiteboardById(
+    id
+);
 ```
 
 ### Parameters
-This endpoint does not have any parameters.
+
+|Name | Type | Description  | Notes|
+|------------- | ------------- | ------------- | -------------|
+| **id** | [**number**] | ID of the whiteboard | defaults to undefined|
 
 
 ### Return type
 
-**Array<Whiteboard>**
+**Whiteboard**
 
 ### Authorization
 

@@ -1,36 +1,11 @@
 "use client";
 import React from "react";
 import ProjectCard from "@/components/project-card/ProjectCard";
-import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
-import { whiteboardApiFactory } from "@/api";
 import CreateProjectCard from "@/components/project-card/CreateProjectCard";
-import { useRouter } from "next/navigation";
+import { useWhiteboards } from "@/hooks/api/whiteboard.api";
 
 const Dashboard = () => {
-  const router = useRouter();
-  const queryClient = useQueryClient();
-
-  const { data: projects = [] } = useQuery({
-    queryKey: ["whiteboards"],
-    queryFn: async () => {
-      const { data } = await whiteboardApiFactory.getWhiteboardsByUserId();
-      return data;
-    },
-  });
-
-  const createMutation = useMutation({
-    mutationFn: (title: string = "Untitled") =>
-      whiteboardApiFactory.createWhiteboard(title),
-    onSuccess: (response) => {
-      const newProject = response.data;
-      queryClient.invalidateQueries({ queryKey: ["whiteboards"] });
-      router.push(`/board/${newProject.id}`);
-    },
-  });
-
-  const handleCreateProject = () => {
-    createMutation.mutate("Untitled");
-  };
+  const { data: projects = [] } = useWhiteboards();
 
   return (
     <div className="min-h-screen text-white">
@@ -40,7 +15,7 @@ const Dashboard = () => {
         </div>
 
         <div className="grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
-          <CreateProjectCard createProject={handleCreateProject} />
+          <CreateProjectCard />
           {projects.map((project) => (
             <ProjectCard key={project.id} project={project} />
           ))}
