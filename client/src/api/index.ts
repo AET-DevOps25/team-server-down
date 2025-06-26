@@ -1,6 +1,8 @@
 import {
   AccountApiFactory,
   Configuration,
+  LlmServiceControllerApi,
+  LlmServiceControllerApiFactory,
   RootApiFactory,
 } from "@/api/generated";
 import globalAxios from "axios";
@@ -33,3 +35,4 @@ const configuration: Configuration = {
 
 export const rootApiFactory = RootApiFactory(configuration);
 export const accountApiFactory = AccountApiFactory(configuration);
+export const llmApiFactory = LlmServiceControllerApiFactory(configuration);

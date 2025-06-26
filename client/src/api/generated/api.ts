@@ -126,6 +126,320 @@ export class AccountApi extends BaseAPI {
 
 
 /**
+ * LlmServiceControllerApi - axios parameter creator
+ * @export
+ */
+export const LlmServiceControllerApiAxiosParamCreator = function (configuration?: Configuration) {
+    return {
+        /**
+         * 
+         * @param {{ [key: string]: Array<string>; }} requestBody 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        completeText: async (requestBody: { [key: string]: Array<string>; }, options: RawAxiosRequestConfig = {}): Promise<RequestArgs> => {
+            // verify required parameter 'requestBody' is not null or undefined
+            assertParamExists('completeText', 'requestBody', requestBody)
+            const localVarPath = `/api/llm/completion`;
+            // use dummy base URL string because the URL constructor only accepts absolute URLs.
+            const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
+            let baseOptions;
+            if (configuration) {
+                baseOptions = configuration.baseOptions;
+            }
+
+            const localVarRequestOptions = { method: 'POST', ...baseOptions, ...options};
+            const localVarHeaderParameter = {} as any;
+            const localVarQueryParameter = {} as any;
+
+            // authentication keycloak required
+            // oauth required
+            await setOAuthToObject(localVarHeaderParameter, "keycloak", [], configuration)
+
+
+    
+            localVarHeaderParameter['Content-Type'] = 'application/json';
+
+            setSearchParams(localVarUrlObj, localVarQueryParameter);
+            let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
+            localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
+            localVarRequestOptions.data = serializeDataIfNeeded(requestBody, localVarRequestOptions, configuration)
+
+            return {
+                url: toPathString(localVarUrlObj),
+                options: localVarRequestOptions,
+            };
+        },
+        /**
+         * 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        healthCheck: async (options: RawAxiosRequestConfig = {}): Promise<RequestArgs> => {
+            const localVarPath = `/api/llm/health`;
+            // use dummy base URL string because the URL constructor only accepts absolute URLs.
+            const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
+            let baseOptions;
+            if (configuration) {
+                baseOptions = configuration.baseOptions;
+            }
+
+            const localVarRequestOptions = { method: 'GET', ...baseOptions, ...options};
+            const localVarHeaderParameter = {} as any;
+            const localVarQueryParameter = {} as any;
+
+            // authentication keycloak required
+            // oauth required
+            await setOAuthToObject(localVarHeaderParameter, "keycloak", [], configuration)
+
+
+    
+            setSearchParams(localVarUrlObj, localVarQueryParameter);
+            let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
+            localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
+
+            return {
+                url: toPathString(localVarUrlObj),
+                options: localVarRequestOptions,
+            };
+        },
+        /**
+         * 
+         * @param {{ [key: string]: Array<string>; }} requestBody 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        rephraseText: async (requestBody: { [key: string]: Array<string>; }, options: RawAxiosRequestConfig = {}): Promise<RequestArgs> => {
+            // verify required parameter 'requestBody' is not null or undefined
+            assertParamExists('rephraseText', 'requestBody', requestBody)
+            const localVarPath = `/api/llm/rephrase`;
+            // use dummy base URL string because the URL constructor only accepts absolute URLs.
+            const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
+            let baseOptions;
+            if (configuration) {
+                baseOptions = configuration.baseOptions;
+            }
+
+            const localVarRequestOptions = { method: 'POST', ...baseOptions, ...options};
+            const localVarHeaderParameter = {} as any;
+            const localVarQueryParameter = {} as any;
+
+            // authentication keycloak required
+            // oauth required
+            await setOAuthToObject(localVarHeaderParameter, "keycloak", [], configuration)
+
+
+    
+            localVarHeaderParameter['Content-Type'] = 'application/json';
+
+            setSearchParams(localVarUrlObj, localVarQueryParameter);
+            let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
+            localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
+            localVarRequestOptions.data = serializeDataIfNeeded(requestBody, localVarRequestOptions, configuration)
+
+            return {
+                url: toPathString(localVarUrlObj),
+                options: localVarRequestOptions,
+            };
+        },
+        /**
+         * 
+         * @param {{ [key: string]: Array<string>; }} requestBody 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        summarizeText: async (requestBody: { [key: string]: Array<string>; }, options: RawAxiosRequestConfig = {}): Promise<RequestArgs> => {
+            // verify required parameter 'requestBody' is not null or undefined
+            assertParamExists('summarizeText', 'requestBody', requestBody)
+            const localVarPath = `/api/llm/summarization`;
+            // use dummy base URL string because the URL constructor only accepts absolute URLs.
+            const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
+            let baseOptions;
+            if (configuration) {
+                baseOptions = configuration.baseOptions;
+            }
+
+            const localVarRequestOptions = { method: 'POST', ...baseOptions, ...options};
+            const localVarHeaderParameter = {} as any;
+            const localVarQueryParameter = {} as any;
+
+            // authentication keycloak required
+            // oauth required
+            await setOAuthToObject(localVarHeaderParameter, "keycloak", [], configuration)
+
+
+    
+            localVarHeaderParameter['Content-Type'] = 'application/json';
+
+            setSearchParams(localVarUrlObj, localVarQueryParameter);
+            let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
+            localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
+            localVarRequestOptions.data = serializeDataIfNeeded(requestBody, localVarRequestOptions, configuration)
+
+            return {
+                url: toPathString(localVarUrlObj),
+                options: localVarRequestOptions,
+            };
+        },
+    }
+};
+
+/**
+ * LlmServiceControllerApi - functional programming interface
+ * @export
+ */
+export const LlmServiceControllerApiFp = function(configuration?: Configuration) {
+    const localVarAxiosParamCreator = LlmServiceControllerApiAxiosParamCreator(configuration)
+    return {
+        /**
+         * 
+         * @param {{ [key: string]: Array<string>; }} requestBody 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        async completeText(requestBody: { [key: string]: Array<string>; }, options?: RawAxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<{ [key: string]: string; }>> {
+            const localVarAxiosArgs = await localVarAxiosParamCreator.completeText(requestBody, options);
+            const localVarOperationServerIndex = configuration?.serverIndex ?? 0;
+            const localVarOperationServerBasePath = operationServerMap['LlmServiceControllerApi.completeText']?.[localVarOperationServerIndex]?.url;
+            return (axios, basePath) => createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration)(axios, localVarOperationServerBasePath || basePath);
+        },
+        /**
+         * 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        async healthCheck(options?: RawAxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<{ [key: string]: string; }>> {
+            const localVarAxiosArgs = await localVarAxiosParamCreator.healthCheck(options);
+            const localVarOperationServerIndex = configuration?.serverIndex ?? 0;
+            const localVarOperationServerBasePath = operationServerMap['LlmServiceControllerApi.healthCheck']?.[localVarOperationServerIndex]?.url;
+            return (axios, basePath) => createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration)(axios, localVarOperationServerBasePath || basePath);
+        },
+        /**
+         * 
+         * @param {{ [key: string]: Array<string>; }} requestBody 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        async rephraseText(requestBody: { [key: string]: Array<string>; }, options?: RawAxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<{ [key: string]: string; }>> {
+            const localVarAxiosArgs = await localVarAxiosParamCreator.rephraseText(requestBody, options);
+            const localVarOperationServerIndex = configuration?.serverIndex ?? 0;
+            const localVarOperationServerBasePath = operationServerMap['LlmServiceControllerApi.rephraseText']?.[localVarOperationServerIndex]?.url;
+            return (axios, basePath) => createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration)(axios, localVarOperationServerBasePath || basePath);
+        },
+        /**
+         * 
+         * @param {{ [key: string]: Array<string>; }} requestBody 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        async summarizeText(requestBody: { [key: string]: Array<string>; }, options?: RawAxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<{ [key: string]: string; }>> {
+            const localVarAxiosArgs = await localVarAxiosParamCreator.summarizeText(requestBody, options);
+            const localVarOperationServerIndex = configuration?.serverIndex ?? 0;
+            const localVarOperationServerBasePath = operationServerMap['LlmServiceControllerApi.summarizeText']?.[localVarOperationServerIndex]?.url;
+            return (axios, basePath) => createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration)(axios, localVarOperationServerBasePath || basePath);
+        },
+    }
+};
+
+/**
+ * LlmServiceControllerApi - factory interface
+ * @export
+ */
+export const LlmServiceControllerApiFactory = function (configuration?: Configuration, basePath?: string, axios?: AxiosInstance) {
+    const localVarFp = LlmServiceControllerApiFp(configuration)
+    return {
+        /**
+         * 
+         * @param {{ [key: string]: Array<string>; }} requestBody 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        completeText(requestBody: { [key: string]: Array<string>; }, options?: RawAxiosRequestConfig): AxiosPromise<{ [key: string]: string; }> {
+            return localVarFp.completeText(requestBody, options).then((request) => request(axios, basePath));
+        },
+        /**
+         * 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        healthCheck(options?: RawAxiosRequestConfig): AxiosPromise<{ [key: string]: string; }> {
+            return localVarFp.healthCheck(options).then((request) => request(axios, basePath));
+        },
+        /**
+         * 
+         * @param {{ [key: string]: Array<string>; }} requestBody 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        rephraseText(requestBody: { [key: string]: Array<string>; }, options?: RawAxiosRequestConfig): AxiosPromise<{ [key: string]: string; }> {
+            return localVarFp.rephraseText(requestBody, options).then((request) => request(axios, basePath));
+        },
+        /**
+         * 
+         * @param {{ [key: string]: Array<string>; }} requestBody 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        summarizeText(requestBody: { [key: string]: Array<string>; }, options?: RawAxiosRequestConfig): AxiosPromise<{ [key: string]: string; }> {
+            return localVarFp.summarizeText(requestBody, options).then((request) => request(axios, basePath));
+        },
+    };
+};
+
+/**
+ * LlmServiceControllerApi - object-oriented interface
+ * @export
+ * @class LlmServiceControllerApi
+ * @extends {BaseAPI}
+ */
+export class LlmServiceControllerApi extends BaseAPI {
+    /**
+     * 
+     * @param {{ [key: string]: Array<string>; }} requestBody 
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     * @memberof LlmServiceControllerApi
+     */
+    public completeText(requestBody: { [key: string]: Array<string>; }, options?: RawAxiosRequestConfig) {
+        return LlmServiceControllerApiFp(this.configuration).completeText(requestBody, options).then((request) => request(this.axios, this.basePath));
+    }
+
+    /**
+     * 
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     * @memberof LlmServiceControllerApi
+     */
+    public healthCheck(options?: RawAxiosRequestConfig) {
+        return LlmServiceControllerApiFp(this.configuration).healthCheck(options).then((request) => request(this.axios, this.basePath));
+    }
+
+    /**
+     * 
+     * @param {{ [key: string]: Array<string>; }} requestBody 
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     * @memberof LlmServiceControllerApi
+     */
+    public rephraseText(requestBody: { [key: string]: Array<string>; }, options?: RawAxiosRequestConfig) {
+        return LlmServiceControllerApiFp(this.configuration).rephraseText(requestBody, options).then((request) => request(this.axios, this.basePath));
+    }
+
+    /**
+     * 
+     * @param {{ [key: string]: Array<string>; }} requestBody 
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     * @memberof LlmServiceControllerApi
+     */
+    public summarizeText(requestBody: { [key: string]: Array<string>; }, options?: RawAxiosRequestConfig) {
+        return LlmServiceControllerApiFp(this.configuration).summarizeText(requestBody, options).then((request) => request(this.axios, this.basePath));
+    }
+}
+
+
+
+/**
  * RootApi - axios parameter creator
  * @export
  */
