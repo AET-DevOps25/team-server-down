@@ -2,7 +2,6 @@ apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: whiteboard-server
-  namespace: {{ .Values.namespace  }}
 spec:
   replicas: {{ .Values.server.replicaCount }}
   selector:
@@ -10,6 +9,8 @@ spec:
       app: whiteboard-server-selector
   template:
     metadata:
+      annotations:
+        deploy-timestamp: "{{ now }}"
       labels:
         app: whiteboard-server-selector
     spec:

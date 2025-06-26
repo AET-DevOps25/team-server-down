@@ -1,6 +1,6 @@
 # WhiteboardApi
 
-All URIs are relative to *http://server:8080*
+All URIs are relative to *http://server:9091*
 
 |Method | HTTP request | Description|
 |------------- | ------------- | -------------|
@@ -11,7 +11,7 @@ All URIs are relative to *http://server:8080*
 |[**updateTitle**](#updatetitle) | **PUT** /whiteboards/{id}/title | Update title|
 
 # **createWhiteboard**
-> Whiteboard createWhiteboard(createWhiteboardRequest)
+> Whiteboard createWhiteboard()
 
 Creates a new whiteboard for a user.
 
@@ -20,17 +20,16 @@ Creates a new whiteboard for a user.
 ```typescript
 import {
     WhiteboardApi,
-    Configuration,
-    CreateWhiteboardRequest
+    Configuration
 } from './api';
 
 const configuration = new Configuration();
 const apiInstance = new WhiteboardApi(configuration);
 
-let createWhiteboardRequest: CreateWhiteboardRequest; //
+let title: string; // (default to undefined)
 
 const { status, data } = await apiInstance.createWhiteboard(
-    createWhiteboardRequest
+    title
 );
 ```
 
@@ -38,7 +37,7 @@ const { status, data } = await apiInstance.createWhiteboard(
 
 |Name | Type | Description  | Notes|
 |------------- | ------------- | ------------- | -------------|
-| **createWhiteboardRequest** | **CreateWhiteboardRequest**|  | |
+| **title** | [**string**] |  | defaults to undefined|
 
 
 ### Return type
@@ -47,11 +46,11 @@ const { status, data } = await apiInstance.createWhiteboard(
 
 ### Authorization
 
-No authorization required
+[keycloak](../README.md#keycloak)
 
 ### HTTP request headers
 
- - **Content-Type**: application/json
+ - **Content-Type**: Not defined
  - **Accept**: */*
 
 
@@ -65,7 +64,7 @@ No authorization required
 # **deleteWhiteboard**
 > deleteWhiteboard()
 
-Deletes a whiteboard by its ID.
+Deletes a whiteboard by its ID if the user owns it.
 
 ### Example
 
@@ -78,7 +77,7 @@ import {
 const configuration = new Configuration();
 const apiInstance = new WhiteboardApi(configuration);
 
-let id: number; // (default to undefined)
+let id: number; //ID of the whiteboard (default to undefined)
 
 const { status, data } = await apiInstance.deleteWhiteboard(
     id
@@ -89,7 +88,7 @@ const { status, data } = await apiInstance.deleteWhiteboard(
 
 |Name | Type | Description  | Notes|
 |------------- | ------------- | ------------- | -------------|
-| **id** | [**number**] |  | defaults to undefined|
+| **id** | [**number**] | ID of the whiteboard | defaults to undefined|
 
 
 ### Return type
@@ -98,7 +97,7 @@ void (empty response body)
 
 ### Authorization
 
-No authorization required
+[keycloak](../README.md#keycloak)
 
 ### HTTP request headers
 
@@ -128,12 +127,10 @@ import {
 const configuration = new Configuration();
 const apiInstance = new WhiteboardApi(configuration);
 
-let id: number; // (default to undefined)
-let userId: number; // (default to undefined)
+let id: number; //ID of the whiteboard (default to undefined)
 
 const { status, data } = await apiInstance.getWhiteboardByIdAndUserId(
-    id,
-    userId
+    id
 );
 ```
 
@@ -141,8 +138,7 @@ const { status, data } = await apiInstance.getWhiteboardByIdAndUserId(
 
 |Name | Type | Description  | Notes|
 |------------- | ------------- | ------------- | -------------|
-| **id** | [**number**] |  | defaults to undefined|
-| **userId** | [**number**] |  | defaults to undefined|
+| **id** | [**number**] | ID of the whiteboard | defaults to undefined|
 
 
 ### Return type
@@ -151,7 +147,7 @@ const { status, data } = await apiInstance.getWhiteboardByIdAndUserId(
 
 ### Authorization
 
-No authorization required
+[keycloak](../README.md#keycloak)
 
 ### HTTP request headers
 
@@ -182,18 +178,11 @@ import {
 const configuration = new Configuration();
 const apiInstance = new WhiteboardApi(configuration);
 
-let userId: number; // (default to undefined)
-
-const { status, data } = await apiInstance.getWhiteboardsByUserId(
-    userId
-);
+const { status, data } = await apiInstance.getWhiteboardsByUserId();
 ```
 
 ### Parameters
-
-|Name | Type | Description  | Notes|
-|------------- | ------------- | ------------- | -------------|
-| **userId** | [**number**] |  | defaults to undefined|
+This endpoint does not have any parameters.
 
 
 ### Return type
@@ -202,7 +191,7 @@ const { status, data } = await apiInstance.getWhiteboardsByUserId(
 
 ### Authorization
 
-No authorization required
+[keycloak](../README.md#keycloak)
 
 ### HTTP request headers
 
@@ -233,7 +222,7 @@ import {
 const configuration = new Configuration();
 const apiInstance = new WhiteboardApi(configuration);
 
-let id: number; // (default to undefined)
+let id: number; //ID of the whiteboard (default to undefined)
 let title: string; // (default to undefined)
 
 const { status, data } = await apiInstance.updateTitle(
@@ -246,7 +235,7 @@ const { status, data } = await apiInstance.updateTitle(
 
 |Name | Type | Description  | Notes|
 |------------- | ------------- | ------------- | -------------|
-| **id** | [**number**] |  | defaults to undefined|
+| **id** | [**number**] | ID of the whiteboard | defaults to undefined|
 | **title** | [**string**] |  | defaults to undefined|
 
 
@@ -256,7 +245,7 @@ const { status, data } = await apiInstance.updateTitle(
 
 ### Authorization
 
-No authorization required
+[keycloak](../README.md#keycloak)
 
 ### HTTP request headers
 

@@ -2,7 +2,6 @@ apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: whiteboard-client
-  namespace: {{ .Values.namespace  }}
 spec:
   replicas: {{ .Values.client.replicaCount }}
   selector:
@@ -26,3 +25,8 @@ spec:
               memory: "50Mi"
           ports:
             - containerPort: {{ .Values.client.service.targetPort }}
+          env:
+            {{- range .Values.client.env }}
+              - name: {{ .name }}
+                value: {{ tpl .value $ | quote }}
+            {{- end }}

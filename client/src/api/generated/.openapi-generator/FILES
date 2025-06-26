@@ -4,6 +4,10 @@ api.ts
 base.ts
 common.ts
 configuration.ts
+docs/AccountApi.md
 docs/RootApi.md
+docs/User.md
+docs/Whiteboard.md
+docs/WhiteboardApi.md
 git_push.sh
 index.ts

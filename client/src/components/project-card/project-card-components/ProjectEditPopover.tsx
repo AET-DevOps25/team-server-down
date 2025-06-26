@@ -3,16 +3,6 @@ import {
   PopoverContent,
   PopoverTrigger,
 } from "@/components/ui/popover";
-import {
-  AlertDialog,
-  AlertDialogAction,
-  AlertDialogCancel,
-  AlertDialogContent,
-  AlertDialogDescription,
-  AlertDialogFooter,
-  AlertDialogHeader,
-  AlertDialogTitle,
-} from "@/components/ui/alert-dialog";
 import { Ellipsis, Pencil, Trash2 } from "lucide-react";
 import React, { ComponentType, SVGProps, useState } from "react";
 import DeletionAlertDialog from "@/components/project-card/project-card-components/DeletionAlertDialog";
@@ -31,14 +21,14 @@ interface PopoverOptionProps {
 function PopoverOption({ label, Icon, onClick }: PopoverOptionProps) {
   return (
     <div
-      className="flex flex-row p-2 rounded-sm text-gray-500 text-center hover:cursor-pointer hover:bg-gray-100"
+      className="flex flex-row rounded-sm p-2 text-center text-gray-500 hover:cursor-pointer hover:bg-gray-100"
       onClick={() => {
         if (onClick) {
           onClick();
         }
       }}
     >
-      <Icon className="pl-1 mr-4" strokeWidth={1.5} />
+      <Icon className="mr-4 pl-1" strokeWidth={1.5} />
       <span className="py-auto">{label}</span>
     </div>
   );
@@ -70,12 +60,12 @@ export default function ProjectEditPopover({
     <>
       <Popover open={popoverOpen} onOpenChange={setPopoverOpen}>
         <PopoverTrigger asChild>
-          <button className="flex justify-center w-8 hover:cursor-pointer">
-            <Ellipsis className="text-gray-500 w-full py-1 px-2 hover:bg-gray-100 rounded-sm" />
+          <button className="flex w-8 justify-center hover:cursor-pointer">
+            <Ellipsis className="w-full rounded-sm px-2 py-1 text-gray-500 hover:bg-gray-100" />
           </button>
         </PopoverTrigger>
 
-        <PopoverContent className="w-52 -mt-2 px-2 py-3" align="start">
+        <PopoverContent className="-mt-2 w-52 px-2 py-3" align="start">
           <div className="flex flex-col gap-y-2">
             <PopoverOption
               label="Rename"

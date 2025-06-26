@@ -98,9 +98,9 @@ export default function TextNode({ id, data, selected }: TextNodeProps) {
         minWidth={100}
         minHeight={50}
       />
-      <div className=" w-full h-full">
+      <div className="h-full w-full">
         <div
-          className=" flex justify-center items-center p-4 w-full h-full"
+          className="flex h-full w-full items-center justify-center p-4"
           style={{
             ...(showBorder && {
               borderWidth: nodeProperties.borderWidth,
@@ -127,7 +127,7 @@ export default function TextNode({ id, data, selected }: TextNodeProps) {
                 }
               }}
               autoFocus
-              className="bg-transparent outline-none border-none text-center m-0 p-0 h-auto w-auto"
+              className="m-0 h-auto w-auto border-none bg-transparent p-0 text-center outline-none"
               style={{
                 color: nodeProperties.textColor,
                 fontSize: `${nodeProperties.fontSize}px`,

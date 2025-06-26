@@ -1,11 +1,8 @@
 "use client";
-import React, { useState } from "react";
+import React from "react";
 import ProjectCard from "@/components/project-card/ProjectCard";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
-import {
-  createWhiteboard,
-  getWhiteboards,
-} from "@/app/dashboard/whiteboardApi";
+import { whiteboardApiFactory } from "@/api";
 import CreateProjectCard from "@/components/project-card/CreateProjectCard";
 import { useRouter } from "next/navigation";
 import DashboardSidebar from "@/components/dashboard-sidebar/DashboardSidebar";
@@ -15,23 +12,27 @@ import FilterBar from "@/components/filters/Filterbar";
 const Dashboard = () => {
   const router = useRouter();
   const queryClient = useQueryClient();
-  const userId = 1; // TODO: Replace with real user ID
 
-  const { data: projects = [], isLoading } = useQuery({
-    queryKey: ["whiteboards", userId],
-    queryFn: () => getWhiteboards(userId),
+  const { data: projects = [] } = useQuery({
+    queryKey: ["whiteboards"],
+    queryFn: async () => {
+      const { data } = await whiteboardApiFactory.getWhiteboardsByUserId();
+      return data;
+    },
   });
 
   const createMutation = useMutation({
-    mutationFn: () => createWhiteboard(userId, "Untitled"),
-    onSuccess: (newProject) => {
-      queryClient.invalidateQueries({ queryKey: ["whiteboards", userId] });
+    mutationFn: (title: string = "Untitled") =>
+      whiteboardApiFactory.createWhiteboard(title),
+    onSuccess: (response) => {
+      const newProject = response.data;
+      queryClient.invalidateQueries({ queryKey: ["whiteboards"] });
       router.push(`/board/${newProject.id}`);
     },
   });
 
   const handleCreateProject = () => {
-    createMutation.mutate();
+    createMutation.mutate("Untitled");
   };
 
   return (
