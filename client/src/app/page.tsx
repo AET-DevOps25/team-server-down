@@ -1,6 +1,5 @@
 "use client";
 
-import WhiteBoard from "@/components/WhiteBoard";
 import { useGetMe } from "@/hooks/api/account.api";
 import { redirect } from "next/navigation";
 

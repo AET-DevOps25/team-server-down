@@ -5,8 +5,8 @@ import React, { useState, useRef, useEffect } from "react";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import formatDate from "@/util/formatDate";
 import { useRouter } from "next/navigation";
-import {Whiteboard} from "@/api/generated";
-import {whiteboardApiFactory} from "@/api";
+import { Whiteboard } from "@/api/generated";
+import { whiteboardApiFactory } from "@/api";
 
 export default function ProjectCard({ project }: { project: Whiteboard }) {
   const router = useRouter();
@@ -18,13 +18,13 @@ export default function ProjectCard({ project }: { project: Whiteboard }) {
   const queryClient = useQueryClient();
 
   const updateTitleMutation = useMutation({
-    mutationFn: (title: string) => whiteboardApiFactory.updateTitle(project.id!, title),
+    mutationFn: (title: string) =>
+      whiteboardApiFactory.updateTitle(project.id!, title),
     onSuccess: () =>
       queryClient.invalidateQueries({
         queryKey: ["whiteboards"],
       }),
   });
-
 
   const deleteMutation = useMutation({
     mutationFn: (id: number) => whiteboardApiFactory.deleteWhiteboard(id),
@@ -85,18 +85,18 @@ export default function ProjectCard({ project }: { project: Whiteboard }) {
 
   return (
     <div
-      className="group relative bg-white rounded-lg border-2 border-gray-200 hover:border-gray-300 transition-all duration-200 cursor-pointer hover:shadow-md"
+      className="group relative cursor-pointer rounded-lg border-2 border-gray-200 bg-white transition-all duration-200 hover:border-gray-300 hover:shadow-md"
       onClick={() => router.push(`/board/${project.id}`)}
     >
-      <div className="aspect-video p-4 flex items-center justify-center bg-gray-50 rounded-t-lg">
+      <div className="flex aspect-video items-center justify-center rounded-t-lg bg-gray-50 p-4">
         {/*theoretically the img of the white board*/}
-        <div className="w-full h-full bg-gray-100 rounded flex items-center justify-center">
-          <FileText className="w-8 h-8 text-gray-400" />
+        <div className="flex h-full w-full items-center justify-center rounded bg-gray-100">
+          <FileText className="h-8 w-8 text-gray-400" />
         </div>
       </div>
-      <div className="flex flex-row p-4 justify-between">
-        <div className="flex-1 mr-2 w-3/4">
-          <div className="flex items-center space-x-2 mb-1">
+      <div className="flex flex-row justify-between p-4">
+        <div className="mr-2 w-3/4 flex-1">
+          <div className="mb-1 flex items-center space-x-2">
             {isEditing ? (
               <input
                 ref={inputRef}
@@ -104,11 +104,11 @@ export default function ProjectCard({ project }: { project: Whiteboard }) {
                 value={editedTitle}
                 onChange={(e) => setEditedTitle(e.target.value)}
                 onKeyDown={handleKeyDown}
-                className="font-medium text-gray-900 bg-transparent border border-blue-500 rounded px-1 py-0.5 outline-none focus:ring-1 focus:ring-blue-500 w-full"
+                className="w-full rounded border border-blue-500 bg-transparent px-1 py-0.5 font-medium text-gray-900 outline-none focus:ring-1 focus:ring-blue-500"
                 onClick={(e) => e.stopPropagation()}
               />
             ) : (
-              <h3 className="font-medium text-gray-900 truncate">
+              <h3 className="truncate font-medium text-gray-900">
                 {project.title}
               </h3>
             )}

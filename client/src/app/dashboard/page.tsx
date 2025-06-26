@@ -10,7 +10,7 @@ const Dashboard = () => {
   const router = useRouter();
   const queryClient = useQueryClient();
 
-  const { data: projects = [], isLoading } = useQuery({
+  const { data: projects = [] } = useQuery({
     queryKey: ["whiteboards"],
     queryFn: async () => {
       const { data } = await whiteboardApiFactory.getWhiteboardsByUserId();
@@ -18,9 +18,9 @@ const Dashboard = () => {
     },
   });
 
-
   const createMutation = useMutation({
-    mutationFn: (title: string = "Untitled") => whiteboardApiFactory.createWhiteboard(title),
+    mutationFn: (title: string = "Untitled") =>
+      whiteboardApiFactory.createWhiteboard(title),
     onSuccess: (response) => {
       const newProject = response.data;
       queryClient.invalidateQueries({ queryKey: ["whiteboards"] });
@@ -39,7 +39,7 @@ const Dashboard = () => {
           <h1 className="text-xl font-medium">My boards</h1>
         </div>
 
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
+        <div className="grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
           <CreateProjectCard createProject={handleCreateProject} />
           {projects.map((project) => (
             <ProjectCard key={project.id} project={project} />
