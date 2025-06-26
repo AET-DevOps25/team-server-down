@@ -12,7 +12,6 @@ import java.util.List;
 import java.util.Optional;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -23,7 +22,11 @@ public class WhiteboardController {
 
   private static final Logger logger = LoggerFactory.getLogger(WhiteboardController.class);
 
-  @Autowired private WhiteboardRepository whiteboardRepository;
+  private WhiteboardRepository whiteboardRepository;
+
+  public WhiteboardController(WhiteboardRepository whiteboardRepository) {
+    this.whiteboardRepository = whiteboardRepository;
+  }
 
   public static class CreateWhiteboardRequest {
     public String title;
@@ -92,12 +95,8 @@ public class WhiteboardController {
   }
 
   @DeleteMapping("/{id}")
-  @Operation(
-      summary = "Delete whiteboard",
-      description = "Deletes a whiteboard by its ID if the user owns it.")
-  public ResponseEntity<Void> deleteWhiteboard(
-      @Parameter(description = "ID of the whiteboard", required = true) @PathVariable Long id,
-      @CurrentUser User user) {
+  public ResponseEntity<Void> deleteWhiteboard(@PathVariable Long id, @CurrentUser User user) {
+
     logger.info("Attempting to delete whiteboard with id={} by userId={}", id, user.getId());
 
     Optional<Whiteboard> whiteboardOpt = whiteboardRepository.findByIdAndUserId(id, user.getId());
@@ -105,11 +104,12 @@ public class WhiteboardController {
     if (whiteboardOpt.isEmpty()) {
       logger.warn(
           "Whiteboard not found or unauthorized access: id={}, userId={}", id, user.getId());
-      return ResponseEntity.status(403).build(); // Forbidden or not found
+      return ResponseEntity.status(403).build();
     }
 
-    whiteboardRepository.deleteByIdAndUserId(id, user.getId());
+    whiteboardRepository.delete(whiteboardOpt.get());
     logger.info("Whiteboard deleted: id={}, userId={}", id, user.getId());
+
     return ResponseEntity.noContent().build();
   }
 }

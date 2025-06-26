@@ -3,14 +3,10 @@ import { FileText } from "lucide-react";
 import ProjectEditPopover from "@/components/project-card/project-card-components/ProjectEditPopover";
 import React, { useState, useRef, useEffect } from "react";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
-import {
-  deleteWhiteboard,
-  updateWhiteboardTitle,
-} from "@/app/dashboard/whiteboardApi";
 import formatDate from "@/util/formatDate";
 import { useRouter } from "next/navigation";
-import DeletionAlertDialog from "@/components/project-card/project-card-components/DeletionAlertDialog";
 import {Whiteboard} from "@/api/generated";
+import {whiteboardApiFactory} from "@/api";
 
 export default function ProjectCard({ project }: { project: Whiteboard }) {
   const router = useRouter();
@@ -22,18 +18,19 @@ export default function ProjectCard({ project }: { project: Whiteboard }) {
   const queryClient = useQueryClient();
 
   const updateTitleMutation = useMutation({
-    mutationFn: (title: string) => updateWhiteboardTitle(project.id!, title),
+    mutationFn: (title: string) => whiteboardApiFactory.updateTitle(project.id!, title),
     onSuccess: () =>
       queryClient.invalidateQueries({
-        queryKey: ["whiteboards", project.userId],
+        queryKey: ["whiteboards"],
       }),
   });
 
+
   const deleteMutation = useMutation({
-    mutationFn: (id: number) => deleteWhiteboard(id),
+    mutationFn: (id: number) => whiteboardApiFactory.deleteWhiteboard(id),
     onSuccess: () =>
       queryClient.invalidateQueries({
-        queryKey: ["whiteboards", project.userId],
+        queryKey: ["whiteboards"],
       }),
   });
 

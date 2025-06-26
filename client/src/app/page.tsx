@@ -8,6 +8,5 @@ export default function Home() {
   const { data } = useGetMe();
   console.log(data);
 
-  //return <WhiteBoard />;
   redirect("/dashboard");
 }

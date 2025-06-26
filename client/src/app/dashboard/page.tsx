@@ -3,18 +3,12 @@ import React from "react";
 import ProjectCard from "@/components/project-card/ProjectCard";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { whiteboardApiFactory } from "@/api";
-import type { Whiteboard } from "@/api/generated";
 import CreateProjectCard from "@/components/project-card/CreateProjectCard";
 import { useRouter } from "next/navigation";
-import {useGetMe} from "@/hooks/api/account.api";
 
 const Dashboard = () => {
   const router = useRouter();
   const queryClient = useQueryClient();
-  const user = useGetMe();
-  const { data } = useGetMe();
-  console.log(data);
-  const userId = 1; // TODO: Replace with real user ID
 
   const { data: projects = [], isLoading } = useQuery({
     queryKey: ["whiteboards"],
