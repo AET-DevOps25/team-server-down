@@ -12,6 +12,7 @@ import java.util.List;
 import java.util.Optional;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -22,14 +23,10 @@ public class WhiteboardController {
 
   private static final Logger logger = LoggerFactory.getLogger(WhiteboardController.class);
 
-  private WhiteboardRepository whiteboardRepository;
+  @Autowired private WhiteboardRepository whiteboardRepository;
 
   public WhiteboardController(WhiteboardRepository whiteboardRepository) {
     this.whiteboardRepository = whiteboardRepository;
-  }
-
-  public static class CreateWhiteboardRequest {
-    public String title;
   }
 
   @PostMapping
