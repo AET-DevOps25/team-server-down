@@ -3,6 +3,8 @@ package de.tum.cit.aet.devops.teamserverdown.client;
 import de.tum.cit.aet.devops.teamserverdown.dto.Request;
 import de.tum.cit.aet.devops.teamserverdown.dto.Response;
 import de.tum.cit.aet.devops.teamserverdown.exception.LLMServiceException;
+import io.swagger.v3.oas.annotations.parameters.RequestBody;
+
 import java.util.List;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -73,7 +75,7 @@ public class LLMRestClient {
     }
   }
 
-  private Response sendPostRequest(String endpoint, Request request) {
+  private Response sendPostRequest(String endpoint, @RequestBody Request request) {
     try {
         // Log request details
         logger.info("Sending POST request to endpoint: {}", endpoint);
