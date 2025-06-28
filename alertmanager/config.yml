@@ -1,0 +1,24 @@
+global:
+  smtp_smarthost: 'smtp.gmail.com:587'
+  smtp_from: 'armanghotra1@gmail.com'
+  smtp_auth_username: 'armanghotra1@gmail.com'
+  smtp_auth_password: 'here comes app password'  
+  smtp_require_tls: true
+
+route:
+  receiver: 'gmail-alerts'
+  group_by: ['alertname']
+  group_wait: 10s
+  group_interval: 1m
+  repeat_interval: 30m
+
+receivers:
+  - name: 'gmail-alerts'
+    email_configs:
+    - to: 'armanghotra1@gmail.com'
+      from: 'armanghotra1@gmail.com'
+      smarthost: 'smtp.gmail.com:587'
+      auth_username: 'armanghotra1@gmail.com'
+      auth_password: 'here comes app password'
+      send_resolved: true
+
