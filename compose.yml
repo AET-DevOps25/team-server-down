@@ -108,65 +108,65 @@ services:
     networks:
       - server
 
-#  genai:
-#    restart: always
-#    build:
-#      context: ./genai
-#      dockerfile: Dockerfile
-#    ports:
-#      - "8000:8000"
-#    environment:
-#      DB_HOST: ${DB_HOST:-weaviate}
-#      DB_PORT: ${DB_PORT:-9090}
-#      DB_GRPC_PORT: ${DB_GRPC_PORT:-50051}
-#    depends_on:
-#      - weaviate
-#    volumes:
-#      - ./genai:/app
-#    networks:
-#      - server
-#      - rag
-#
-#  weaviate:
-#    command: [ "--host", "0.0.0.0", "--port", "9090", "--scheme", "http"]
-#    image: cr.weaviate.io/semitechnologies/weaviate:1.30.0
-#    ports:
-#      - "9090:9090"
-#      - "50051:50051"
-#    volumes:
-#      - weaviate-data:/var/lib/weaviate
-#    restart: on-failure:0
-#    environment:
-#      TRANSFORMERS_INFERENCE_API: 'http://t2v-transformers:8080'
-#      IMAGE_INFERENCE_API: 'http://i2v-neural:8080'
-#      SPELLCHECK_INFERENCE_API: 'http://text-spellcheck:8080'
-#      QUERY_DEFAULTS_LIMIT: 25
-#      AUTHENTICATION_ANONYMOUS_ACCESS_ENABLED: 'true'
-#      PERSISTENCE_DATA_PATH: '/var/lib/weaviate'
-#      DEFAULT_VECTORIZER_MODULE: 'text2vec-transformers'
-#      ENABLE_MODULES: 'text2vec-transformers,text-spellcheck,img2vec-neural'
-#      CLUSTER_HOSTNAME: 'node1'
-#    networks:
-#      - rag
-#
-#  t2v-transformers:
-#    image: cr.weaviate.io/semitechnologies/transformers-inference:sentence-transformers-multi-qa-MiniLM-L6-cos-v1
-#    environment:
-#      ENABLE_CUDA: '0'
-#    networks:
-#      - rag
-#
-#  text-spellcheck:
-#    image: cr.weaviate.io/semitechnologies/text-spellcheck-model:pyspellchecker-en
-#    networks:
-#      - rag
-#
-#  i2v-neural:
-#    image: cr.weaviate.io/semitechnologies/img2vec-pytorch:resnet50
-#    environment:
-#      ENABLE_CUDA: '0'
-#    networks:
-#      - rag
+  genai:
+    restart: always
+    build:
+      context: ./genai
+      dockerfile: Dockerfile
+    ports:
+      - "8000:8000"
+    environment:
+      DB_HOST: ${DB_HOST:-weaviate}
+      DB_PORT: ${DB_PORT:-9090}
+      DB_GRPC_PORT: ${DB_GRPC_PORT:-50051}
+    depends_on:
+      - weaviate
+    volumes:
+      - ./genai:/app
+    networks:
+      - server
+      - rag
+
+  weaviate:
+    command: [ "--host", "0.0.0.0", "--port", "9090", "--scheme", "http"]
+    image: cr.weaviate.io/semitechnologies/weaviate:1.30.0
+    ports:
+      - "9090:9090"
+      - "50051:50051"
+    volumes:
+      - weaviate-data:/var/lib/weaviate
+    restart: on-failure:0
+    environment:
+      TRANSFORMERS_INFERENCE_API: 'http://t2v-transformers:8080'
+      IMAGE_INFERENCE_API: 'http://i2v-neural:8080'
+      SPELLCHECK_INFERENCE_API: 'http://text-spellcheck:8080'
+      QUERY_DEFAULTS_LIMIT: 25
+      AUTHENTICATION_ANONYMOUS_ACCESS_ENABLED: 'true'
+      PERSISTENCE_DATA_PATH: '/var/lib/weaviate'
+      DEFAULT_VECTORIZER_MODULE: 'text2vec-transformers'
+      ENABLE_MODULES: 'text2vec-transformers,text-spellcheck,img2vec-neural'
+      CLUSTER_HOSTNAME: 'node1'
+    networks:
+      - rag
+
+  t2v-transformers:
+    image: cr.weaviate.io/semitechnologies/transformers-inference:sentence-transformers-multi-qa-MiniLM-L6-cos-v1
+    environment:
+      ENABLE_CUDA: '0'
+    networks:
+      - rag
+
+  text-spellcheck:
+    image: cr.weaviate.io/semitechnologies/text-spellcheck-model:pyspellchecker-en
+    networks:
+      - rag
+
+  i2v-neural:
+    image: cr.weaviate.io/semitechnologies/img2vec-pytorch:resnet50
+    environment:
+      ENABLE_CUDA: '0'
+    networks:
+      - rag
 
 networks:
   server:
