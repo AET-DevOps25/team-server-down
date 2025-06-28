@@ -1,4 +1,5 @@
 "use client";
+import { signOut as nextAuthSignOut, useSession } from "next-auth/react";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -19,6 +20,22 @@ export default function UserDropdown() {
 
   const { data } = useGetMe();
   const user: User | undefined = data?.data;
+
+  const session = useSession();
+
+  async function signOut() {
+    try {
+      await fetch(`${process.env.NEXT_PUBLIC_BASE_URL}/api/auth/sso-sign-out`, {
+        headers: {
+          // @ts-ignore
+          refresh_token: session.data?.refreshToken,
+        },
+      });
+    } catch (error) {
+      console.error("Error occurred during sign out:", error);
+    }
+    await nextAuthSignOut();
+  }
 
   return (
     <>
@@ -51,7 +68,10 @@ export default function UserDropdown() {
             Profile
           </DropdownMenuItem>
 
-          <DropdownMenuItem className="flex items-center gap-3 px-3 py-2">
+          <DropdownMenuItem
+            className="flex items-center gap-3 px-3 py-2"
+            onClick={signOut}
+          >
             <LogOut className="h-4 w-4" />
             Log out
           </DropdownMenuItem>
