@@ -22,7 +22,7 @@ public class WhiteboardController {
 
   private static final Logger logger = LoggerFactory.getLogger(WhiteboardController.class);
 
-  @Autowired private WhiteboardRepository whiteboardRepository;
+  private WhiteboardRepository whiteboardRepository;
 
   public WhiteboardController(WhiteboardRepository whiteboardRepository) {
     this.whiteboardRepository = whiteboardRepository;
