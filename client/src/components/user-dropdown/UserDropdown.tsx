@@ -44,17 +44,17 @@ export default function UserDropdown() {
           <div className="flex flex-row items-center gap-2">
             <button className="flex items-center gap-2 rounded-full p-1 hover:cursor-pointer hover:bg-gray-100 focus:outline-none">
               <Avatar
-                username={user?.firstName}
+                username={user?.username}
                 className="h-8 w-8"
                 fallbackClassName="text-sm"
               />
             </button>
-            <span>Hey {user?.firstName} !</span>
+            <span>Hey {user?.username} !</span>
           </div>
         </DropdownMenuTrigger>
         <DropdownMenuContent align="start" className="mt-3 w-56">
           <div className="flex flex-col items-center gap-3 p-3">
-            <Avatar username={user?.firstName} className="h-10 w-10" />
+            <Avatar username={user?.username} className="h-10 w-10" />
             <span className="font-medium">
               {user?.firstName} {user?.lastName}
             </span>

@@ -20,7 +20,7 @@ export default function Avatar({
       <AvatarFallback
         className={`bg-blue-600 font-medium text-white ${fallbackClassName}`}
       >
-        {username?.charAt(0)}
+        {username?.charAt(0).toUpperCase()}
       </AvatarFallback>
     </ShadeCnAvatar>
   );
