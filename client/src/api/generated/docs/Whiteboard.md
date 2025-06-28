@@ -7,8 +7,8 @@ Name | Type | Description | Notes
 ------------ | ------------- | ------------- | -------------
 **id** | **number** |  | [optional] [default to undefined]
 **title** | **string** |  | [optional] [default to undefined]
-**creationTime** | **string** |  | [optional] [default to undefined]
-**lastEditedTime** | **string** |  | [optional] [default to undefined]
+**createdAt** | **string** |  | [optional] [default to undefined]
+**lastUpdatedAt** | **string** |  | [optional] [default to undefined]
 **userId** | **number** |  | [optional] [default to undefined]
 
 ## Example
@@ -19,8 +19,8 @@ import { Whiteboard } from './api';
 const instance: Whiteboard = {
     id,
     title,
-    creationTime,
-    lastEditedTime,
+    createdAt,
+    lastUpdatedAt,
     userId,
 };
 ```

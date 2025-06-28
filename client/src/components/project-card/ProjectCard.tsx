@@ -2,11 +2,13 @@
 import { FileText } from "lucide-react";
 import ProjectEditPopover from "@/components/project-card/project-card-components/ProjectEditPopover";
 import React, { useState, useRef, useEffect } from "react";
-import { useMutation, useQueryClient } from "@tanstack/react-query";
 import formatDate from "@/util/formatDate";
 import { useRouter } from "next/navigation";
 import { Whiteboard } from "@/api/generated";
-import { whiteboardApiFactory } from "@/api";
+import {
+  useDeleteWhiteboard,
+  useUpdateWhiteboardTitle,
+} from "@/hooks/api/whiteboard.api";
 
 export default function ProjectCard({ project }: { project: Whiteboard }) {
   const router = useRouter();
@@ -15,24 +17,9 @@ export default function ProjectCard({ project }: { project: Whiteboard }) {
   const [editedTitle, setEditedTitle] = useState(project.title!);
   const inputRef = useRef<HTMLInputElement>(null);
 
-  const queryClient = useQueryClient();
+  const deleteWhiteboard = useDeleteWhiteboard();
 
-  const updateTitleMutation = useMutation({
-    mutationFn: (title: string) =>
-      whiteboardApiFactory.updateTitle(project.id!, title),
-    onSuccess: () =>
-      queryClient.invalidateQueries({
-        queryKey: ["whiteboards"],
-      }),
-  });
-
-  const deleteMutation = useMutation({
-    mutationFn: (id: number) => whiteboardApiFactory.deleteWhiteboard(id),
-    onSuccess: () =>
-      queryClient.invalidateQueries({
-        queryKey: ["whiteboards"],
-      }),
-  });
+  const updateTitle = useUpdateWhiteboardTitle(project.id!);
 
   useEffect(() => {
     if (!isEditing) return;
@@ -63,13 +50,13 @@ export default function ProjectCard({ project }: { project: Whiteboard }) {
   };
 
   const handleDelete = () => {
-    deleteMutation.mutate(project.id!);
+    deleteWhiteboard.mutate(project.id!);
   };
 
   const handleSave = () => {
     const trimmedTitle = editedTitle.trim();
     if (trimmedTitle && trimmedTitle !== project.title) {
-      updateTitleMutation.mutate(trimmedTitle);
+      updateTitle.mutate(trimmedTitle);
     }
     setIsEditing(false);
   };
@@ -116,7 +103,7 @@ export default function ProjectCard({ project }: { project: Whiteboard }) {
 
           <div className="text-sm text-gray-500">
             <span>Last edited: </span>
-            <span>{formatDate(project.lastEditedTime!)}</span>
+            <span>{formatDate(project.lastUpdatedAt!)}</span>
           </div>
         </div>
         <div onClick={(e) => e.stopPropagation()}>

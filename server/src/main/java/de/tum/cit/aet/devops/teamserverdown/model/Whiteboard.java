@@ -1,12 +1,14 @@
 package de.tum.cit.aet.devops.teamserverdown.model;
 
+import static org.hibernate.generator.EventType.INSERT;
+import static org.hibernate.generator.EventType.UPDATE;
+
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
-import jakarta.persistence.PrePersist;
-import jakarta.persistence.PreUpdate;
-import java.time.LocalDateTime;
+import java.time.Instant;
+import org.hibernate.annotations.CurrentTimestamp;
 
 @Entity
 public class Whiteboard {
@@ -17,9 +19,11 @@ public class Whiteboard {
 
   private String title;
 
-  private LocalDateTime creationTime;
+  @CurrentTimestamp(event = INSERT)
+  private Instant createdAt;
 
-  private LocalDateTime lastEditedTime;
+  @CurrentTimestamp(event = {INSERT, UPDATE})
+  private Instant lastUpdatedAt;
 
   private Long userId;
 
@@ -28,19 +32,6 @@ public class Whiteboard {
   public Whiteboard(String title, Long userId) {
     this.title = title;
     this.userId = userId;
-    this.creationTime = LocalDateTime.now();
-    this.lastEditedTime = this.creationTime;
-  }
-
-  @PrePersist
-  protected void onCreate() {
-    this.creationTime = LocalDateTime.now();
-    this.lastEditedTime = this.creationTime;
-  }
-
-  @PreUpdate
-  protected void onUpdate() {
-    this.lastEditedTime = LocalDateTime.now();
   }
 
   public Long getId() {
@@ -59,20 +50,20 @@ public class Whiteboard {
     this.title = title;
   }
 
-  public LocalDateTime getCreationTime() {
-    return creationTime;
+  public Instant getCreatedAt() {
+    return createdAt;
   }
 
-  public void setCreationTime(LocalDateTime creationTime) {
-    this.creationTime = creationTime;
+  public void setCreatedAt(Instant createdAt) {
+    this.createdAt = createdAt;
   }
 
-  public LocalDateTime getLastEditedTime() {
-    return lastEditedTime;
+  public Instant getLastUpdatedAt() {
+    return lastUpdatedAt;
   }
 
-  public void setLastEditedTime(LocalDateTime lastEditedTime) {
-    this.lastEditedTime = lastEditedTime;
+  public void setLastUpdatedAt(Instant lastUpdatedAt) {
+    this.lastUpdatedAt = lastUpdatedAt;
   }
 
   public Long getUserId() {

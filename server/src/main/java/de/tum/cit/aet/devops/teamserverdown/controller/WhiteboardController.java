@@ -7,7 +7,6 @@ import de.tum.cit.aet.devops.teamserverdown.security.CurrentUser;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.tags.Tag;
-import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 import org.slf4j.Logger;
@@ -42,7 +41,7 @@ public class WhiteboardController {
   }
 
   @GetMapping("/{id}")
-  public ResponseEntity<Whiteboard> getWhiteboardByIdAndUserId(
+  public ResponseEntity<Whiteboard> getWhiteboardById(
       @Parameter(description = "ID of the whiteboard", required = true) @PathVariable Long id,
       @CurrentUser User user) {
 
@@ -62,8 +61,8 @@ public class WhiteboardController {
   @GetMapping
   @Operation(
       summary = "Get whiteboards by user ID",
-      description = "Returns a list of whiteboards for the given user ID.")
-  public List<Whiteboard> getWhiteboardsByUserId(@CurrentUser User user) {
+      description = "Returns a list of whiteboards for the current user.")
+  public List<Whiteboard> getUserWhiteboards(@CurrentUser User user) {
     logger.info("Fetching all whiteboards for userId={}", user.getId());
     return whiteboardRepository.findByUserId(user.getId());
   }
@@ -82,7 +81,6 @@ public class WhiteboardController {
         throw new RuntimeException("Not autherized for this request");
       }
       w.setTitle(title);
-      w.setLastEditedTime(LocalDateTime.now());
       Whiteboard updated = whiteboardRepository.save(w);
       logger.info("Whiteboard title updated successfully for id={}", id);
       return updated;

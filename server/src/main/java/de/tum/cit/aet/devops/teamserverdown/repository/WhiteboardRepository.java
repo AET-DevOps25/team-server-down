@@ -9,6 +9,4 @@ public interface WhiteboardRepository extends JpaRepository<Whiteboard, Long> {
   Optional<Whiteboard> findByIdAndUserId(Long id, Long userId);
 
   List<Whiteboard> findByUserId(Long userId);
-
-  void deleteByIdAndUserId(Long id, Long userId);
 }

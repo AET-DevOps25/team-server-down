@@ -19,6 +19,14 @@ public class AccountTest {
 
   @Test
   void testGetCurrentUser() throws Exception {
-    mockMvc.perform(get("/me").header("Authorization", "Bearer Token")).andExpect(status().isOk());
+    mockMvc
+        .perform(get("/me").header("Authorization", "Bearer Token"))
+        .andExpect(status().isOk())
+        .andExpect(jsonPath("$.id").value(1))
+        .andExpect(jsonPath("$.firstName").value("John"))
+        .andExpect(jsonPath("$.lastName").value("Doe"))
+        .andExpect(jsonPath("$.username").value("john.doe"))
+        .andExpect(jsonPath("$.email").value("john.doe@tum.de"));
+    ;
   }
 }

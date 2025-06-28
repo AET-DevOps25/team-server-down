@@ -1,15 +1,13 @@
 import { Plus } from "lucide-react";
+import { useCreateWhiteboard } from "@/hooks/api/whiteboard.api";
 
-interface CreateProjectCardProps {
-  createProject: () => void;
-}
+export default function CreateProjectCard() {
+  const createMutation = useCreateWhiteboard();
+  const handleCreate = () => createMutation.mutate("Untitled");
 
-export default function CreateProjectCard({
-  createProject,
-}: CreateProjectCardProps) {
   return (
     <div
-      onClick={createProject}
+      onClick={handleCreate}
       className="group relative cursor-pointer rounded-lg border-2 border-dashed border-gray-300 bg-white transition-all duration-200 hover:border-gray-400 hover:bg-gray-50"
     >
       <div className="flex aspect-video items-center justify-center p-4">

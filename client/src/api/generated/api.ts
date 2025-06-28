@@ -83,13 +83,13 @@ export interface Whiteboard {
      * @type {string}
      * @memberof Whiteboard
      */
-    'creationTime'?: string;
+    'createdAt'?: string;
     /**
      * 
      * @type {string}
      * @memberof Whiteboard
      */
-    'lastEditedTime'?: string;
+    'lastUpdatedAt'?: string;
     /**
      * 
      * @type {number}
@@ -352,9 +352,8 @@ export const WhiteboardApiAxiosParamCreator = function (configuration?: Configur
             };
         },
         /**
-         * Deletes a whiteboard by its ID if the user owns it.
-         * @summary Delete whiteboard
-         * @param {number} id ID of the whiteboard
+         * 
+         * @param {number} id 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
@@ -390,16 +389,13 @@ export const WhiteboardApiAxiosParamCreator = function (configuration?: Configur
             };
         },
         /**
-         * 
-         * @param {number} id ID of the whiteboard
+         * Returns a list of whiteboards for the current user.
+         * @summary Get whiteboards by user ID
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        getWhiteboardByIdAndUserId: async (id: number, options: RawAxiosRequestConfig = {}): Promise<RequestArgs> => {
-            // verify required parameter 'id' is not null or undefined
-            assertParamExists('getWhiteboardByIdAndUserId', 'id', id)
-            const localVarPath = `/whiteboards/{id}`
-                .replace(`{${"id"}}`, encodeURIComponent(String(id)));
+        getUserWhiteboards: async (options: RawAxiosRequestConfig = {}): Promise<RequestArgs> => {
+            const localVarPath = `/whiteboards`;
             // use dummy base URL string because the URL constructor only accepts absolute URLs.
             const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
             let baseOptions;
@@ -427,13 +423,16 @@ export const WhiteboardApiAxiosParamCreator = function (configuration?: Configur
             };
         },
         /**
-         * Returns a list of whiteboards for the given user ID.
-         * @summary Get whiteboards by user ID
+         * 
+         * @param {number} id ID of the whiteboard
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        getWhiteboardsByUserId: async (options: RawAxiosRequestConfig = {}): Promise<RequestArgs> => {
-            const localVarPath = `/whiteboards`;
+        getWhiteboardById: async (id: number, options: RawAxiosRequestConfig = {}): Promise<RequestArgs> => {
+            // verify required parameter 'id' is not null or undefined
+            assertParamExists('getWhiteboardById', 'id', id)
+            const localVarPath = `/whiteboards/{id}`
+                .replace(`{${"id"}}`, encodeURIComponent(String(id)));
             // use dummy base URL string because the URL constructor only accepts absolute URLs.
             const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
             let baseOptions;
@@ -529,9 +528,8 @@ export const WhiteboardApiFp = function(configuration?: Configuration) {
             return (axios, basePath) => createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration)(axios, localVarOperationServerBasePath || basePath);
         },
         /**
-         * Deletes a whiteboard by its ID if the user owns it.
-         * @summary Delete whiteboard
-         * @param {number} id ID of the whiteboard
+         * 
+         * @param {number} id 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
@@ -542,27 +540,27 @@ export const WhiteboardApiFp = function(configuration?: Configuration) {
             return (axios, basePath) => createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration)(axios, localVarOperationServerBasePath || basePath);
         },
         /**
+         * Returns a list of whiteboards for the current user.
+         * @summary Get whiteboards by user ID
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        async getUserWhiteboards(options?: RawAxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<Array<Whiteboard>>> {
+            const localVarAxiosArgs = await localVarAxiosParamCreator.getUserWhiteboards(options);
+            const localVarOperationServerIndex = configuration?.serverIndex ?? 0;
+            const localVarOperationServerBasePath = operationServerMap['WhiteboardApi.getUserWhiteboards']?.[localVarOperationServerIndex]?.url;
+            return (axios, basePath) => createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration)(axios, localVarOperationServerBasePath || basePath);
+        },
+        /**
          * 
          * @param {number} id ID of the whiteboard
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        async getWhiteboardByIdAndUserId(id: number, options?: RawAxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<Whiteboard>> {
-            const localVarAxiosArgs = await localVarAxiosParamCreator.getWhiteboardByIdAndUserId(id, options);
+        async getWhiteboardById(id: number, options?: RawAxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<Whiteboard>> {
+            const localVarAxiosArgs = await localVarAxiosParamCreator.getWhiteboardById(id, options);
             const localVarOperationServerIndex = configuration?.serverIndex ?? 0;
-            const localVarOperationServerBasePath = operationServerMap['WhiteboardApi.getWhiteboardByIdAndUserId']?.[localVarOperationServerIndex]?.url;
-            return (axios, basePath) => createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration)(axios, localVarOperationServerBasePath || basePath);
-        },
-        /**
-         * Returns a list of whiteboards for the given user ID.
-         * @summary Get whiteboards by user ID
-         * @param {*} [options] Override http request option.
-         * @throws {RequiredError}
-         */
-        async getWhiteboardsByUserId(options?: RawAxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<Array<Whiteboard>>> {
-            const localVarAxiosArgs = await localVarAxiosParamCreator.getWhiteboardsByUserId(options);
-            const localVarOperationServerIndex = configuration?.serverIndex ?? 0;
-            const localVarOperationServerBasePath = operationServerMap['WhiteboardApi.getWhiteboardsByUserId']?.[localVarOperationServerIndex]?.url;
+            const localVarOperationServerBasePath = operationServerMap['WhiteboardApi.getWhiteboardById']?.[localVarOperationServerIndex]?.url;
             return (axios, basePath) => createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration)(axios, localVarOperationServerBasePath || basePath);
         },
         /**
@@ -600,9 +598,8 @@ export const WhiteboardApiFactory = function (configuration?: Configuration, bas
             return localVarFp.createWhiteboard(title, options).then((request) => request(axios, basePath));
         },
         /**
-         * Deletes a whiteboard by its ID if the user owns it.
-         * @summary Delete whiteboard
-         * @param {number} id ID of the whiteboard
+         * 
+         * @param {number} id 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
@@ -610,22 +607,22 @@ export const WhiteboardApiFactory = function (configuration?: Configuration, bas
             return localVarFp.deleteWhiteboard(id, options).then((request) => request(axios, basePath));
         },
         /**
+         * Returns a list of whiteboards for the current user.
+         * @summary Get whiteboards by user ID
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        getUserWhiteboards(options?: RawAxiosRequestConfig): AxiosPromise<Array<Whiteboard>> {
+            return localVarFp.getUserWhiteboards(options).then((request) => request(axios, basePath));
+        },
+        /**
          * 
          * @param {number} id ID of the whiteboard
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        getWhiteboardByIdAndUserId(id: number, options?: RawAxiosRequestConfig): AxiosPromise<Whiteboard> {
-            return localVarFp.getWhiteboardByIdAndUserId(id, options).then((request) => request(axios, basePath));
-        },
-        /**
-         * Returns a list of whiteboards for the given user ID.
-         * @summary Get whiteboards by user ID
-         * @param {*} [options] Override http request option.
-         * @throws {RequiredError}
-         */
-        getWhiteboardsByUserId(options?: RawAxiosRequestConfig): AxiosPromise<Array<Whiteboard>> {
-            return localVarFp.getWhiteboardsByUserId(options).then((request) => request(axios, basePath));
+        getWhiteboardById(id: number, options?: RawAxiosRequestConfig): AxiosPromise<Whiteboard> {
+            return localVarFp.getWhiteboardById(id, options).then((request) => request(axios, basePath));
         },
         /**
          * Updates the title of an existing whiteboard.
@@ -661,9 +658,8 @@ export class WhiteboardApi extends BaseAPI {
     }
 
     /**
-     * Deletes a whiteboard by its ID if the user owns it.
-     * @summary Delete whiteboard
-     * @param {number} id ID of the whiteboard
+     * 
+     * @param {number} id 
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      * @memberof WhiteboardApi
@@ -673,25 +669,25 @@ export class WhiteboardApi extends BaseAPI {
     }
 
     /**
+     * Returns a list of whiteboards for the current user.
+     * @summary Get whiteboards by user ID
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     * @memberof WhiteboardApi
+     */
+    public getUserWhiteboards(options?: RawAxiosRequestConfig) {
+        return WhiteboardApiFp(this.configuration).getUserWhiteboards(options).then((request) => request(this.axios, this.basePath));
+    }
+
+    /**
      * 
      * @param {number} id ID of the whiteboard
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      * @memberof WhiteboardApi
      */
-    public getWhiteboardByIdAndUserId(id: number, options?: RawAxiosRequestConfig) {
-        return WhiteboardApiFp(this.configuration).getWhiteboardByIdAndUserId(id, options).then((request) => request(this.axios, this.basePath));
-    }
-
-    /**
-     * Returns a list of whiteboards for the given user ID.
-     * @summary Get whiteboards by user ID
-     * @param {*} [options] Override http request option.
-     * @throws {RequiredError}
-     * @memberof WhiteboardApi
-     */
-    public getWhiteboardsByUserId(options?: RawAxiosRequestConfig) {
-        return WhiteboardApiFp(this.configuration).getWhiteboardsByUserId(options).then((request) => request(this.axios, this.basePath));
+    public getWhiteboardById(id: number, options?: RawAxiosRequestConfig) {
+        return WhiteboardApiFp(this.configuration).getWhiteboardById(id, options).then((request) => request(this.axios, this.basePath));
     }
 
     /**
