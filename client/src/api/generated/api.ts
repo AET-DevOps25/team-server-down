@@ -23,6 +23,80 @@ import type { RequestArgs } from './base';
 // @ts-ignore
 import { BASE_PATH, COLLECTION_FORMATS, BaseAPI, RequiredError, operationServerMap } from './base';
 
+/**
+ * 
+ * @export
+ * @interface User
+ */
+export interface User {
+    /**
+     * 
+     * @type {number}
+     * @memberof User
+     */
+    'id'?: number;
+    /**
+     * 
+     * @type {string}
+     * @memberof User
+     */
+    'firstName'?: string;
+    /**
+     * 
+     * @type {string}
+     * @memberof User
+     */
+    'lastName'?: string;
+    /**
+     * 
+     * @type {string}
+     * @memberof User
+     */
+    'username'?: string;
+    /**
+     * 
+     * @type {string}
+     * @memberof User
+     */
+    'email'?: string;
+}
+/**
+ * 
+ * @export
+ * @interface Whiteboard
+ */
+export interface Whiteboard {
+    /**
+     * 
+     * @type {number}
+     * @memberof Whiteboard
+     */
+    'id'?: number;
+    /**
+     * 
+     * @type {string}
+     * @memberof Whiteboard
+     */
+    'title'?: string;
+    /**
+     * 
+     * @type {string}
+     * @memberof Whiteboard
+     */
+    'createdAt'?: string;
+    /**
+     * 
+     * @type {string}
+     * @memberof Whiteboard
+     */
+    'lastUpdatedAt'?: string;
+    /**
+     * 
+     * @type {number}
+     * @memberof Whiteboard
+     */
+    'userId'?: number;
+}
 
 /**
  * AccountApi - axios parameter creator
@@ -78,7 +152,7 @@ export const AccountApiFp = function(configuration?: Configuration) {
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        async getCurrentUser(options?: RawAxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<string>> {
+        async getCurrentUser(options?: RawAxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<User>> {
             const localVarAxiosArgs = await localVarAxiosParamCreator.getCurrentUser(options);
             const localVarOperationServerIndex = configuration?.serverIndex ?? 0;
             const localVarOperationServerBasePath = operationServerMap['AccountApi.getCurrentUser']?.[localVarOperationServerIndex]?.url;
@@ -99,7 +173,7 @@ export const AccountApiFactory = function (configuration?: Configuration, basePa
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        getCurrentUser(options?: RawAxiosRequestConfig): AxiosPromise<string> {
+        getCurrentUser(options?: RawAxiosRequestConfig): AxiosPromise<User> {
             return localVarFp.getCurrentUser(options).then((request) => request(axios, basePath));
         },
     };
@@ -225,6 +299,408 @@ export class RootApi extends BaseAPI {
      */
     public root(options?: RawAxiosRequestConfig) {
         return RootApiFp(this.configuration).root(options).then((request) => request(this.axios, this.basePath));
+    }
+}
+
+
+
+/**
+ * WhiteboardApi - axios parameter creator
+ * @export
+ */
+export const WhiteboardApiAxiosParamCreator = function (configuration?: Configuration) {
+    return {
+        /**
+         * Creates a new whiteboard for a user.
+         * @summary Create whiteboard
+         * @param {string} title 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        createWhiteboard: async (title: string, options: RawAxiosRequestConfig = {}): Promise<RequestArgs> => {
+            // verify required parameter 'title' is not null or undefined
+            assertParamExists('createWhiteboard', 'title', title)
+            const localVarPath = `/whiteboards`;
+            // use dummy base URL string because the URL constructor only accepts absolute URLs.
+            const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
+            let baseOptions;
+            if (configuration) {
+                baseOptions = configuration.baseOptions;
+            }
+
+            const localVarRequestOptions = { method: 'POST', ...baseOptions, ...options};
+            const localVarHeaderParameter = {} as any;
+            const localVarQueryParameter = {} as any;
+
+            // authentication keycloak required
+            // oauth required
+            await setOAuthToObject(localVarHeaderParameter, "keycloak", [], configuration)
+
+            if (title !== undefined) {
+                localVarQueryParameter['title'] = title;
+            }
+
+
+    
+            setSearchParams(localVarUrlObj, localVarQueryParameter);
+            let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
+            localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
+
+            return {
+                url: toPathString(localVarUrlObj),
+                options: localVarRequestOptions,
+            };
+        },
+        /**
+         * 
+         * @param {number} id 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        deleteWhiteboard: async (id: number, options: RawAxiosRequestConfig = {}): Promise<RequestArgs> => {
+            // verify required parameter 'id' is not null or undefined
+            assertParamExists('deleteWhiteboard', 'id', id)
+            const localVarPath = `/whiteboards/{id}`
+                .replace(`{${"id"}}`, encodeURIComponent(String(id)));
+            // use dummy base URL string because the URL constructor only accepts absolute URLs.
+            const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
+            let baseOptions;
+            if (configuration) {
+                baseOptions = configuration.baseOptions;
+            }
+
+            const localVarRequestOptions = { method: 'DELETE', ...baseOptions, ...options};
+            const localVarHeaderParameter = {} as any;
+            const localVarQueryParameter = {} as any;
+
+            // authentication keycloak required
+            // oauth required
+            await setOAuthToObject(localVarHeaderParameter, "keycloak", [], configuration)
+
+
+    
+            setSearchParams(localVarUrlObj, localVarQueryParameter);
+            let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
+            localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
+
+            return {
+                url: toPathString(localVarUrlObj),
+                options: localVarRequestOptions,
+            };
+        },
+        /**
+         * Returns a list of whiteboards for the current user.
+         * @summary Get whiteboards by user ID
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        getUserWhiteboards: async (options: RawAxiosRequestConfig = {}): Promise<RequestArgs> => {
+            const localVarPath = `/whiteboards`;
+            // use dummy base URL string because the URL constructor only accepts absolute URLs.
+            const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
+            let baseOptions;
+            if (configuration) {
+                baseOptions = configuration.baseOptions;
+            }
+
+            const localVarRequestOptions = { method: 'GET', ...baseOptions, ...options};
+            const localVarHeaderParameter = {} as any;
+            const localVarQueryParameter = {} as any;
+
+            // authentication keycloak required
+            // oauth required
+            await setOAuthToObject(localVarHeaderParameter, "keycloak", [], configuration)
+
+
+    
+            setSearchParams(localVarUrlObj, localVarQueryParameter);
+            let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
+            localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
+
+            return {
+                url: toPathString(localVarUrlObj),
+                options: localVarRequestOptions,
+            };
+        },
+        /**
+         * 
+         * @param {number} id ID of the whiteboard
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        getWhiteboardById: async (id: number, options: RawAxiosRequestConfig = {}): Promise<RequestArgs> => {
+            // verify required parameter 'id' is not null or undefined
+            assertParamExists('getWhiteboardById', 'id', id)
+            const localVarPath = `/whiteboards/{id}`
+                .replace(`{${"id"}}`, encodeURIComponent(String(id)));
+            // use dummy base URL string because the URL constructor only accepts absolute URLs.
+            const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
+            let baseOptions;
+            if (configuration) {
+                baseOptions = configuration.baseOptions;
+            }
+
+            const localVarRequestOptions = { method: 'GET', ...baseOptions, ...options};
+            const localVarHeaderParameter = {} as any;
+            const localVarQueryParameter = {} as any;
+
+            // authentication keycloak required
+            // oauth required
+            await setOAuthToObject(localVarHeaderParameter, "keycloak", [], configuration)
+
+
+    
+            setSearchParams(localVarUrlObj, localVarQueryParameter);
+            let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
+            localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
+
+            return {
+                url: toPathString(localVarUrlObj),
+                options: localVarRequestOptions,
+            };
+        },
+        /**
+         * Updates the title of an existing whiteboard.
+         * @summary Update title
+         * @param {number} id ID of the whiteboard
+         * @param {string} title 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        updateTitle: async (id: number, title: string, options: RawAxiosRequestConfig = {}): Promise<RequestArgs> => {
+            // verify required parameter 'id' is not null or undefined
+            assertParamExists('updateTitle', 'id', id)
+            // verify required parameter 'title' is not null or undefined
+            assertParamExists('updateTitle', 'title', title)
+            const localVarPath = `/whiteboards/{id}/title`
+                .replace(`{${"id"}}`, encodeURIComponent(String(id)));
+            // use dummy base URL string because the URL constructor only accepts absolute URLs.
+            const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
+            let baseOptions;
+            if (configuration) {
+                baseOptions = configuration.baseOptions;
+            }
+
+            const localVarRequestOptions = { method: 'PUT', ...baseOptions, ...options};
+            const localVarHeaderParameter = {} as any;
+            const localVarQueryParameter = {} as any;
+
+            // authentication keycloak required
+            // oauth required
+            await setOAuthToObject(localVarHeaderParameter, "keycloak", [], configuration)
+
+            if (title !== undefined) {
+                localVarQueryParameter['title'] = title;
+            }
+
+
+    
+            setSearchParams(localVarUrlObj, localVarQueryParameter);
+            let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
+            localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
+
+            return {
+                url: toPathString(localVarUrlObj),
+                options: localVarRequestOptions,
+            };
+        },
+    }
+};
+
+/**
+ * WhiteboardApi - functional programming interface
+ * @export
+ */
+export const WhiteboardApiFp = function(configuration?: Configuration) {
+    const localVarAxiosParamCreator = WhiteboardApiAxiosParamCreator(configuration)
+    return {
+        /**
+         * Creates a new whiteboard for a user.
+         * @summary Create whiteboard
+         * @param {string} title 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        async createWhiteboard(title: string, options?: RawAxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<Whiteboard>> {
+            const localVarAxiosArgs = await localVarAxiosParamCreator.createWhiteboard(title, options);
+            const localVarOperationServerIndex = configuration?.serverIndex ?? 0;
+            const localVarOperationServerBasePath = operationServerMap['WhiteboardApi.createWhiteboard']?.[localVarOperationServerIndex]?.url;
+            return (axios, basePath) => createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration)(axios, localVarOperationServerBasePath || basePath);
+        },
+        /**
+         * 
+         * @param {number} id 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        async deleteWhiteboard(id: number, options?: RawAxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<void>> {
+            const localVarAxiosArgs = await localVarAxiosParamCreator.deleteWhiteboard(id, options);
+            const localVarOperationServerIndex = configuration?.serverIndex ?? 0;
+            const localVarOperationServerBasePath = operationServerMap['WhiteboardApi.deleteWhiteboard']?.[localVarOperationServerIndex]?.url;
+            return (axios, basePath) => createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration)(axios, localVarOperationServerBasePath || basePath);
+        },
+        /**
+         * Returns a list of whiteboards for the current user.
+         * @summary Get whiteboards by user ID
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        async getUserWhiteboards(options?: RawAxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<Array<Whiteboard>>> {
+            const localVarAxiosArgs = await localVarAxiosParamCreator.getUserWhiteboards(options);
+            const localVarOperationServerIndex = configuration?.serverIndex ?? 0;
+            const localVarOperationServerBasePath = operationServerMap['WhiteboardApi.getUserWhiteboards']?.[localVarOperationServerIndex]?.url;
+            return (axios, basePath) => createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration)(axios, localVarOperationServerBasePath || basePath);
+        },
+        /**
+         * 
+         * @param {number} id ID of the whiteboard
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        async getWhiteboardById(id: number, options?: RawAxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<Whiteboard>> {
+            const localVarAxiosArgs = await localVarAxiosParamCreator.getWhiteboardById(id, options);
+            const localVarOperationServerIndex = configuration?.serverIndex ?? 0;
+            const localVarOperationServerBasePath = operationServerMap['WhiteboardApi.getWhiteboardById']?.[localVarOperationServerIndex]?.url;
+            return (axios, basePath) => createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration)(axios, localVarOperationServerBasePath || basePath);
+        },
+        /**
+         * Updates the title of an existing whiteboard.
+         * @summary Update title
+         * @param {number} id ID of the whiteboard
+         * @param {string} title 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        async updateTitle(id: number, title: string, options?: RawAxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<Whiteboard>> {
+            const localVarAxiosArgs = await localVarAxiosParamCreator.updateTitle(id, title, options);
+            const localVarOperationServerIndex = configuration?.serverIndex ?? 0;
+            const localVarOperationServerBasePath = operationServerMap['WhiteboardApi.updateTitle']?.[localVarOperationServerIndex]?.url;
+            return (axios, basePath) => createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration)(axios, localVarOperationServerBasePath || basePath);
+        },
+    }
+};
+
+/**
+ * WhiteboardApi - factory interface
+ * @export
+ */
+export const WhiteboardApiFactory = function (configuration?: Configuration, basePath?: string, axios?: AxiosInstance) {
+    const localVarFp = WhiteboardApiFp(configuration)
+    return {
+        /**
+         * Creates a new whiteboard for a user.
+         * @summary Create whiteboard
+         * @param {string} title 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        createWhiteboard(title: string, options?: RawAxiosRequestConfig): AxiosPromise<Whiteboard> {
+            return localVarFp.createWhiteboard(title, options).then((request) => request(axios, basePath));
+        },
+        /**
+         * 
+         * @param {number} id 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        deleteWhiteboard(id: number, options?: RawAxiosRequestConfig): AxiosPromise<void> {
+            return localVarFp.deleteWhiteboard(id, options).then((request) => request(axios, basePath));
+        },
+        /**
+         * Returns a list of whiteboards for the current user.
+         * @summary Get whiteboards by user ID
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        getUserWhiteboards(options?: RawAxiosRequestConfig): AxiosPromise<Array<Whiteboard>> {
+            return localVarFp.getUserWhiteboards(options).then((request) => request(axios, basePath));
+        },
+        /**
+         * 
+         * @param {number} id ID of the whiteboard
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        getWhiteboardById(id: number, options?: RawAxiosRequestConfig): AxiosPromise<Whiteboard> {
+            return localVarFp.getWhiteboardById(id, options).then((request) => request(axios, basePath));
+        },
+        /**
+         * Updates the title of an existing whiteboard.
+         * @summary Update title
+         * @param {number} id ID of the whiteboard
+         * @param {string} title 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        updateTitle(id: number, title: string, options?: RawAxiosRequestConfig): AxiosPromise<Whiteboard> {
+            return localVarFp.updateTitle(id, title, options).then((request) => request(axios, basePath));
+        },
+    };
+};
+
+/**
+ * WhiteboardApi - object-oriented interface
+ * @export
+ * @class WhiteboardApi
+ * @extends {BaseAPI}
+ */
+export class WhiteboardApi extends BaseAPI {
+    /**
+     * Creates a new whiteboard for a user.
+     * @summary Create whiteboard
+     * @param {string} title 
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     * @memberof WhiteboardApi
+     */
+    public createWhiteboard(title: string, options?: RawAxiosRequestConfig) {
+        return WhiteboardApiFp(this.configuration).createWhiteboard(title, options).then((request) => request(this.axios, this.basePath));
+    }
+
+    /**
+     * 
+     * @param {number} id 
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     * @memberof WhiteboardApi
+     */
+    public deleteWhiteboard(id: number, options?: RawAxiosRequestConfig) {
+        return WhiteboardApiFp(this.configuration).deleteWhiteboard(id, options).then((request) => request(this.axios, this.basePath));
+    }
+
+    /**
+     * Returns a list of whiteboards for the current user.
+     * @summary Get whiteboards by user ID
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     * @memberof WhiteboardApi
+     */
+    public getUserWhiteboards(options?: RawAxiosRequestConfig) {
+        return WhiteboardApiFp(this.configuration).getUserWhiteboards(options).then((request) => request(this.axios, this.basePath));
+    }
+
+    /**
+     * 
+     * @param {number} id ID of the whiteboard
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     * @memberof WhiteboardApi
+     */
+    public getWhiteboardById(id: number, options?: RawAxiosRequestConfig) {
+        return WhiteboardApiFp(this.configuration).getWhiteboardById(id, options).then((request) => request(this.axios, this.basePath));
+    }
+
+    /**
+     * Updates the title of an existing whiteboard.
+     * @summary Update title
+     * @param {number} id ID of the whiteboard
+     * @param {string} title 
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     * @memberof WhiteboardApi
+     */
+    public updateTitle(id: number, title: string, options?: RawAxiosRequestConfig) {
+        return WhiteboardApiFp(this.configuration).updateTitle(id, title, options).then((request) => request(this.axios, this.basePath));
     }
 }
 

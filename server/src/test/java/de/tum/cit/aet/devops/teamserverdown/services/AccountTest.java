@@ -22,6 +22,11 @@ public class AccountTest {
     mockMvc
         .perform(get("/me").header("Authorization", "Bearer Token"))
         .andExpect(status().isOk())
-        .andExpect(content().string("john.doe"));
+        .andExpect(jsonPath("$.id").value(1))
+        .andExpect(jsonPath("$.firstName").value("John"))
+        .andExpect(jsonPath("$.lastName").value("Doe"))
+        .andExpect(jsonPath("$.username").value("john.doe"))
+        .andExpect(jsonPath("$.email").value("john.doe@tum.de"));
+    ;
   }
 }
