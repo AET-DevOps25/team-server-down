@@ -9,7 +9,7 @@ import React from "react";
 
 export default function FilterBar() {
   return (
-    <div className="flex items-center gap-4 mb-6">
+    <div className="mb-6 flex items-center gap-4">
       <div className="flex items-center gap-2">
         <span className="text-sm text-gray-600">Filter by</span>
         <Select defaultValue="all-boards">

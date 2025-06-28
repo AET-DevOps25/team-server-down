@@ -11,12 +11,14 @@ import {
 import React from "react";
 
 interface DeletionAlertDialogProps {
+  toDelete: string;
   dialogOpen: boolean;
   setDialogOpen: (open: boolean) => void;
   handleConfirmDelete: () => void;
 }
 
 export default function DeletionAlertDialog({
+  toDelete,
   dialogOpen,
   setDialogOpen,
   handleConfirmDelete,
@@ -28,7 +30,8 @@ export default function DeletionAlertDialog({
           <AlertDialogTitle>Are you sure?</AlertDialogTitle>
           <AlertDialogDescription>
             This action cannot be undone. This will permanently delete your
-            board from our servers.
+            {"\u00A0"}
+            {toDelete} from our servers.
           </AlertDialogDescription>
         </AlertDialogHeader>
         <AlertDialogFooter>
