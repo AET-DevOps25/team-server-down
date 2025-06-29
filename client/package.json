@@ -8,7 +8,8 @@
     "start": "next start",
     "lint": "next lint",
     "format": "prettier --write \"src/**/*.{ts,tsx}\"",
-    "openapi:generate": "openapi-generator-cli generate -i http://server:9091/v3/api-docs -g typescript-axios -o src/api/generated"
+    "openapi:generate": "openapi-generator-cli generate -i http://localhost:9091/v3/api-docs -g typescript-axios -o src/api/generated",
+    "openapi:generate:genai": "openapi-generator-cli generate -i http://localhost:8000/v3/api-docs -g typescript-axios -o src/api/genai/generated"
   },
   "dependencies": {
     "@openapitools/openapi-generator-cli": "^2.20.2",

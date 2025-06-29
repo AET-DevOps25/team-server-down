@@ -16,7 +16,7 @@ interface AIActionsProps {
 
 export function AIActionDropdown({ selectedNodes, onAIAction }: AIActionsProps) {
   const [loading, setLoading] = useState(false);
-  const hasSelectedTextNodes = selectedNodes.some(node => node.type === 'text');
+  const hasSelectedTextNodes = selectedNodes.some(node => node.type === 'text' || node.type === 'shapeNode');
 
   const handleAIAction = async (action: 'complete' | 'summarize' | 'rephrase') => {
     if (!hasSelectedTextNodes) return;

@@ -10,6 +10,8 @@ from langchain.callbacks.manager import CallbackManagerForLLMRun
 import logging
 from fastapi.middleware.cors import CORSMiddleware
 from starlette.middleware.base import BaseHTTPMiddleware
+from fastapi.responses import JSONResponse
+from fastapi.openapi.utils import get_openapi
 
 # Setup logging
 logging.basicConfig(level=logging.INFO)
@@ -92,57 +94,9 @@ app = FastAPI(
     version="1.0.0"
 )
 
-@app.middleware("http")
-async def log_requests(request: Request, call_next):
-    try:
-        # Read the raw request body
-        body_bytes = await request.body()
-        raw_body = body_bytes.decode() if body_bytes else 'No body'
-
-        # Detailed request logging
-        logger.info(f"""
-=== Incoming Request Details ===
-URL: {request.url}
-Method: {request.method}
-Client Host: {request.client.host if request.client else 'Unknown'}
-Content-Length: {request.headers.get('content-length', 'Not specified')}
-Content-Type: {request.headers.get('content-type')}
-
-Headers:
-{json.dumps(dict(request.headers), indent=2)}
-
-Raw Body Content:
-{raw_body}
-
-Request Body Type: {type(body_bytes)}
-Request Body Length: {len(body_bytes) if body_bytes else 0}
-============================
-""")
-
-        # Create a new stream for the request body
-        async def get_body():
-            return body_bytes
-
-        # Preserve the original request body
-        request._body = body_bytes
-        request.body = get_body
-
-        # Process the request and capture response
-        response = await call_next(request)
-        
-        # Log response details
-        logger.info(f"""
-=== Response Details ===
-Status Code: {response.status_code}
-Headers: {dict(response.headers)}
-============================
-""")
-        
-        return response
-
-    except Exception as e:
-        logger.error(f"Middleware error: {str(e)}", exc_info=True)
-        raise
+@app.get("/v3/api-docs", include_in_schema=False)
+def custom_openapi():
+    return JSONResponse(get_openapi(title=app.title, version=app.version, routes=app.routes))
 
 app.add_middleware(
     CORSMiddleware,

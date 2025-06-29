@@ -16,7 +16,8 @@ import TextNode from "@/components/text-node/TextNode";
 import ShapeNode from "@/components/shape-node/ShapeNode";
 import { AIActionDropdown } from "./aiActionDropdown/aiActionDropdown";
 import SpinnerDemo from "./spinner/Lucidespinner";
-import { useRephraseTextMutation } from "@/hooks/api/llm.api";
+import { useTextRephrase, useTextCompletion, useTextSummarization } from "@/hooks/api/llm.api";
+import { TextResponse } from "@/api/genai/generated";
 
 const nodeTypes = {
   text: TextNode,
@@ -27,7 +28,10 @@ export default function WhiteBoard() {
   const [nodes, setNodes, onNodesChange] = useNodesState<Node>([]);
   const [selectedNodes, setSelectedNodes] = useState<Node[]>([]); 
   const [isLoading, setIsLoading] = useState(false);
-  const { mutateAsync: rephraseText } = useRephraseTextMutation();
+  const { mutateAsync: rephraseText } = useTextRephrase();
+  const { mutateAsync: completeText } = useTextCompletion();
+  const { mutateAsync: summarizedText } = useTextSummarization();
+
 
   const handleAddNode = useCallback(
     (newNode: Node) => {
@@ -48,7 +52,7 @@ export default function WhiteBoard() {
   }, [nodes, onNodesChange]);
 
   const handleAIAction = async (action: 'complete' | 'summarize' | 'rephrase') => {
-    const textNodes = selectedNodes.filter(node => node.type === 'text');
+    const textNodes = selectedNodes.filter(node => node.type === 'text' || node.type === 'shapeNode');
     if (textNodes.length === 0) return;
   
     const nodeToUpdate = textNodes[0];
@@ -57,15 +61,18 @@ export default function WhiteBoard() {
     setIsLoading(true);
   
     try {
-      let data: { [key: string]: string } = {};
+      let data: TextResponse;
   
       if (action === 'rephrase') {
-        data = await rephraseText([currentText]);
-      } else {
-        throw new Error(`Action "${action}" not supported via hook yet.`);
+       data = await rephraseText({ user_text: [currentText] });
+      } else if (action === 'complete') {
+        data = await completeText({ user_text: [currentText] });
       }
-  
-      const llmResponse = data?.llm_response || Object.values(data)[0] || '';
+      else {
+        data = await summarizedText ({ user_text: [currentText] })
+      }
+      
+      const llmResponse = data.llm_response 
   
       setNodes((nds) =>
         nds.map((node) =>
@@ -74,14 +81,7 @@ export default function WhiteBoard() {
                 ...node,
                 data: {
                   ...node.data,
-                  label: (() => {
-                    switch (action) {
-                      case 'rephrase':
-                        return llmResponse;
-                      default:
-                        return currentText;
-                    }
-                  })(),
+                  label: action === 'rephrase' || action === 'summarize' ? llmResponse : currentText + llmResponse
                 },
               }
             : node

@@ -1,12 +1,11 @@
 import {
   AccountApiFactory,
   Configuration,
-  LlmServiceControllerApi,
-  LlmServiceControllerApiFactory,
   RootApiFactory,
 } from "@/api/generated";
 import globalAxios from "axios";
 import { getSession } from "next-auth/react";
+import { DefaultApiFactory } from "./genai/generated";
 
 globalAxios.interceptors.request.use(async (request) => {
   const session = await getSession();
@@ -32,7 +31,10 @@ const configuration: Configuration = {
   },
   basePath: process.env.NEXT_PUBLIC_API_URL,
 };
+console.log("API URL:", configuration, process);
 
 export const rootApiFactory = RootApiFactory(configuration);
 export const accountApiFactory = AccountApiFactory(configuration);
-export const llmApiFactory = LlmServiceControllerApiFactory(configuration);
+export const llmApiFactory = DefaultApiFactory(undefined, "http://localhost:8000");
+
+
