@@ -1,19 +1,23 @@
-import React, { useCallback } from "react";
+'use client'
+import React, { useCallback, useState } from "react";
 import {
-  ReactFlow,
-  Node,
-  addEdge,
-  Connection,
-  useNodesState,
-  useEdgesState,
-  Controls,
-  Background,
-  BackgroundVariant,
+    ReactFlow,
+    Node,
+    addEdge,
+    Connection,
+    useNodesState,
+    useEdgesState,
+    Controls,
+    Background,
+    BackgroundVariant, ReactFlowInstance, useReactFlow, Edge,
+    ReactFlowProvider,
 } from "@xyflow/react";
 import "@xyflow/react/dist/style.css";
 import Sidebar from "@/components/sidebar/Sidebar";
 import TextNode from "@/components/text-node/TextNode";
 import ShapeNode from "@/components/shape-node/ShapeNode";
+import {Node as BackendNode} from "@/api/generated/api"
+
 
 const nodeTypes = {
   text: TextNode,
@@ -22,15 +26,31 @@ const nodeTypes = {
 
 export default function WhiteBoard() {
   const [nodes, setNodes, onNodesChange] = useNodesState<Node>([]);
+  const [edges, setEdges, onEdgesChange] = useEdgesState<Edge>([]);
+  const [rfInstance, setRfInstance] = useState<ReactFlowInstance | null>(null);
+  const { setViewport } = useReactFlow();
 
   const handleAddNode = useCallback(
     (newNode: Node) => {
       setNodes((nds) => [...nds, newNode]);
+      console.log("here")
+      console.log(newNode);
+      console.log(rfInstance)
+        if (rfInstance) {
+            const flow = rfInstance.toObject();
+            console.log(JSON.stringify(flow));
+        }
+        else {
+            console.log("else")
+        }
     },
-    [setNodes],
+      [setNodes, rfInstance] ,
   );
 
-  const [edges, setEdges, onEdgesChange] = useEdgesState([]);
+
+
+
+
 
   const onConnect = useCallback(
     (params: Connection) => setEdges((eds) => addEdge(params, eds)),
@@ -39,6 +59,7 @@ export default function WhiteBoard() {
 
   return (
     <div style={{ width: "100vw", height: "100vh" }}>
+        <button onClick={handleSaveState}>Click to save</button>
       <div className="fixed top-1/2 left-4 z-10 -translate-y-1/2">
         <Sidebar onAddNode={handleAddNode} />
       </div>
@@ -48,6 +69,10 @@ export default function WhiteBoard() {
         onNodesChange={onNodesChange}
         onEdgesChange={onEdgesChange}
         onConnect={onConnect}
+        onInit={(instance) => {
+            console.log('✅ Initialized', instance);
+            setRfInstance(instance);
+        }}
         nodeTypes={nodeTypes}
         fitView
       >

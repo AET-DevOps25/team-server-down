@@ -8,6 +8,7 @@ All URIs are relative to *http://localhost:9091*
 |[**deleteWhiteboard**](#deletewhiteboard) | **DELETE** /whiteboards/{id} | |
 |[**getUserWhiteboards**](#getuserwhiteboards) | **GET** /whiteboards | Get whiteboards by user ID|
 |[**getWhiteboardById**](#getwhiteboardbyid) | **GET** /whiteboards/{id} | |
+|[**saveWhiteboardState**](#savewhiteboardstate) | **POST** /whiteboards/{whiteboardId}/save | |
 |[**updateTitle**](#updatetitle) | **PUT** /whiteboards/{id}/title | Update title|
 
 # **createWhiteboard**
@@ -196,6 +197,60 @@ const { status, data } = await apiInstance.getWhiteboardById(
 
  - **Content-Type**: Not defined
  - **Accept**: */*
+
+
+### HTTP response details
+| Status code | Description | Response headers |
+|-------------|-------------|------------------|
+|**200** | OK |  -  |
+
+[[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to Model list]](../README.md#documentation-for-models) [[Back to README]](../README.md)
+
+# **saveWhiteboardState**
+> saveWhiteboardState(whiteboardStateDto)
+
+
+### Example
+
+```typescript
+import {
+    WhiteboardApi,
+    Configuration,
+    WhiteboardStateDto
+} from './api';
+
+const configuration = new Configuration();
+const apiInstance = new WhiteboardApi(configuration);
+
+let whiteboardId: number; // (default to undefined)
+let whiteboardStateDto: WhiteboardStateDto; //
+
+const { status, data } = await apiInstance.saveWhiteboardState(
+    whiteboardId,
+    whiteboardStateDto
+);
+```
+
+### Parameters
+
+|Name | Type | Description  | Notes|
+|------------- | ------------- | ------------- | -------------|
+| **whiteboardStateDto** | **WhiteboardStateDto**|  | |
+| **whiteboardId** | [**number**] |  | defaults to undefined|
+
+
+### Return type
+
+void (empty response body)
+
+### Authorization
+
+[keycloak](../README.md#keycloak)
+
+### HTTP request headers
+
+ - **Content-Type**: application/json
+ - **Accept**: Not defined
 
 
 ### HTTP response details

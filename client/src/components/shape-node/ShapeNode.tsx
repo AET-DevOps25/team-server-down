@@ -20,6 +20,7 @@ export interface ShapeNodeParams extends NodeProps {
   id: string;
   data: {
     label: string;
+    shapeType: string;
     Shape: React.ComponentType<React.SVGProps<SVGSVGElement>>;
     nodeProperties: NodeProperties;
   };
@@ -27,7 +28,7 @@ export interface ShapeNodeParams extends NodeProps {
 }
 
 const ShapeNode = ({ id, data, selected }: ShapeNodeParams) => {
-  const { Shape, nodeProperties, label } = data;
+  const { shapeType, Shape, nodeProperties, label } = data;
 
   const { setNodes } = useReactFlow();
 

@@ -1,6 +1,10 @@
 import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
+import './index.css';
+import '@xyflow/react/dist/style.css';
+import './xy-theme.css';
+
 import Providers from "@/app/providers";
 import SessionGuard from "@/components/auth/session-guard/SessionGuard";
 

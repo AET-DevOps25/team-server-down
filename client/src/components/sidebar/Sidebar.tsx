@@ -74,15 +74,18 @@ export default function Sidebar({ onAddNode }: SidebarProps) {
 
   const handleAddShapeNode = (item: (typeof menuItems)[0]) => {
     const newNode: Node = {
-      id: `shape-${Date.now()}`, // Use timestamp for unique ID
-      type: "shapeNode", // Note: should match your nodeTypes key
+      id: `shape-${Date.now()}`, // Use timestamp for unique ID // TODO combine tih user id so it s actually unique
+      type: "shapeNode",
       data: {
+        shapeType: item.shape,
         label: item.shape,
         Shape: item.ShapeComponent,
         nodeProperties: defaultShapeNodeProperties,
       },
       position: { x: Math.random() * 300, y: Math.random() * 300 }, // Random position
     };
+    console.log("new node");
+    console.log(newNode);
     onAddNode(newNode);
   };
 

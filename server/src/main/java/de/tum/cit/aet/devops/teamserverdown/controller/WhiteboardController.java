@@ -1,7 +1,13 @@
 package de.tum.cit.aet.devops.teamserverdown.controller;
 
+import de.tum.cit.aet.devops.teamserverdown.dto.ViewportDto;
+import de.tum.cit.aet.devops.teamserverdown.dto.WhiteboardStateDto;
 import de.tum.cit.aet.devops.teamserverdown.model.User;
+import de.tum.cit.aet.devops.teamserverdown.model.Viewport;
 import de.tum.cit.aet.devops.teamserverdown.model.Whiteboard;
+import de.tum.cit.aet.devops.teamserverdown.repository.EdgeRepository;
+import de.tum.cit.aet.devops.teamserverdown.repository.NodeRepository;
+import de.tum.cit.aet.devops.teamserverdown.repository.ViewportRepository;
 import de.tum.cit.aet.devops.teamserverdown.repository.WhiteboardRepository;
 import de.tum.cit.aet.devops.teamserverdown.security.CurrentUser;
 import io.swagger.v3.oas.annotations.Operation;
@@ -22,9 +28,19 @@ public class WhiteboardController {
   private static final Logger logger = LoggerFactory.getLogger(WhiteboardController.class);
 
   private WhiteboardRepository whiteboardRepository;
+  private NodeRepository nodeRepository;
+  private EdgeRepository edgeRepository;
+  private ViewportRepository viewportRepository;
 
-  public WhiteboardController(WhiteboardRepository whiteboardRepository) {
+  public WhiteboardController(
+      WhiteboardRepository whiteboardRepository,
+      NodeRepository nodeRepository,
+      EdgeRepository edgeRepository,
+      ViewportRepository viewportRepository) {
     this.whiteboardRepository = whiteboardRepository;
+    this.nodeRepository = nodeRepository;
+    this.edgeRepository = edgeRepository;
+    this.viewportRepository = viewportRepository;
   }
 
   @PostMapping
@@ -106,4 +122,43 @@ public class WhiteboardController {
 
     return ResponseEntity.noContent().build();
   }
+
+  @PostMapping("/{whiteboardId}/save")
+  public ResponseEntity<Void> saveWhiteboardState(
+          @PathVariable Long whiteboardId,
+          @RequestBody WhiteboardStateDto whiteboardStateDto) {
+
+    nodeRepository.deleteByWhiteboardId(whiteboardId);
+    edgeRepository.deleteByWhiteboardId(whiteboardId);
+
+    whiteboardStateDto.getNodes().forEach(node -> node.setWhiteboardId(whiteboardId));
+    whiteboardStateDto.getEdges().forEach(edge -> edge.setWhiteboardId(whiteboardId));
+
+    nodeRepository.saveAll(whiteboardStateDto.getNodes());
+    edgeRepository.saveAll(whiteboardStateDto.getEdges());
+
+    ViewportDto viewportDto = whiteboardStateDto.getViewportDto();
+    if (viewportDto != null) {
+      Optional<Viewport> existingOpt = viewportRepository.findByWhiteboardId(whiteboardId);
+
+      if (existingOpt.isPresent()) {
+        Viewport existing = existingOpt.get();
+        existing.setX(viewportDto.getX());
+        existing.setY(viewportDto.getY());
+        existing.setZoom(viewportDto.getZoom());
+        viewportRepository.save(existing);
+      } else {
+        Viewport newViewport = new Viewport();
+        newViewport.setX(viewportDto.getX());
+        newViewport.setY(viewportDto.getY());
+        newViewport.setZoom(viewportDto.getZoom());
+        newViewport.setWhiteboardId(whiteboardId);
+        viewportRepository.save(newViewport);
+      }
+    }
+
+    return ResponseEntity.ok().build();
+  }
+
+
 }
