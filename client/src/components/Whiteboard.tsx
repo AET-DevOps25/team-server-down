@@ -1,55 +1,72 @@
-'use client'
-import React, { useCallback, useState } from "react";
+"use client";
+import React, { useCallback, useEffect, useState } from "react";
 import {
-    ReactFlow,
-    Node,
-    addEdge,
-    Connection,
-    useNodesState,
-    useEdgesState,
-    Controls,
-    Background,
-    BackgroundVariant, ReactFlowInstance, useReactFlow, Edge,
-    ReactFlowProvider,
+  ReactFlow,
+  Node,
+  addEdge,
+  Connection,
+  useNodesState,
+  useEdgesState,
+  Controls,
+  Background,
+  BackgroundVariant,
+  ReactFlowInstance,
+  useReactFlow,
+  Edge,
 } from "@xyflow/react";
 import "@xyflow/react/dist/style.css";
 import Sidebar from "@/components/sidebar/Sidebar";
 import TextNode from "@/components/text-node/TextNode";
 import ShapeNode from "@/components/shape-node/ShapeNode";
-import {Node as BackendNode} from "@/api/generated/api"
-
+import { useSaveWhiteboardState } from "@/hooks/api/whiteboard.save.state.api";
+import { useRestoreWhiteboard } from "@/hooks/api/whiteboard.restore.state.api";
+import useInterval from "@/hooks/useInterval";
 
 const nodeTypes = {
   text: TextNode,
   shapeNode: ShapeNode,
 };
 
-export default function WhiteBoard() {
+export default function Whiteboard() {
   const [nodes, setNodes, onNodesChange] = useNodesState<Node>([]);
   const [edges, setEdges, onEdgesChange] = useEdgesState<Edge>([]);
   const [rfInstance, setRfInstance] = useState<ReactFlowInstance | null>(null);
-  const { setViewport } = useReactFlow();
+  const { getNodes, getEdges, getViewport } = useReactFlow();
+
+  const whiteboardId = 1;
+
+  const { saveWhiteboardState, isSaving, error } = useSaveWhiteboardState({
+    whiteboardId,
+    nodes: getNodes(),
+    edges: getEdges(),
+    viewport: getViewport(),
+  });
+
+  useInterval(saveWhiteboardState, 3000);
+
+  const {
+    isLoading,
+    error: la,
+    refetch,
+  } = useRestoreWhiteboard({
+    whiteboardId,
+  });
 
   const handleAddNode = useCallback(
     (newNode: Node) => {
       setNodes((nds) => [...nds, newNode]);
-      console.log("here")
+      console.log("here");
       console.log(newNode);
-      console.log(rfInstance)
-        if (rfInstance) {
-            const flow = rfInstance.toObject();
-            console.log(JSON.stringify(flow));
-        }
-        else {
-            console.log("else")
-        }
+      console.log(rfInstance);
+      if (rfInstance) {
+        const flow = rfInstance.toObject();
+        console.log(JSON.stringify(flow));
+      } else {
+        console.log("else");
+      }
     },
-      [setNodes, rfInstance] ,
+    [setNodes, rfInstance],
   );
-
-
-
-
 
 
   const onConnect = useCallback(
@@ -59,7 +76,6 @@ export default function WhiteBoard() {
 
   return (
     <div style={{ width: "100vw", height: "100vh" }}>
-        <button onClick={handleSaveState}>Click to save</button>
       <div className="fixed top-1/2 left-4 z-10 -translate-y-1/2">
         <Sidebar onAddNode={handleAddNode} />
       </div>
@@ -70,8 +86,8 @@ export default function WhiteBoard() {
         onEdgesChange={onEdgesChange}
         onConnect={onConnect}
         onInit={(instance) => {
-            console.log('✅ Initialized', instance);
-            setRfInstance(instance);
+          console.log("Initialized", instance);
+          setRfInstance(instance);
         }}
         nodeTypes={nodeTypes}
         fitView

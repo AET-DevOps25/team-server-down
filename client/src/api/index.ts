@@ -1,7 +1,11 @@
 import {
   AccountApiFactory,
   Configuration,
+  EdgeControllerApiFactory,
+  NodeControllerApi,
+  NodeControllerApiFactory,
   RootApiFactory,
+  ViewportControllerApiFactory,
   WhiteboardApiFactory,
 } from "@/api/generated";
 import globalAxios from "axios";
@@ -35,3 +39,6 @@ const configuration: Configuration = {
 export const rootApiFactory = RootApiFactory(configuration);
 export const accountApiFactory = AccountApiFactory(configuration);
 export const whiteboardApiFactory = WhiteboardApiFactory(configuration);
+export const nodeApiFactory = NodeControllerApiFactory(configuration);
+export const edgeApiFactory = EdgeControllerApiFactory(configuration);
+export const viewportFactory = ViewportControllerApiFactory(configuration);

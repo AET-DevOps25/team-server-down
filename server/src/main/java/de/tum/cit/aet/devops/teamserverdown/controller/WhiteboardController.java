@@ -160,5 +160,4 @@ public class WhiteboardController {
     return ResponseEntity.ok().build();
   }
 
-
 }

@@ -11,6 +11,7 @@ import {
   defaultShapeNodeProperties,
   defaultTextNodeProperties,
 } from "@/types/NodeProperties";
+import shapeRegistry from "@/util/shapeRegistry";
 
 interface SidebarProps {
   onAddNode: (node: Node) => void;
@@ -18,42 +19,36 @@ interface SidebarProps {
 
 export default function Sidebar({ onAddNode }: SidebarProps) {
   const menuItems = [
-    { icon: Circle, label: "Circle", shape: "circle", ShapeComponent: Circle },
+    { icon: Circle, label: "Circle", shape: "circle" },
     {
       icon: Diamond,
       label: "Diamond",
       shape: "diamond",
-      ShapeComponent: Diamond,
     },
     {
       icon: Hexagon,
       label: "Hexagon",
       shape: "hexagon",
-      ShapeComponent: Hexagon,
     },
     {
       icon: Parallelogram,
       label: "Parallelogram",
       shape: "parallelogram",
-      ShapeComponent: Parallelogram,
     },
     {
       icon: Rectangle,
       label: "Rectangle",
       shape: "rectangle",
-      ShapeComponent: Rectangle,
     },
     {
       icon: Trapezoid,
       label: "Trapezoid",
       shape: "trapezoid",
-      ShapeComponent: Trapezoid,
     },
     {
       icon: Triangle,
       label: "Triangle",
       shape: "triangle",
-      ShapeComponent: Triangle,
     },
   ];
 
@@ -78,8 +73,8 @@ export default function Sidebar({ onAddNode }: SidebarProps) {
       type: "shapeNode",
       data: {
         shapeType: item.shape,
-        label: item.shape,
-        Shape: item.ShapeComponent,
+        label: item.label,
+        Shape: shapeRegistry({ shapeType: item.shape }),
         nodeProperties: defaultShapeNodeProperties,
       },
       position: { x: Math.random() * 300, y: Math.random() * 300 }, // Random position
