@@ -45,6 +45,7 @@ services:
     image: ghcr.io/aet-devops25/team-server-down/client:latest
     environment:
       - PUBLIC_API_URL=${PUBLIC_API_URL}
+      - PUBLIC_GENAI_URL=${PUBLIC_GENAI_URL}
     depends_on:
       - server
     restart: unless-stopped

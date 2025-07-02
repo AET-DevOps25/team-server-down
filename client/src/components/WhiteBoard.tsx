@@ -81,7 +81,7 @@ export default function WhiteBoard() {
                 ...node,
                 data: {
                   ...node.data,
-                  label: action === 'rephrase' || action === 'summarize' ? llmResponse : currentText + llmResponse
+                  label: llmResponse
                 },
               }
             : node

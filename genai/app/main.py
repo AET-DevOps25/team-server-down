@@ -96,7 +96,7 @@ app = FastAPI(
 
 @app.get("/v3/api-docs", include_in_schema=False)
 def custom_openapi():
-    return JSONResponse(get_openapi(title=app.title, version=app.version, routes=app.routes))
+    return JSONResponse(get_openapi(title=app.title, version=app.version, routes=app.routes, servers=[{"url": "http://localhost:8000"}],))
 
 app.add_middleware(
     CORSMiddleware,
@@ -123,6 +123,7 @@ async def complete_text(request: TextRequest):
         {input_text}
         
         Rules:
+        - ALWAYS start your response with the exact input text
         - Add only ONE sentence
         - Keep the style consistent
         - Make it coherent with the input

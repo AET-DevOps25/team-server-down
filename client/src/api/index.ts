@@ -31,7 +31,23 @@ const configuration: Configuration = {
   },
   basePath: process.env.NEXT_PUBLIC_API_URL,
 };
-console.log("API URL:", configuration, process);
+
+const configurationAI: Configuration = {
+  isJsonMime(mime: string): boolean {
+    const jsonMime = new RegExp(
+      "^(application/json|[^;/ \t]+/[^;/ \t]+[+]json)[ \t]*(;.*)?$",
+      "i",
+    );
+    return (
+      mime !== null &&
+      (jsonMime.test(mime) ||
+        mime.toLowerCase() === "application/json-patch+json")
+    );
+  },
+  basePath: process.env.NEXT_PUBLIC_GENAI_URL,
+};
+
+console.log("configuration ai", configurationAI, configuration, process.env.NEXT_PUBLIC_GENAI_URL, process.env.NEXT_PUBLIC_API_URL);
 
 export const rootApiFactory = RootApiFactory(configuration);
 export const accountApiFactory = AccountApiFactory(configuration);

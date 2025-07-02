@@ -30,7 +30,7 @@ export function AIActionDropdown({ selectedNodes, onAIAction }: AIActionsProps) 
   };
 
   return (
-    <div className="fixed top-1 left-4 z-10">
+    <div className="fixed top-8 left-8 z-10">
       <DropdownMenu>
         <DropdownMenuTrigger asChild>
           <Button
@@ -43,7 +43,9 @@ export function AIActionDropdown({ selectedNodes, onAIAction }: AIActionsProps) 
             }`}
             disabled={!hasSelectedTextNodes || loading}
           >
-            <Sparkles className={`h-25 w-25 ${loading ? 'animate-spin' : ''}`} />
+        <Sparkles
+        className={`size-20 ${loading ? 'animate-spin' : ''}`}
+          />
           </Button>
         </DropdownMenuTrigger>
         <DropdownMenuContent align="end" className="w-48">

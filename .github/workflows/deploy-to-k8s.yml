@@ -18,6 +18,7 @@ jobs:
       repo: ${{ steps.set-vars.outputs.repo }}
       tag: ${{ steps.set-vars.outputs.tag }}
       api_url: ${{ steps.set-vars.outputs.api_url }}
+      genai_url: ${{ steps.set-vars.outputs.genai_url }} 
       merge_commit: ${{ steps.merge-base-branch.outputs.merge_commit }}
     steps:
       - name: Checkout
@@ -46,13 +47,16 @@ jobs:
           if [[ "$BRANCH" == "main" ]]; then
             echo "tag=latest" >> $GITHUB_OUTPUT
             echo "api_url=https://api.whiteboard.student.k8s.aet.cit.tum.de" >> $GITHUB_OUTPUT
+            echo "genai_url=https://genai.whiteboard.student.k8s.aet.cit.tum.de" >> $GITHUB_OUTPUT
           elif [[ "$BRANCH" == "develop" ]]; then
             echo "tag=develop" >> $GITHUB_OUTPUT
             echo "api_url=https://staging.api.whiteboard.student.k8s.aet.cit.tum.de" >> $GITHUB_OUTPUT
+            echo "genai_url=https://staging.genai.whiteboard.student.k8s.aet.cit.tum.de" >> $GITHUB_OUTPUT
           else
             BRANCH_SAFE=${BRANCH//\//-}
             echo "tag=$BRANCH_SAFE" >> $GITHUB_OUTPUT
             echo "api_url=https://$BRANCH_SAFE.api.whiteboard.student.k8s.aet.cit.tum.de" >> $GITHUB_OUTPUT
+            echo "genai_url=https://$BRANCH_SAFE.genai.whiteboard.student.k8s.aet.cit.tum.de" >> $GITHUB_OUTPUT
           fi
 
   build-client:
@@ -90,6 +94,7 @@ jobs:
           push: true
           tags: ghcr.io/${{ needs.setup.outputs.repo }}/client:${{ needs.setup.outputs.tag }}
           build-args: API_URL=${{ needs.setup.outputs.api_url }}
+                NEXT_PUBLIC_GENAI_URL=${{ needs.setup.outputs.genai_url }}
           platforms: linux/amd64
 
   build-server:
