@@ -4,3 +4,4 @@ CREATE TABLE "user"
     name VARCHAR(255),
     CONSTRAINT pk_user PRIMARY KEY (id)
 );
+
