@@ -1,5 +1,5 @@
 "use client";
-import React, { useCallback, useEffect, useState } from "react";
+import React, { useCallback, useState } from "react";
 import {
   ReactFlow,
   Node,
@@ -21,21 +21,24 @@ import ShapeNode from "@/components/shape-node/ShapeNode";
 import { useSaveWhiteboardState } from "@/hooks/api/whiteboard.save.state.api";
 import { useRestoreWhiteboard } from "@/hooks/api/whiteboard.restore.state.api";
 import useInterval from "@/hooks/useInterval";
+import MenuBar from "./menu-bar/MenuBar";
 
 const nodeTypes = {
   text: TextNode,
   shapeNode: ShapeNode,
 };
 
-export default function Whiteboard() {
+interface WhiteboardProps {
+  whiteboardId: number;
+}
+
+export default function Whiteboard({ whiteboardId }: WhiteboardProps) {
   const [nodes, setNodes, onNodesChange] = useNodesState<Node>([]);
   const [edges, setEdges, onEdgesChange] = useEdgesState<Edge>([]);
   const [rfInstance, setRfInstance] = useState<ReactFlowInstance | null>(null);
   const { getNodes, getEdges, getViewport } = useReactFlow();
 
-  const whiteboardId = 1;
-
-  const { saveWhiteboardState, isSaving, error } = useSaveWhiteboardState({
+  const { saveWhiteboardState } = useSaveWhiteboardState({
     whiteboardId,
     nodes: getNodes(),
     edges: getEdges(),
@@ -44,11 +47,7 @@ export default function Whiteboard() {
 
   useInterval(saveWhiteboardState, 3000);
 
-  const {
-    isLoading,
-    error: la,
-    refetch,
-  } = useRestoreWhiteboard({
+  useRestoreWhiteboard({
     whiteboardId,
   });
 
@@ -68,7 +67,6 @@ export default function Whiteboard() {
     [setNodes, rfInstance],
   );
 
-
   const onConnect = useCallback(
     (params: Connection) => setEdges((eds) => addEdge(params, eds)),
     [setEdges],
@@ -76,6 +74,9 @@ export default function Whiteboard() {
 
   return (
     <div style={{ width: "100vw", height: "100vh" }}>
+      <div className="fixed top-0 right-0 left-0 z-20 mx-4 my-6">
+        <MenuBar whiteboardId={whiteboardId} />
+      </div>
       <div className="fixed top-1/2 left-4 z-10 -translate-y-1/2">
         <Sidebar onAddNode={handleAddNode} />
       </div>

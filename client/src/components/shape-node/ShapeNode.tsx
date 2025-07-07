@@ -28,7 +28,7 @@ export interface ShapeNodeParams extends NodeProps {
 }
 
 const ShapeNode = ({ id, data, selected }: ShapeNodeParams) => {
-  const { shapeType, Shape, nodeProperties, label } = data;
+  const { Shape, nodeProperties, label } = data;
 
   const { setNodes } = useReactFlow();
 

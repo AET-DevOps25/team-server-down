@@ -8,6 +8,7 @@ All URIs are relative to *http://localhost:9091*
 |[**deleteWhiteboard**](#deletewhiteboard) | **DELETE** /whiteboards/{id} | |
 |[**getUserWhiteboards**](#getuserwhiteboards) | **GET** /whiteboards | Get whiteboards by user ID|
 |[**getWhiteboardById**](#getwhiteboardbyid) | **GET** /whiteboards/{id} | |
+|[**getWhiteboardTitle**](#getwhiteboardtitle) | **GET** /whiteboards/{id}/title | Get whiteboard title|
 |[**saveWhiteboardState**](#savewhiteboardstate) | **POST** /whiteboards/{whiteboardId}/save | |
 |[**updateTitle**](#updatetitle) | **PUT** /whiteboards/{id}/title | Update title|
 
@@ -188,6 +189,57 @@ const { status, data } = await apiInstance.getWhiteboardById(
 ### Return type
 
 **Whiteboard**
+
+### Authorization
+
+[keycloak](../README.md#keycloak)
+
+### HTTP request headers
+
+ - **Content-Type**: Not defined
+ - **Accept**: */*
+
+
+### HTTP response details
+| Status code | Description | Response headers |
+|-------------|-------------|------------------|
+|**200** | OK |  -  |
+
+[[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to Model list]](../README.md#documentation-for-models) [[Back to README]](../README.md)
+
+# **getWhiteboardTitle**
+> string getWhiteboardTitle()
+
+Returns the title of a whiteboard by its ID
+
+### Example
+
+```typescript
+import {
+    WhiteboardApi,
+    Configuration
+} from './api';
+
+const configuration = new Configuration();
+const apiInstance = new WhiteboardApi(configuration);
+
+let id: number; //ID of the whiteboard (default to undefined)
+
+const { status, data } = await apiInstance.getWhiteboardTitle(
+    id
+);
+```
+
+### Parameters
+
+|Name | Type | Description  | Notes|
+|------------- | ------------- | ------------- | -------------|
+| **id** | [**number**] | ID of the whiteboard | defaults to undefined|
+
+
+### Return type
+
+**string**
 
 ### Authorization
 

@@ -40,7 +40,6 @@ export function useSaveWhiteboardState({
             ? `${node.type}:${data.shapeType}`
             : node.type || "";
 
-
         const label =
           "label" in data
             ? typeof data.label === "string"

@@ -1,7 +1,7 @@
 import { Plus } from "lucide-react";
 import { useCreateWhiteboard } from "@/hooks/api/whiteboard.api";
 
-export default function CreateProjectCard() {
+export default function CreateWhiteboardCard() {
   const createMutation = useCreateWhiteboard();
   const handleCreate = () => createMutation.mutate("Untitled");
 

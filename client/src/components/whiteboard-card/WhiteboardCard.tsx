@@ -1,6 +1,5 @@
 "use client";
-import { FileText } from "lucide-react";
-import ProjectEditPopover from "@/components/project-card/project-card-components/ProjectEditPopover";
+
 import React, { useState, useRef, useEffect } from "react";
 import formatDate from "@/util/formatDate";
 import { useRouter } from "next/navigation";
@@ -9,6 +8,8 @@ import {
   useDeleteWhiteboard,
   useUpdateWhiteboardTitle,
 } from "@/hooks/api/whiteboard.api";
+import WhiteboardThumbnail from "@/components/whiteboard-card/whiteboard-card-components/WhiteboardThumbnail";
+import WhiteboardEditPopover from "@/components/whiteboard-card/whiteboard-card-components/WhiteboardEditPopover";
 
 export default function ProjectCard({ project }: { project: Whiteboard }) {
   const router = useRouter();
@@ -18,7 +19,6 @@ export default function ProjectCard({ project }: { project: Whiteboard }) {
   const inputRef = useRef<HTMLInputElement>(null);
 
   const deleteWhiteboard = useDeleteWhiteboard();
-
   const updateTitle = useUpdateWhiteboardTitle(project.id!);
 
   useEffect(() => {
@@ -76,10 +76,7 @@ export default function ProjectCard({ project }: { project: Whiteboard }) {
       onClick={() => router.push(`/board/${project.id}`)}
     >
       <div className="flex aspect-video items-center justify-center rounded-t-lg bg-gray-50 p-4">
-        {/*theoretically the img of the white board*/}
-        <div className="flex h-full w-full items-center justify-center rounded bg-gray-100">
-          <FileText className="h-8 w-8 text-gray-400" />
-        </div>
+        <WhiteboardThumbnail id={project.id!} title={project.title} />
       </div>
       <div className="flex flex-row justify-between p-4">
         <div className="mr-2 w-3/4 flex-1">
@@ -107,7 +104,10 @@ export default function ProjectCard({ project }: { project: Whiteboard }) {
           </div>
         </div>
         <div onClick={(e) => e.stopPropagation()}>
-          <ProjectEditPopover onRename={handleRename} onDelete={handleDelete} />
+          <WhiteboardEditPopover
+            onRename={handleRename}
+            onDelete={handleDelete}
+          />
         </div>
       </div>
     </div>

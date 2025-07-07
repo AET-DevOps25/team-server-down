@@ -82,6 +82,28 @@ public class WhiteboardController {
     return whiteboardRepository.findByUserId(user.getId());
   }
 
+  @GetMapping("/{id}/title")
+  @Operation(
+      summary = "Get whiteboard title",
+      description = "Returns the title of a whiteboard by its ID")
+  public ResponseEntity<String> getWhiteboardTitle(
+      @Parameter(description = "ID of the whiteboard", required = true) @PathVariable Long id,
+      @CurrentUser User user) {
+
+    logger.info("Fetching title for whiteboard with id={} for userId={}", id, user.getId());
+    Optional<Whiteboard> whiteboardOpt = whiteboardRepository.findByIdAndUserId(id, user.getId());
+
+    if (whiteboardOpt.isPresent()) {
+      Whiteboard whiteboard = whiteboardOpt.get();
+      logger.info("Whiteboard found: id={}, title='{}'", id, whiteboard.getTitle());
+      return ResponseEntity.ok(whiteboard.getTitle());
+    } else {
+      logger.warn(
+          "Whiteboard not found or unauthorized access for id={} and userId={}", id, user.getId());
+      return ResponseEntity.status(404).build();
+    }
+  }
+
   @PutMapping("/{id}/title")
   @Operation(summary = "Update title", description = "Updates the title of an existing whiteboard.")
   public Whiteboard updateTitle(
@@ -125,8 +147,7 @@ public class WhiteboardController {
 
   @PostMapping("/{whiteboardId}/save")
   public ResponseEntity<Void> saveWhiteboardState(
-          @PathVariable Long whiteboardId,
-          @RequestBody WhiteboardStateDto whiteboardStateDto) {
+      @PathVariable Long whiteboardId, @RequestBody WhiteboardStateDto whiteboardStateDto) {
 
     nodeRepository.deleteByWhiteboardId(whiteboardId);
     edgeRepository.deleteByWhiteboardId(whiteboardId);
@@ -159,5 +180,4 @@ public class WhiteboardController {
 
     return ResponseEntity.ok().build();
   }
-
 }

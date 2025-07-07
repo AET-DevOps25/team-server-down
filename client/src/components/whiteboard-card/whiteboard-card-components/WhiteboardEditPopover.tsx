@@ -34,7 +34,7 @@ function PopoverOption({ label, Icon, onClick }: PopoverOptionProps) {
   );
 }
 
-export default function ProjectEditPopover({
+export default function WhiteboardEditPopover({
   onRename,
   onDelete,
 }: ProjectEditPopoverProps) {

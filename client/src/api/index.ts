@@ -2,7 +2,6 @@ import {
   AccountApiFactory,
   Configuration,
   EdgeControllerApiFactory,
-  NodeControllerApi,
   NodeControllerApiFactory,
   RootApiFactory,
   ViewportControllerApiFactory,
