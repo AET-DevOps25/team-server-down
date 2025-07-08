@@ -51,59 +51,11 @@ export default function WhiteBoard() {
     setSelectedNodes(nodes.filter(node => node.selected));
   }, [nodes, onNodesChange]);
 
-  const handleAIAction = async (action: 'complete' | 'summarize' | 'rephrase') => {
-    const textNodes = selectedNodes.filter(node => node.type === 'text' || node.type === 'shapeNode');
-    if (textNodes.length === 0) return;
-  
-    const nodeToUpdate = textNodes[0];
-    const currentText = nodeToUpdate.data.label as string;
-  
-    setIsLoading(true);
-  
-    try {
-      let data: TextResponse;
-  
-      if (action === 'rephrase') {
-       data = await rephraseText({ user_text: [currentText] });
-      } else if (action === 'complete') {
-        data = await completeText({ user_text: [currentText] });
-      }
-      else {
-        data = await summarizedText ({ user_text: [currentText] })
-      }
-      
-      const llmResponse = data.llm_response 
-  
-      setNodes((nds) =>
-        nds.map((node) =>
-          node.id === nodeToUpdate.id
-            ? {
-                ...node,
-                data: {
-                  ...node.data,
-                  label: llmResponse
-                },
-              }
-            : node
-        )
-      );
-    } catch (error) {
-      console.error("Error calling LLM service:", error);
-    } finally {
-      setIsLoading(false);
-    }
-  };
-
   return (
     <div style={{ width: "100vw", height: "100vh" }}>
       <div className="fixed top-1/2 left-4 z-10 -translate-y-1/2">
         <Sidebar onAddNode={handleAddNode} />
       </div>
-      <AIActionDropdown 
-        selectedNodes={selectedNodes}
-        onAIAction={handleAIAction}
-      />
-
     {isLoading && (
         <div className="fixed inset-0 bg-black/20 backdrop-blur-sm flex items-center justify-center z-50">
           <SpinnerDemo />

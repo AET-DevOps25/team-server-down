@@ -46,11 +46,8 @@ const configurationAI: Configuration = {
   },
   basePath: process.env.NEXT_PUBLIC_GENAI_URL,
 };
-
-console.log("configuration ai", configurationAI, configuration, process.env.NEXT_PUBLIC_GENAI_URL, process.env.NEXT_PUBLIC_API_URL);
-
 export const rootApiFactory = RootApiFactory(configuration);
 export const accountApiFactory = AccountApiFactory(configuration);
-export const llmApiFactory = DefaultApiFactory(undefined, "http://localhost:8000");
+export const llmApiFactory = DefaultApiFactory(configurationAI);
 
 

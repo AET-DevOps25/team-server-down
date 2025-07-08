@@ -1,4 +1,3 @@
-import { Node } from "@xyflow/react";
 import { Sparkles, Type, FileText, RefreshCw } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import {
@@ -10,17 +9,16 @@ import {
 import { useState } from "react";
 
 interface AIActionsProps {
-  selectedNodes: Node[];
+  disabled?: boolean;
   onAIAction: (action: 'complete' | 'summarize' | 'rephrase') => void;
 }
 
-export function AIActionDropdown({ selectedNodes, onAIAction }: AIActionsProps) {
+export function AIActionDropdown({ disabled = false, onAIAction }: AIActionsProps) {
   const [loading, setLoading] = useState(false);
-  const hasSelectedTextNodes = selectedNodes.some(node => node.type === 'text' || node.type === 'shapeNode');
 
   const handleAIAction = async (action: 'complete' | 'summarize' | 'rephrase') => {
-    if (!hasSelectedTextNodes) return;
-    
+    if (disabled) return;
+
     setLoading(true);
     try {
       await onAIAction(action);
@@ -30,22 +28,18 @@ export function AIActionDropdown({ selectedNodes, onAIAction }: AIActionsProps) 
   };
 
   return (
-    <div className="fixed top-8 left-8 z-10">
+    <div>
       <DropdownMenu>
         <DropdownMenuTrigger asChild>
           <Button
             variant="outline"
             size="icon"
             className={`p-2 transition-all ${
-              hasSelectedTextNodes
-                ? 'bg-purple-100 text-purple-600 hover:bg-purple-200'
-                : 'opacity-50 cursor-not-allowed'
+              disabled ? 'opacity-50 cursor-not-allowed' : 'bg-purple-100 text-purple-600 hover:bg-purple-200'
             }`}
-            disabled={!hasSelectedTextNodes || loading}
+            disabled={disabled || loading}
           >
-        <Sparkles
-        className={`size-20 ${loading ? 'animate-spin' : ''}`}
-          />
+            <Sparkles className={`size-5 ${loading ? 'animate-spin' : ''}`} />
           </Button>
         </DropdownMenuTrigger>
         <DropdownMenuContent align="end" className="w-48">

@@ -1,18 +1,23 @@
 "use client";
 import React from "react";
-import { memo } from "react";
+import { memo, useState } from "react";
 import StylePopover from "@/components/style-bar/style-bar-components/StylePopover";
 import FontSizeSelector from "@/components/style-bar/style-bar-components/FontSizeSelector";
 import TextStylingSelector from "@/components/style-bar/style-bar-components/TextStylingSelector";
 import FontFamilySelector from "@/components/style-bar/style-bar-components/FontFamilySelector";
 import { checkerboardStyle, NodeProperties } from "@/types/NodeProperties";
+import { useTextRephrase, useTextCompletion, useTextSummarization } from "@/hooks/api/llm.api";
+import { AIActionDropdown } from "../aiActionDropdown/aiActionDropdown";
+import { LoadingOverlay } from "../spinner/LoadingOverlay";
 
 interface StyleBarProps {
   nodeProperties: NodeProperties;
   onUpdateNode: (updatedProperties: Partial<NodeProperties>) => void;
+  onUpdateLabel: (newLabel: string) => void; 
+  selectedNodeLabel: string; 
 }
 
-const StyleBar = ({ nodeProperties, onUpdateNode }: StyleBarProps) => {
+const StyleBar = ({ nodeProperties, onUpdateNode, onUpdateLabel, selectedNodeLabel }: StyleBarProps) => {
   const {
     color: bgColor,
     borderColor,
@@ -27,6 +32,11 @@ const StyleBar = ({ nodeProperties, onUpdateNode }: StyleBarProps) => {
     borderOpacity = 1,
     opacity = 1,
   } = nodeProperties;
+
+  const { mutateAsync: rephraseText } = useTextRephrase();
+const { mutateAsync: completeText } = useTextCompletion();
+const { mutateAsync: summarizedText } = useTextSummarization();
+const [isLoading, setIsLoading] = useState(false);
 
   const onChangeBgColor = (color: string) => {
     onUpdateNode({ color });
@@ -76,7 +86,31 @@ const StyleBar = ({ nodeProperties, onUpdateNode }: StyleBarProps) => {
     onUpdateNode({ isStrikethrough: !isStrikethrough });
   };
 
+  const handleAIAction = async (action: 'complete' | 'summarize' | 'rephrase') => {
+    setIsLoading(true);
+  
+    try {
+      let data;
+  
+      if (action === "rephrase") {
+        data = await rephraseText({ user_text: [selectedNodeLabel] });
+      } else if (action === "complete") {
+        data = await completeText({ user_text: [selectedNodeLabel] });
+      } else {
+        data = await summarizedText({ user_text: [selectedNodeLabel] });
+      }
+  
+      const llmResponse = data.llm_response;
+      onUpdateLabel(llmResponse);
+    } catch (error) {
+      console.error("LLM error:", error);
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
   return (
+    <>
     <div className="flex items-center gap-4 rounded-md border border-gray-200 bg-white px-3 py-1.5 shadow-lg">
       <StylePopover
         title="Background Style"
@@ -190,7 +224,15 @@ const StyleBar = ({ nodeProperties, onUpdateNode }: StyleBarProps) => {
         fontFamily={fontFamily}
         onChangeFontFamily={onChangeFontFamily}
       />
+      
+      <AIActionDropdown 
+         disabled={!selectedNodeLabel || isLoading}
+          onAIAction={handleAIAction}
+       />
     </div>
+    {isLoading && <LoadingOverlay />}
+    
+    </>
   );
 };
 

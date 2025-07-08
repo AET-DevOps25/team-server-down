@@ -12,15 +12,19 @@ from fastapi.middleware.cors import CORSMiddleware
 from starlette.middleware.base import BaseHTTPMiddleware
 from fastapi.responses import JSONResponse
 from fastapi.openapi.utils import get_openapi
+from dotenv import load_dotenv
+from pathlib import Path
 
 # Setup logging
 logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)
 
+load_dotenv()
+
 router = APIRouter()
 
 # Environment configuration
-CHAIR_API_KEY = "add api key here"
+CHAIR_API_KEY = os.getenv('CHAIR_API_KEY')
 API_URL = "https://gpu.aet.cit.tum.de/api/chat/completions"
 
 

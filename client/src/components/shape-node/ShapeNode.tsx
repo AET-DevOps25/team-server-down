@@ -47,41 +47,18 @@ const ShapeNode = ({ id, data, selected }: ShapeNodeParams) => {
     );
   }, [id, setNodes]);
 
-  useEffect(() => {
-    if (inputRef.current) {
-      const input = inputRef.current;
-      const { scrollWidth, scrollHeight } = input;
-  
-      const minWidth = 100;
-      const minHeight = 100;
-      const padding = 20;
-  
-      const newWidth = Math.max(scrollWidth + padding, minWidth);
-      const newHeight = Math.max(scrollHeight + padding, minHeight);
-  
-      setNodes((nodes) =>
-        nodes.map((node) =>
-          node.id === id
-            ? {
-                ...node,
-                style: {
-                  ...node.style,
-                  width: newWidth,
-                  height: newHeight,
-                },
-              }
-            : node
-        )
-      );
-    }
-  }, [label, setNodes, id]);
-  
 
   return (
     <div 
     className="shape-node-wrapper" 
     onClick={handleClick}
     data-nodeid={id}
+    style={{ 
+      width: '100%',
+      height: '100%',
+      minHeight: '100px',
+      position: 'relative'
+    }}
     >
       <NodeToolbar isVisible={selected} position={Position.Top}>
        <div className="flex items-center gap-2">
@@ -90,6 +67,8 @@ const ShapeNode = ({ id, data, selected }: ShapeNodeParams) => {
           onUpdateNode={(updatedProperties: Partial<NodeProperties>) =>
             onUpdateNode({ nodeProperties: updatedProperties })
           }
+          onUpdateLabel={(newLabel: string) => onUpdateNode({ label: newLabel })}
+          selectedNodeLabel={label}
         />
           </div>
       </NodeToolbar>
@@ -106,6 +85,7 @@ const ShapeNode = ({ id, data, selected }: ShapeNodeParams) => {
           <div className="pointer-events-none absolute inset-0 flex h-full w-full items-center justify-center p-0.5">
             <Shape
               className={`h-full w-full`}
+              preserveAspectRatio="none"
               style={{
                 fill: nodeProperties.color,
                 fillOpacity: nodeProperties.opacity,
@@ -130,6 +110,7 @@ const ShapeNode = ({ id, data, selected }: ShapeNodeParams) => {
             textDecoration:
               `${nodeProperties.isUnderline ? "underline" : ""} ${nodeProperties.isStrikethrough ? "line-through" : ""}`.trim() ||
               "none",
+            textOverflow: "ellipsis",
           }}
           value={label}
           onChange={(e) => onUpdateNode({ label: e.target.value })}
