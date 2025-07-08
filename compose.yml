@@ -87,7 +87,6 @@ services:
       - "3000:3000"
     networks:
       - server
-      - genai
 
   db:
     restart: always
