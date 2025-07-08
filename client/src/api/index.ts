@@ -3,7 +3,7 @@ import {
   Configuration,
   RootApiFactory,
   WhiteboardApiFactory,
-} from "@/api/generated";
+} from "@/api/main/generated";
 import globalAxios from "axios";
 import { getSession } from "next-auth/react";
 import { DefaultApiFactory } from "./genai/generated";
