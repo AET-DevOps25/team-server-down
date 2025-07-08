@@ -1,5 +1,5 @@
 "use client";
-import { memo, useCallback, useState, useRef, useEffect } from "react";
+import { memo, useCallback, useRef } from "react";
 import {
   Handle,
   NodeProps,
@@ -27,7 +27,7 @@ export interface ShapeNodeParams extends NodeProps {
 
 const ShapeNode = ({ id, data, selected }: ShapeNodeParams) => {
   const { Shape, nodeProperties, label } = data;
-  const { setNodes} = useReactFlow();
+  const { setNodes } = useReactFlow();
   const inputRef = useRef<HTMLInputElement>(null);
 
   const onUpdateNode = (updater: {
@@ -37,40 +37,44 @@ const ShapeNode = ({ id, data, selected }: ShapeNodeParams) => {
     setNodes(updateNode(id, updater));
   };
 
-  const handleClick = useCallback((evt: React.MouseEvent) => {
-    evt.stopPropagation();
-    setNodes((nodes) =>
-      nodes.map((node) => ({
-        ...node,
-        selected: node.id === id,
-      }))
-    );
-  }, [id, setNodes]);
-
+  const handleClick = useCallback(
+    (evt: React.MouseEvent) => {
+      evt.stopPropagation();
+      setNodes((nodes) =>
+        nodes.map((node) => ({
+          ...node,
+          selected: node.id === id,
+        })),
+      );
+    },
+    [id, setNodes],
+  );
 
   return (
-    <div 
-    className="shape-node-wrapper" 
-    onClick={handleClick}
-    data-nodeid={id}
-    style={{ 
-      width: '100%',
-      height: '100%',
-      minHeight: '100px',
-      position: 'relative'
-    }}
+    <div
+      className="shape-node-wrapper"
+      onClick={handleClick}
+      data-nodeid={id}
+      style={{
+        width: "100%",
+        height: "100%",
+        minHeight: "100px",
+        position: "relative",
+      }}
     >
       <NodeToolbar isVisible={selected} position={Position.Top}>
-       <div className="flex items-center gap-2">
-        <StyleBar
-          nodeProperties={nodeProperties}
-          onUpdateNode={(updatedProperties: Partial<NodeProperties>) =>
-            onUpdateNode({ nodeProperties: updatedProperties })
-          }
-          onUpdateLabel={(newLabel: string) => onUpdateNode({ label: newLabel })}
-          selectedNodeLabel={label}
-        />
-          </div>
+        <div className="flex items-center gap-2">
+          <StyleBar
+            nodeProperties={nodeProperties}
+            onUpdateNode={(updatedProperties: Partial<NodeProperties>) =>
+              onUpdateNode({ nodeProperties: updatedProperties })
+            }
+            onUpdateLabel={(newLabel: string) =>
+              onUpdateNode({ label: newLabel })
+            }
+            selectedNodeLabel={label}
+          />
+        </div>
       </NodeToolbar>
 
       <NodeResizer
@@ -99,7 +103,7 @@ const ShapeNode = ({ id, data, selected }: ShapeNodeParams) => {
         )}
 
         <input
-          ref = {inputRef}
+          ref={inputRef}
           className={`z-10 min-h-[100px] w-4/5 bg-transparent text-center focus:outline-none`}
           style={{
             color: nodeProperties.textColor,

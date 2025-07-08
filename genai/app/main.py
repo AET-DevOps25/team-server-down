@@ -1,19 +1,16 @@
 import os
-import json
 import requests
-from typing import Dict, Any, List, Optional
-from fastapi import FastAPI, HTTPException, APIRouter, Request
-from pydantic import BaseModel, Field
+from typing import Any, List, Optional
+from fastapi import FastAPI, HTTPException, APIRouter
+from pydantic import BaseModel
 from langchain.llms.base import LLM
 from langchain_core.prompts import PromptTemplate
 from langchain.callbacks.manager import CallbackManagerForLLMRun
 import logging
 from fastapi.middleware.cors import CORSMiddleware
-from starlette.middleware.base import BaseHTTPMiddleware
 from fastapi.responses import JSONResponse
 from fastapi.openapi.utils import get_openapi
 from dotenv import load_dotenv
-from pathlib import Path
 
 # Setup logging
 logging.basicConfig(level=logging.INFO)

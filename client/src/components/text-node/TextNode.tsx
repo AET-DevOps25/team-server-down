@@ -62,7 +62,7 @@ export default function TextNode({ id, data, selected }: TextNodeProps) {
     onUpdateNode({ label: newText });
   };
 
-  useEffect(() => { 
+  useEffect(() => {
     setText(data.label as string);
   }, [data.label]);
 
@@ -75,8 +75,10 @@ export default function TextNode({ id, data, selected }: TextNodeProps) {
             onUpdateNode={(updatedProperties: Partial<NodeProperties>) =>
               onUpdateNode({ nodeProperties: updatedProperties })
             }
-            onUpdateLabel={(newLabel: string) => onUpdateNode({ label: newLabel })}
-             selectedNodeLabel={text}
+            onUpdateLabel={(newLabel: string) =>
+              onUpdateNode({ label: newLabel })
+            }
+            selectedNodeLabel={text}
           />
         </NodeToolbar>
       )}
