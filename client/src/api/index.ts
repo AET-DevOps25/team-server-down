@@ -33,7 +33,7 @@ const configuration: Configuration = {
   basePath: process.env.NEXT_PUBLIC_API_URL,
 };
 
-const configurationAI: Configuration = {
+/*const configurationAI: Configuration = {
   isJsonMime(mime: string): boolean {
     const jsonMime = new RegExp(
       "^(application/json|[^;/ \t]+/[^;/ \t]+[+]json)[ \t]*(;.*)?$",
@@ -46,8 +46,8 @@ const configurationAI: Configuration = {
     );
   },
   basePath: process.env.NEXT_PUBLIC_GENAI_URL,
-};
+};*/
 export const rootApiFactory = RootApiFactory(configuration);
 export const accountApiFactory = AccountApiFactory(configuration);
-export const llmApiFactory = DefaultApiFactory(configurationAI);
+//export const llmApiFactory = DefaultApiFactory(configurationAI);
 export const whiteboardApiFactory = WhiteboardApiFactory(configuration);
