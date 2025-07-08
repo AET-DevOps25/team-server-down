@@ -2,6 +2,7 @@ import {
   AccountApiFactory,
   Configuration,
   RootApiFactory,
+  WhiteboardApiFactory,
 } from "@/api/generated";
 import globalAxios from "axios";
 import { getSession } from "next-auth/react";
@@ -49,5 +50,4 @@ const configurationAI: Configuration = {
 export const rootApiFactory = RootApiFactory(configuration);
 export const accountApiFactory = AccountApiFactory(configuration);
 export const llmApiFactory = DefaultApiFactory(configurationAI);
-
-
+export const whiteboardApiFactory = WhiteboardApiFactory(configuration);
