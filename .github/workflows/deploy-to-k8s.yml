@@ -93,9 +93,9 @@ jobs:
           file: ./client/Dockerfile
           push: true
           tags: ghcr.io/${{ needs.setup.outputs.repo }}/client:${{ needs.setup.outputs.tag }}
-          build-args: 
-                API_URL=${{ needs.setup.outputs.api_url }}
-                GENAI_API_URL=${{ needs.setup.outputs.genai_url }}
+          build-args: |
+            API_URL=${{ needs.setup.outputs.api_url }}
+            GENAI_API_URL=${{ needs.setup.outputs.genai_url }}
           platforms: linux/amd64
 
   build-server:
