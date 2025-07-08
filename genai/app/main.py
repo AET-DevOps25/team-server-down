@@ -4,7 +4,6 @@ from typing import Any, List, Optional
 from fastapi import FastAPI, HTTPException, APIRouter
 from pydantic import BaseModel
 from langchain.llms.base import LLM
-from langchain_core.prompts import PromptTemplate
 from langchain.callbacks.manager import CallbackManagerForLLMRun
 import logging
 from fastapi.middleware.cors import CORSMiddleware
