@@ -106,24 +106,22 @@ public class WhiteboardController {
 
   @PutMapping("/{id}/title")
   @Operation(summary = "Update title", description = "Updates the title of an existing whiteboard.")
-  public Whiteboard updateTitle(
+  public ResponseEntity<String> updateTitle(
       @Parameter(description = "ID of the whiteboard", required = true) @PathVariable Long id,
       @RequestParam String title,
       @CurrentUser User user) {
     logger.info("Updating title for whiteboard id={} to '{}'", id, title);
-    Optional<Whiteboard> optional = whiteboardRepository.findById(id);
-    if (optional.isPresent()) {
-      Whiteboard w = optional.get();
-      if (w.getUserId() != user.getId()) {
-        throw new RuntimeException("Not autherized for this request");
-      }
+    Optional<Whiteboard> whiteboardOpt = whiteboardRepository.findByIdAndUserId(id, user.getId());
+    if (whiteboardOpt.isPresent()) {
+      Whiteboard w = whiteboardOpt.get();
       w.setTitle(title);
       Whiteboard updated = whiteboardRepository.save(w);
       logger.info("Whiteboard title updated successfully for id={}", id);
-      return updated;
+      return ResponseEntity.ok(updated.getTitle());
     }
-    logger.error("Failed to update title - Whiteboard not found for id={}", id);
-    throw new RuntimeException("Whiteboard not found");
+    logger.warn(
+            "Whiteboard not found or unauthorized access: id={}, userId={}", id, user.getId());
+    return ResponseEntity.status(403).build();
   }
 
   @DeleteMapping("/{id}")
