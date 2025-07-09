@@ -5,7 +5,7 @@ import {
 } from "@/components/ui/popover";
 import { Ellipsis, Pencil, Trash2 } from "lucide-react";
 import React, { ComponentType, SVGProps, useState } from "react";
-import DeletionAlertDialog from "@/components/project-card/project-card-components/DeletionAlertDialog";
+import DeletionAlertDialog from "@/components/deletion-alert-dialog/DeletionAlertDialog";
 
 interface ProjectEditPopoverProps {
   onRename: () => void;
@@ -82,6 +82,7 @@ export default function ProjectEditPopover({
       </Popover>
 
       <DeletionAlertDialog
+        toDelete="board"
         dialogOpen={dialogOpen}
         setDialogOpen={setDialogOpen}
         handleConfirmDelete={handleConfirmDelete}
