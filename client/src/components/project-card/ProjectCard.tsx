@@ -4,7 +4,7 @@ import ProjectEditPopover from "@/components/project-card/project-card-component
 import React, { useState, useRef, useEffect } from "react";
 import formatDate from "@/util/formatDate";
 import { useRouter } from "next/navigation";
-import { Whiteboard } from "@/api/generated";
+import { Whiteboard } from "@/api/main/generated";
 import {
   useDeleteWhiteboard,
   useUpdateWhiteboardTitle,

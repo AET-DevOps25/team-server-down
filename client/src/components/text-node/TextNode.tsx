@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import {
   Handle,
   NodeProps,
@@ -62,6 +62,10 @@ export default function TextNode({ id, data, selected }: TextNodeProps) {
     onUpdateNode({ label: newText });
   };
 
+  useEffect(() => {
+    setText(data.label as string);
+  }, [data.label]);
+
   return (
     <>
       {showStyleBar && (
@@ -71,6 +75,10 @@ export default function TextNode({ id, data, selected }: TextNodeProps) {
             onUpdateNode={(updatedProperties: Partial<NodeProperties>) =>
               onUpdateNode({ nodeProperties: updatedProperties })
             }
+            onUpdateLabel={(newLabel: string) =>
+              onUpdateNode({ label: newLabel })
+            }
+            selectedNodeLabel={text}
           />
         </NodeToolbar>
       )}

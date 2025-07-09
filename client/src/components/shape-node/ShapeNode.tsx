@@ -1,5 +1,5 @@
 "use client";
-import { memo } from "react";
+import { memo, useCallback, useRef } from "react";
 import {
   Handle,
   NodeProps,
@@ -15,7 +15,6 @@ import {
   NodeProperties,
 } from "@/types/NodeProperties";
 import { updateNode } from "@/util/updateNode";
-
 export interface ShapeNodeParams extends NodeProps {
   id: string;
   data: {
@@ -28,8 +27,8 @@ export interface ShapeNodeParams extends NodeProps {
 
 const ShapeNode = ({ id, data, selected }: ShapeNodeParams) => {
   const { Shape, nodeProperties, label } = data;
-
   const { setNodes } = useReactFlow();
+  const inputRef = useRef<HTMLInputElement>(null);
 
   const onUpdateNode = (updater: {
     label?: string;
@@ -38,15 +37,44 @@ const ShapeNode = ({ id, data, selected }: ShapeNodeParams) => {
     setNodes(updateNode(id, updater));
   };
 
+  const handleClick = useCallback(
+    (evt: React.MouseEvent) => {
+      evt.stopPropagation();
+      setNodes((nodes) =>
+        nodes.map((node) => ({
+          ...node,
+          selected: node.id === id,
+        })),
+      );
+    },
+    [id, setNodes],
+  );
+
   return (
-    <>
+    <div
+      className="shape-node-wrapper"
+      onClick={handleClick}
+      data-nodeid={id}
+      style={{
+        width: "100%",
+        height: "100%",
+        minHeight: "100px",
+        position: "relative",
+      }}
+    >
       <NodeToolbar isVisible={selected} position={Position.Top}>
-        <StyleBar
-          nodeProperties={nodeProperties}
-          onUpdateNode={(updatedProperties: Partial<NodeProperties>) =>
-            onUpdateNode({ nodeProperties: updatedProperties })
-          }
-        />
+        <div className="flex items-center gap-2">
+          <StyleBar
+            nodeProperties={nodeProperties}
+            onUpdateNode={(updatedProperties: Partial<NodeProperties>) =>
+              onUpdateNode({ nodeProperties: updatedProperties })
+            }
+            onUpdateLabel={(newLabel: string) =>
+              onUpdateNode({ label: newLabel })
+            }
+            selectedNodeLabel={label}
+          />
+        </div>
       </NodeToolbar>
 
       <NodeResizer
@@ -61,6 +89,7 @@ const ShapeNode = ({ id, data, selected }: ShapeNodeParams) => {
           <div className="pointer-events-none absolute inset-0 flex h-full w-full items-center justify-center p-0.5">
             <Shape
               className={`h-full w-full`}
+              preserveAspectRatio="none"
               style={{
                 fill: nodeProperties.color,
                 fillOpacity: nodeProperties.opacity,
@@ -74,6 +103,7 @@ const ShapeNode = ({ id, data, selected }: ShapeNodeParams) => {
         )}
 
         <input
+          ref={inputRef}
           className={`z-10 min-h-[100px] w-4/5 bg-transparent text-center focus:outline-none`}
           style={{
             color: nodeProperties.textColor,
@@ -84,6 +114,7 @@ const ShapeNode = ({ id, data, selected }: ShapeNodeParams) => {
             textDecoration:
               `${nodeProperties.isUnderline ? "underline" : ""} ${nodeProperties.isStrikethrough ? "line-through" : ""}`.trim() ||
               "none",
+            textOverflow: "ellipsis",
           }}
           value={label}
           onChange={(e) => onUpdateNode({ label: e.target.value })}
@@ -142,7 +173,7 @@ const ShapeNode = ({ id, data, selected }: ShapeNodeParams) => {
         position={Position.Right}
         style={handleStyle}
       />
-    </>
+    </div>
   );
 };
 
