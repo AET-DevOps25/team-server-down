@@ -11,7 +11,7 @@ import { LogOut, UserIcon } from "lucide-react";
 import React, { useState } from "react";
 import AccountModal from "@/components/account-modal/AccountModal";
 import { useGetMe } from "@/hooks/api/account.api";
-import { User } from "@/api/generated/api";
+import { User } from "@/api/main/generated/api";
 import Avatar from "@/components/avatar/Avatar";
 
 export default function UserDropdown() {
