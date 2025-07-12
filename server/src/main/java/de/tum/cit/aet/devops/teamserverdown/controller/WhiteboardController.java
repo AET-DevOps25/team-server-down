@@ -1,7 +1,13 @@
 package de.tum.cit.aet.devops.teamserverdown.controller;
 
+import de.tum.cit.aet.devops.teamserverdown.dto.ViewportDto;
+import de.tum.cit.aet.devops.teamserverdown.dto.WhiteboardStateDto;
 import de.tum.cit.aet.devops.teamserverdown.model.User;
+import de.tum.cit.aet.devops.teamserverdown.model.Viewport;
 import de.tum.cit.aet.devops.teamserverdown.model.Whiteboard;
+import de.tum.cit.aet.devops.teamserverdown.repository.EdgeRepository;
+import de.tum.cit.aet.devops.teamserverdown.repository.NodeRepository;
+import de.tum.cit.aet.devops.teamserverdown.repository.ViewportRepository;
 import de.tum.cit.aet.devops.teamserverdown.repository.WhiteboardRepository;
 import de.tum.cit.aet.devops.teamserverdown.security.CurrentUser;
 import io.swagger.v3.oas.annotations.Operation;
@@ -22,9 +28,19 @@ public class WhiteboardController {
   private static final Logger logger = LoggerFactory.getLogger(WhiteboardController.class);
 
   private WhiteboardRepository whiteboardRepository;
+  private NodeRepository nodeRepository;
+  private EdgeRepository edgeRepository;
+  private ViewportRepository viewportRepository;
 
-  public WhiteboardController(WhiteboardRepository whiteboardRepository) {
+  public WhiteboardController(
+      WhiteboardRepository whiteboardRepository,
+      NodeRepository nodeRepository,
+      EdgeRepository edgeRepository,
+      ViewportRepository viewportRepository) {
     this.whiteboardRepository = whiteboardRepository;
+    this.nodeRepository = nodeRepository;
+    this.edgeRepository = edgeRepository;
+    this.viewportRepository = viewportRepository;
   }
 
   @PostMapping
@@ -66,26 +82,45 @@ public class WhiteboardController {
     return whiteboardRepository.findByUserId(user.getId());
   }
 
+  @GetMapping("/{id}/title")
+  @Operation(
+      summary = "Get whiteboard title",
+      description = "Returns the title of a whiteboard by its ID")
+  public ResponseEntity<String> getWhiteboardTitle(
+      @Parameter(description = "ID of the whiteboard", required = true) @PathVariable Long id,
+      @CurrentUser User user) {
+
+    logger.info("Fetching title for whiteboard with id={} for userId={}", id, user.getId());
+    Optional<Whiteboard> whiteboardOpt = whiteboardRepository.findByIdAndUserId(id, user.getId());
+
+    if (whiteboardOpt.isPresent()) {
+      Whiteboard whiteboard = whiteboardOpt.get();
+      logger.info("Whiteboard found: id={}, title='{}'", id, whiteboard.getTitle());
+      return ResponseEntity.ok(whiteboard.getTitle());
+    } else {
+      logger.warn(
+          "Whiteboard not found or unauthorized access for id={} and userId={}", id, user.getId());
+      return ResponseEntity.status(404).build();
+    }
+  }
+
   @PutMapping("/{id}/title")
   @Operation(summary = "Update title", description = "Updates the title of an existing whiteboard.")
-  public Whiteboard updateTitle(
+  public ResponseEntity<String> updateTitle(
       @Parameter(description = "ID of the whiteboard", required = true) @PathVariable Long id,
       @RequestParam String title,
       @CurrentUser User user) {
     logger.info("Updating title for whiteboard id={} to '{}'", id, title);
-    Optional<Whiteboard> optional = whiteboardRepository.findById(id);
-    if (optional.isPresent()) {
-      Whiteboard w = optional.get();
-      if (w.getUserId() != user.getId()) {
-        throw new RuntimeException("Not autherized for this request");
-      }
+    Optional<Whiteboard> whiteboardOpt = whiteboardRepository.findByIdAndUserId(id, user.getId());
+    if (whiteboardOpt.isPresent()) {
+      Whiteboard w = whiteboardOpt.get();
       w.setTitle(title);
       Whiteboard updated = whiteboardRepository.save(w);
       logger.info("Whiteboard title updated successfully for id={}", id);
-      return updated;
+      return ResponseEntity.ok(updated.getTitle());
     }
-    logger.error("Failed to update title - Whiteboard not found for id={}", id);
-    throw new RuntimeException("Whiteboard not found");
+    logger.warn("Whiteboard not found or unauthorized access: id={}, userId={}", id, user.getId());
+    return ResponseEntity.status(403).build();
   }
 
   @DeleteMapping("/{id}")
@@ -105,5 +140,41 @@ public class WhiteboardController {
     logger.info("Whiteboard deleted: id={}, userId={}", id, user.getId());
 
     return ResponseEntity.noContent().build();
+  }
+
+  @PostMapping("/{whiteboardId}/save")
+  public ResponseEntity<Void> saveWhiteboardState(
+      @PathVariable Long whiteboardId, @RequestBody WhiteboardStateDto whiteboardStateDto) {
+
+    nodeRepository.deleteByWhiteboardId(whiteboardId);
+    edgeRepository.deleteByWhiteboardId(whiteboardId);
+
+    whiteboardStateDto.getNodes().forEach(node -> node.setWhiteboardId(whiteboardId));
+    whiteboardStateDto.getEdges().forEach(edge -> edge.setWhiteboardId(whiteboardId));
+
+    nodeRepository.saveAll(whiteboardStateDto.getNodes());
+    edgeRepository.saveAll(whiteboardStateDto.getEdges());
+
+    ViewportDto viewportDto = whiteboardStateDto.getViewportDto();
+    if (viewportDto != null) {
+      Optional<Viewport> existingOpt = viewportRepository.findByWhiteboardId(whiteboardId);
+
+      if (existingOpt.isPresent()) {
+        Viewport existing = existingOpt.get();
+        existing.setX(viewportDto.getX());
+        existing.setY(viewportDto.getY());
+        existing.setZoom(viewportDto.getZoom());
+        viewportRepository.save(existing);
+      } else {
+        Viewport newViewport = new Viewport();
+        newViewport.setX(viewportDto.getX());
+        newViewport.setY(viewportDto.getY());
+        newViewport.setZoom(viewportDto.getZoom());
+        newViewport.setWhiteboardId(whiteboardId);
+        viewportRepository.save(newViewport);
+      }
+    }
+
+    return ResponseEntity.ok().build();
   }
 }

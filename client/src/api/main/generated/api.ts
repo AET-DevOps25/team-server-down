@@ -42,6 +42,291 @@ import {
 /**
  *
  * @export
+ * @interface Edge
+ */
+export interface Edge {
+  /**
+   *
+   * @type {string}
+   * @memberof Edge
+   */
+  id?: string;
+  /**
+   *
+   * @type {number}
+   * @memberof Edge
+   */
+  whiteboardId?: number;
+  /**
+   *
+   * @type {string}
+   * @memberof Edge
+   */
+  source?: string;
+  /**
+   *
+   * @type {string}
+   * @memberof Edge
+   */
+  sourceHandle?: string;
+  /**
+   *
+   * @type {string}
+   * @memberof Edge
+   */
+  target?: string;
+  /**
+   *
+   * @type {string}
+   * @memberof Edge
+   */
+  targetHandle?: string;
+}
+/**
+ *
+ * @export
+ * @interface Node
+ */
+export interface Node {
+  /**
+   *
+   * @type {string}
+   * @memberof Node
+   */
+  id?: string;
+  /**
+   *
+   * @type {number}
+   * @memberof Node
+   */
+  whiteboardId?: number;
+  /**
+   *
+   * @type {string}
+   * @memberof Node
+   */
+  type?: string;
+  /**
+   *
+   * @type {number}
+   * @memberof Node
+   */
+  positionX?: number;
+  /**
+   *
+   * @type {number}
+   * @memberof Node
+   */
+  positionY?: number;
+  /**
+   *
+   * @type {string}
+   * @memberof Node
+   */
+  label?: string;
+  /**
+   *
+   * @type {number}
+   * @memberof Node
+   */
+  width?: number;
+  /**
+   *
+   * @type {number}
+   * @memberof Node
+   */
+  height?: number;
+  /**
+   *
+   * @type {string}
+   * @memberof Node
+   */
+  color?: string;
+  /**
+   *
+   * @type {string}
+   * @memberof Node
+   */
+  borderColor?: string;
+  /**
+   *
+   * @type {number}
+   * @memberof Node
+   */
+  borderWidth?: number;
+  /**
+   *
+   * @type {number}
+   * @memberof Node
+   */
+  borderOpacity?: number;
+  /**
+   *
+   * @type {number}
+   * @memberof Node
+   */
+  opacity?: number;
+  /**
+   *
+   * @type {string}
+   * @memberof Node
+   */
+  textColor?: string;
+  /**
+   *
+   * @type {number}
+   * @memberof Node
+   */
+  fontSize?: number;
+  /**
+   *
+   * @type {string}
+   * @memberof Node
+   */
+  fontFamily?: string;
+  /**
+   *
+   * @type {boolean}
+   * @memberof Node
+   */
+  bold?: boolean;
+  /**
+   *
+   * @type {boolean}
+   * @memberof Node
+   */
+  italic?: boolean;
+  /**
+   *
+   * @type {boolean}
+   * @memberof Node
+   */
+  strikethrough?: boolean;
+  /**
+   *
+   * @type {boolean}
+   * @memberof Node
+   */
+  underline?: boolean;
+}
+/**
+ *
+ * @export
+ * @interface NodeUpdateDTO
+ */
+export interface NodeUpdateDTO {
+  /**
+   *
+   * @type {string}
+   * @memberof NodeUpdateDTO
+   */
+  type?: string;
+  /**
+   *
+   * @type {number}
+   * @memberof NodeUpdateDTO
+   */
+  positionX?: number;
+  /**
+   *
+   * @type {number}
+   * @memberof NodeUpdateDTO
+   */
+  positionY?: number;
+  /**
+   *
+   * @type {string}
+   * @memberof NodeUpdateDTO
+   */
+  label?: string;
+  /**
+   *
+   * @type {number}
+   * @memberof NodeUpdateDTO
+   */
+  width?: number;
+  /**
+   *
+   * @type {number}
+   * @memberof NodeUpdateDTO
+   */
+  height?: number;
+  /**
+   *
+   * @type {string}
+   * @memberof NodeUpdateDTO
+   */
+  color?: string;
+  /**
+   *
+   * @type {string}
+   * @memberof NodeUpdateDTO
+   */
+  borderColor?: string;
+  /**
+   *
+   * @type {number}
+   * @memberof NodeUpdateDTO
+   */
+  borderWidth?: number;
+  /**
+   *
+   * @type {number}
+   * @memberof NodeUpdateDTO
+   */
+  borderOpacity?: number;
+  /**
+   *
+   * @type {number}
+   * @memberof NodeUpdateDTO
+   */
+  opacity?: number;
+  /**
+   *
+   * @type {string}
+   * @memberof NodeUpdateDTO
+   */
+  textColor?: string;
+  /**
+   *
+   * @type {number}
+   * @memberof NodeUpdateDTO
+   */
+  fontSize?: number;
+  /**
+   *
+   * @type {string}
+   * @memberof NodeUpdateDTO
+   */
+  fontFamily?: string;
+  /**
+   *
+   * @type {boolean}
+   * @memberof NodeUpdateDTO
+   */
+  isBold?: boolean;
+  /**
+   *
+   * @type {boolean}
+   * @memberof NodeUpdateDTO
+   */
+  isItalic?: boolean;
+  /**
+   *
+   * @type {boolean}
+   * @memberof NodeUpdateDTO
+   */
+  isStrikethrough?: boolean;
+  /**
+   *
+   * @type {boolean}
+   * @memberof NodeUpdateDTO
+   */
+  isUnderline?: boolean;
+}
+/**
+ *
+ * @export
  * @interface User
  */
 export interface User {
@@ -79,6 +364,99 @@ export interface User {
 /**
  *
  * @export
+ * @interface Viewport
+ */
+export interface Viewport {
+  /**
+   *
+   * @type {number}
+   * @memberof Viewport
+   */
+  id?: number;
+  /**
+   *
+   * @type {number}
+   * @memberof Viewport
+   */
+  x?: number;
+  /**
+   *
+   * @type {number}
+   * @memberof Viewport
+   */
+  y?: number;
+  /**
+   *
+   * @type {number}
+   * @memberof Viewport
+   */
+  zoom?: number;
+  /**
+   *
+   * @type {number}
+   * @memberof Viewport
+   */
+  whiteboardId?: number;
+}
+/**
+ *
+ * @export
+ * @interface ViewportCreateRequest
+ */
+export interface ViewportCreateRequest {
+  /**
+   *
+   * @type {number}
+   * @memberof ViewportCreateRequest
+   */
+  x?: number;
+  /**
+   *
+   * @type {number}
+   * @memberof ViewportCreateRequest
+   */
+  y?: number;
+  /**
+   *
+   * @type {number}
+   * @memberof ViewportCreateRequest
+   */
+  zoom?: number;
+  /**
+   *
+   * @type {number}
+   * @memberof ViewportCreateRequest
+   */
+  whiteboardId?: number;
+}
+/**
+ *
+ * @export
+ * @interface ViewportDto
+ */
+export interface ViewportDto {
+  /**
+   *
+   * @type {number}
+   * @memberof ViewportDto
+   */
+  x?: number;
+  /**
+   *
+   * @type {number}
+   * @memberof ViewportDto
+   */
+  y?: number;
+  /**
+   *
+   * @type {number}
+   * @memberof ViewportDto
+   */
+  zoom?: number;
+}
+/**
+ *
+ * @export
  * @interface Whiteboard
  */
 export interface Whiteboard {
@@ -112,6 +490,31 @@ export interface Whiteboard {
    * @memberof Whiteboard
    */
   userId?: number;
+}
+/**
+ *
+ * @export
+ * @interface WhiteboardStateDto
+ */
+export interface WhiteboardStateDto {
+  /**
+   *
+   * @type {Array<Node>}
+   * @memberof WhiteboardStateDto
+   */
+  nodes?: Array<Node>;
+  /**
+   *
+   * @type {Array<Edge>}
+   * @memberof WhiteboardStateDto
+   */
+  edges?: Array<Edge>;
+  /**
+   *
+   * @type {ViewportDto}
+   * @memberof WhiteboardStateDto
+   */
+  viewportDto?: ViewportDto;
 }
 
 /**
@@ -252,26 +655,26 @@ export class AccountApi extends BaseAPI {
 }
 
 /**
- * LlmServiceControllerApi - axios parameter creator
+ * EdgeControllerApi - axios parameter creator
  * @export
  */
-export const LlmServiceControllerApiAxiosParamCreator = function (
+export const EdgeControllerApiAxiosParamCreator = function (
   configuration?: Configuration,
 ) {
   return {
     /**
      *
-     * @param {{ [key: string]: Array<string>; }} requestBody
+     * @param {Edge} edge
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      */
-    completeText: async (
-      requestBody: { [key: string]: Array<string> },
+    addEdge: async (
+      edge: Edge,
       options: RawAxiosRequestConfig = {},
     ): Promise<RequestArgs> => {
-      // verify required parameter 'requestBody' is not null or undefined
-      assertParamExists("completeText", "requestBody", requestBody);
-      const localVarPath = `/api/llm/completion`;
+      // verify required parameter 'edge' is not null or undefined
+      assertParamExists("addEdge", "edge", edge);
+      const localVarPath = `/edge`;
       // use dummy base URL string because the URL constructor only accepts absolute URLs.
       const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
       let baseOptions;
@@ -307,7 +710,7 @@ export const LlmServiceControllerApiAxiosParamCreator = function (
         ...options.headers,
       };
       localVarRequestOptions.data = serializeDataIfNeeded(
-        requestBody,
+        edge,
         localVarRequestOptions,
         configuration,
       );
@@ -319,13 +722,453 @@ export const LlmServiceControllerApiAxiosParamCreator = function (
     },
     /**
      *
+     * @param {string} id
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      */
-    healthCheck: async (
+    deleteEdge: async (
+      id: string,
       options: RawAxiosRequestConfig = {},
     ): Promise<RequestArgs> => {
-      const localVarPath = `/api/llm/health`;
+      // verify required parameter 'id' is not null or undefined
+      assertParamExists("deleteEdge", "id", id);
+      const localVarPath = `/edge/{id}`.replace(
+        `{${"id"}}`,
+        encodeURIComponent(String(id)),
+      );
+      // use dummy base URL string because the URL constructor only accepts absolute URLs.
+      const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
+      let baseOptions;
+      if (configuration) {
+        baseOptions = configuration.baseOptions;
+      }
+
+      const localVarRequestOptions = {
+        method: "DELETE",
+        ...baseOptions,
+        ...options,
+      };
+      const localVarHeaderParameter = {} as any;
+      const localVarQueryParameter = {} as any;
+
+      // authentication keycloak required
+      // oauth required
+      await setOAuthToObject(
+        localVarHeaderParameter,
+        "keycloak",
+        [],
+        configuration,
+      );
+
+      setSearchParams(localVarUrlObj, localVarQueryParameter);
+      let headersFromBaseOptions =
+        baseOptions && baseOptions.headers ? baseOptions.headers : {};
+      localVarRequestOptions.headers = {
+        ...localVarHeaderParameter,
+        ...headersFromBaseOptions,
+        ...options.headers,
+      };
+
+      return {
+        url: toPathString(localVarUrlObj),
+        options: localVarRequestOptions,
+      };
+    },
+    /**
+     *
+     * @param {number} whiteboardId
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     */
+    getEdgesByWhiteboard: async (
+      whiteboardId: number,
+      options: RawAxiosRequestConfig = {},
+    ): Promise<RequestArgs> => {
+      // verify required parameter 'whiteboardId' is not null or undefined
+      assertParamExists("getEdgesByWhiteboard", "whiteboardId", whiteboardId);
+      const localVarPath = `/edge/whiteboard/{whiteboardId}`.replace(
+        `{${"whiteboardId"}}`,
+        encodeURIComponent(String(whiteboardId)),
+      );
+      // use dummy base URL string because the URL constructor only accepts absolute URLs.
+      const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
+      let baseOptions;
+      if (configuration) {
+        baseOptions = configuration.baseOptions;
+      }
+
+      const localVarRequestOptions = {
+        method: "GET",
+        ...baseOptions,
+        ...options,
+      };
+      const localVarHeaderParameter = {} as any;
+      const localVarQueryParameter = {} as any;
+
+      // authentication keycloak required
+      // oauth required
+      await setOAuthToObject(
+        localVarHeaderParameter,
+        "keycloak",
+        [],
+        configuration,
+      );
+
+      setSearchParams(localVarUrlObj, localVarQueryParameter);
+      let headersFromBaseOptions =
+        baseOptions && baseOptions.headers ? baseOptions.headers : {};
+      localVarRequestOptions.headers = {
+        ...localVarHeaderParameter,
+        ...headersFromBaseOptions,
+        ...options.headers,
+      };
+
+      return {
+        url: toPathString(localVarUrlObj),
+        options: localVarRequestOptions,
+      };
+    },
+  };
+};
+
+/**
+ * EdgeControllerApi - functional programming interface
+ * @export
+ */
+export const EdgeControllerApiFp = function (configuration?: Configuration) {
+  const localVarAxiosParamCreator =
+    EdgeControllerApiAxiosParamCreator(configuration);
+  return {
+    /**
+     *
+     * @param {Edge} edge
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     */
+    async addEdge(
+      edge: Edge,
+      options?: RawAxiosRequestConfig,
+    ): Promise<
+      (axios?: AxiosInstance, basePath?: string) => AxiosPromise<Edge>
+    > {
+      const localVarAxiosArgs = await localVarAxiosParamCreator.addEdge(
+        edge,
+        options,
+      );
+      const localVarOperationServerIndex = configuration?.serverIndex ?? 0;
+      const localVarOperationServerBasePath =
+        operationServerMap["EdgeControllerApi.addEdge"]?.[
+          localVarOperationServerIndex
+        ]?.url;
+      return (axios, basePath) =>
+        createRequestFunction(
+          localVarAxiosArgs,
+          globalAxios,
+          BASE_PATH,
+          configuration,
+        )(axios, localVarOperationServerBasePath || basePath);
+    },
+    /**
+     *
+     * @param {string} id
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     */
+    async deleteEdge(
+      id: string,
+      options?: RawAxiosRequestConfig,
+    ): Promise<
+      (axios?: AxiosInstance, basePath?: string) => AxiosPromise<void>
+    > {
+      const localVarAxiosArgs = await localVarAxiosParamCreator.deleteEdge(
+        id,
+        options,
+      );
+      const localVarOperationServerIndex = configuration?.serverIndex ?? 0;
+      const localVarOperationServerBasePath =
+        operationServerMap["EdgeControllerApi.deleteEdge"]?.[
+          localVarOperationServerIndex
+        ]?.url;
+      return (axios, basePath) =>
+        createRequestFunction(
+          localVarAxiosArgs,
+          globalAxios,
+          BASE_PATH,
+          configuration,
+        )(axios, localVarOperationServerBasePath || basePath);
+    },
+    /**
+     *
+     * @param {number} whiteboardId
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     */
+    async getEdgesByWhiteboard(
+      whiteboardId: number,
+      options?: RawAxiosRequestConfig,
+    ): Promise<
+      (axios?: AxiosInstance, basePath?: string) => AxiosPromise<Array<Edge>>
+    > {
+      const localVarAxiosArgs =
+        await localVarAxiosParamCreator.getEdgesByWhiteboard(
+          whiteboardId,
+          options,
+        );
+      const localVarOperationServerIndex = configuration?.serverIndex ?? 0;
+      const localVarOperationServerBasePath =
+        operationServerMap["EdgeControllerApi.getEdgesByWhiteboard"]?.[
+          localVarOperationServerIndex
+        ]?.url;
+      return (axios, basePath) =>
+        createRequestFunction(
+          localVarAxiosArgs,
+          globalAxios,
+          BASE_PATH,
+          configuration,
+        )(axios, localVarOperationServerBasePath || basePath);
+    },
+  };
+};
+
+/**
+ * EdgeControllerApi - factory interface
+ * @export
+ */
+export const EdgeControllerApiFactory = function (
+  configuration?: Configuration,
+  basePath?: string,
+  axios?: AxiosInstance,
+) {
+  const localVarFp = EdgeControllerApiFp(configuration);
+  return {
+    /**
+     *
+     * @param {Edge} edge
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     */
+    addEdge(edge: Edge, options?: RawAxiosRequestConfig): AxiosPromise<Edge> {
+      return localVarFp
+        .addEdge(edge, options)
+        .then((request) => request(axios, basePath));
+    },
+    /**
+     *
+     * @param {string} id
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     */
+    deleteEdge(
+      id: string,
+      options?: RawAxiosRequestConfig,
+    ): AxiosPromise<void> {
+      return localVarFp
+        .deleteEdge(id, options)
+        .then((request) => request(axios, basePath));
+    },
+    /**
+     *
+     * @param {number} whiteboardId
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     */
+    getEdgesByWhiteboard(
+      whiteboardId: number,
+      options?: RawAxiosRequestConfig,
+    ): AxiosPromise<Array<Edge>> {
+      return localVarFp
+        .getEdgesByWhiteboard(whiteboardId, options)
+        .then((request) => request(axios, basePath));
+    },
+  };
+};
+
+/**
+ * EdgeControllerApi - object-oriented interface
+ * @export
+ * @class EdgeControllerApi
+ * @extends {BaseAPI}
+ */
+export class EdgeControllerApi extends BaseAPI {
+  /**
+   *
+   * @param {Edge} edge
+   * @param {*} [options] Override http request option.
+   * @throws {RequiredError}
+   * @memberof EdgeControllerApi
+   */
+  public addEdge(edge: Edge, options?: RawAxiosRequestConfig) {
+    return EdgeControllerApiFp(this.configuration)
+      .addEdge(edge, options)
+      .then((request) => request(this.axios, this.basePath));
+  }
+
+  /**
+   *
+   * @param {string} id
+   * @param {*} [options] Override http request option.
+   * @throws {RequiredError}
+   * @memberof EdgeControllerApi
+   */
+  public deleteEdge(id: string, options?: RawAxiosRequestConfig) {
+    return EdgeControllerApiFp(this.configuration)
+      .deleteEdge(id, options)
+      .then((request) => request(this.axios, this.basePath));
+  }
+
+  /**
+   *
+   * @param {number} whiteboardId
+   * @param {*} [options] Override http request option.
+   * @throws {RequiredError}
+   * @memberof EdgeControllerApi
+   */
+  public getEdgesByWhiteboard(
+    whiteboardId: number,
+    options?: RawAxiosRequestConfig,
+  ) {
+    return EdgeControllerApiFp(this.configuration)
+      .getEdgesByWhiteboard(whiteboardId, options)
+      .then((request) => request(this.axios, this.basePath));
+  }
+}
+
+/**
+ * NodeControllerApi - axios parameter creator
+ * @export
+ */
+export const NodeControllerApiAxiosParamCreator = function (
+  configuration?: Configuration,
+) {
+  return {
+    /**
+     *
+     * @param {Node} node
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     */
+    createNode: async (
+      node: Node,
+      options: RawAxiosRequestConfig = {},
+    ): Promise<RequestArgs> => {
+      // verify required parameter 'node' is not null or undefined
+      assertParamExists("createNode", "node", node);
+      const localVarPath = `/nodes`;
+      // use dummy base URL string because the URL constructor only accepts absolute URLs.
+      const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
+      let baseOptions;
+      if (configuration) {
+        baseOptions = configuration.baseOptions;
+      }
+
+      const localVarRequestOptions = {
+        method: "POST",
+        ...baseOptions,
+        ...options,
+      };
+      const localVarHeaderParameter = {} as any;
+      const localVarQueryParameter = {} as any;
+
+      // authentication keycloak required
+      // oauth required
+      await setOAuthToObject(
+        localVarHeaderParameter,
+        "keycloak",
+        [],
+        configuration,
+      );
+
+      localVarHeaderParameter["Content-Type"] = "application/json";
+
+      setSearchParams(localVarUrlObj, localVarQueryParameter);
+      let headersFromBaseOptions =
+        baseOptions && baseOptions.headers ? baseOptions.headers : {};
+      localVarRequestOptions.headers = {
+        ...localVarHeaderParameter,
+        ...headersFromBaseOptions,
+        ...options.headers,
+      };
+      localVarRequestOptions.data = serializeDataIfNeeded(
+        node,
+        localVarRequestOptions,
+        configuration,
+      );
+
+      return {
+        url: toPathString(localVarUrlObj),
+        options: localVarRequestOptions,
+      };
+    },
+    /**
+     *
+     * @param {string} id
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     */
+    deleteNode: async (
+      id: string,
+      options: RawAxiosRequestConfig = {},
+    ): Promise<RequestArgs> => {
+      // verify required parameter 'id' is not null or undefined
+      assertParamExists("deleteNode", "id", id);
+      const localVarPath = `/nodes/{id}`.replace(
+        `{${"id"}}`,
+        encodeURIComponent(String(id)),
+      );
+      // use dummy base URL string because the URL constructor only accepts absolute URLs.
+      const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
+      let baseOptions;
+      if (configuration) {
+        baseOptions = configuration.baseOptions;
+      }
+
+      const localVarRequestOptions = {
+        method: "DELETE",
+        ...baseOptions,
+        ...options,
+      };
+      const localVarHeaderParameter = {} as any;
+      const localVarQueryParameter = {} as any;
+
+      // authentication keycloak required
+      // oauth required
+      await setOAuthToObject(
+        localVarHeaderParameter,
+        "keycloak",
+        [],
+        configuration,
+      );
+
+      setSearchParams(localVarUrlObj, localVarQueryParameter);
+      let headersFromBaseOptions =
+        baseOptions && baseOptions.headers ? baseOptions.headers : {};
+      localVarRequestOptions.headers = {
+        ...localVarHeaderParameter,
+        ...headersFromBaseOptions,
+        ...options.headers,
+      };
+
+      return {
+        url: toPathString(localVarUrlObj),
+        options: localVarRequestOptions,
+      };
+    },
+    /**
+     *
+     * @param {number} whiteboardId
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     */
+    getAllByWhiteboardId: async (
+      whiteboardId: number,
+      options: RawAxiosRequestConfig = {},
+    ): Promise<RequestArgs> => {
+      // verify required parameter 'whiteboardId' is not null or undefined
+      assertParamExists("getAllByWhiteboardId", "whiteboardId", whiteboardId);
+      const localVarPath = `/nodes/whiteboard/{whiteboardId}`.replace(
+        `{${"whiteboardId"}}`,
+        encodeURIComponent(String(whiteboardId)),
+      );
       // use dummy base URL string because the URL constructor only accepts absolute URLs.
       const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
       let baseOptions;
@@ -366,17 +1209,24 @@ export const LlmServiceControllerApiAxiosParamCreator = function (
     },
     /**
      *
-     * @param {{ [key: string]: Array<string>; }} requestBody
+     * @param {string} id
+     * @param {NodeUpdateDTO} nodeUpdateDTO
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      */
-    rephraseText: async (
-      requestBody: { [key: string]: Array<string> },
+    patchNode: async (
+      id: string,
+      nodeUpdateDTO: NodeUpdateDTO,
       options: RawAxiosRequestConfig = {},
     ): Promise<RequestArgs> => {
-      // verify required parameter 'requestBody' is not null or undefined
-      assertParamExists("rephraseText", "requestBody", requestBody);
-      const localVarPath = `/api/llm/rephrase`;
+      // verify required parameter 'id' is not null or undefined
+      assertParamExists("patchNode", "id", id);
+      // verify required parameter 'nodeUpdateDTO' is not null or undefined
+      assertParamExists("patchNode", "nodeUpdateDTO", nodeUpdateDTO);
+      const localVarPath = `/nodes/nodes/{id}`.replace(
+        `{${"id"}}`,
+        encodeURIComponent(String(id)),
+      );
       // use dummy base URL string because the URL constructor only accepts absolute URLs.
       const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
       let baseOptions;
@@ -385,7 +1235,7 @@ export const LlmServiceControllerApiAxiosParamCreator = function (
       }
 
       const localVarRequestOptions = {
-        method: "POST",
+        method: "PATCH",
         ...baseOptions,
         ...options,
       };
@@ -412,65 +1262,7 @@ export const LlmServiceControllerApiAxiosParamCreator = function (
         ...options.headers,
       };
       localVarRequestOptions.data = serializeDataIfNeeded(
-        requestBody,
-        localVarRequestOptions,
-        configuration,
-      );
-
-      return {
-        url: toPathString(localVarUrlObj),
-        options: localVarRequestOptions,
-      };
-    },
-    /**
-     *
-     * @param {{ [key: string]: Array<string>; }} requestBody
-     * @param {*} [options] Override http request option.
-     * @throws {RequiredError}
-     */
-    summarizeText: async (
-      requestBody: { [key: string]: Array<string> },
-      options: RawAxiosRequestConfig = {},
-    ): Promise<RequestArgs> => {
-      // verify required parameter 'requestBody' is not null or undefined
-      assertParamExists("summarizeText", "requestBody", requestBody);
-      const localVarPath = `/api/llm/summarization`;
-      // use dummy base URL string because the URL constructor only accepts absolute URLs.
-      const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
-      let baseOptions;
-      if (configuration) {
-        baseOptions = configuration.baseOptions;
-      }
-
-      const localVarRequestOptions = {
-        method: "POST",
-        ...baseOptions,
-        ...options,
-      };
-      const localVarHeaderParameter = {} as any;
-      const localVarQueryParameter = {} as any;
-
-      // authentication keycloak required
-      // oauth required
-      await setOAuthToObject(
-        localVarHeaderParameter,
-        "keycloak",
-        [],
-        configuration,
-      );
-
-      localVarHeaderParameter["Content-Type"] = "application/json";
-
-      setSearchParams(localVarUrlObj, localVarQueryParameter);
-      let headersFromBaseOptions =
-        baseOptions && baseOptions.headers ? baseOptions.headers : {};
-      localVarRequestOptions.headers = {
-        ...localVarHeaderParameter,
-        ...headersFromBaseOptions,
-        ...options.headers,
-      };
-      localVarRequestOptions.data = serializeDataIfNeeded(
-        requestBody,
+        nodeUpdateDTO,
         localVarRequestOptions,
         configuration,
       );
@@ -484,37 +1276,32 @@ export const LlmServiceControllerApiAxiosParamCreator = function (
 };
 
 /**
- * LlmServiceControllerApi - functional programming interface
+ * NodeControllerApi - functional programming interface
  * @export
  */
-export const LlmServiceControllerApiFp = function (
-  configuration?: Configuration,
-) {
+export const NodeControllerApiFp = function (configuration?: Configuration) {
   const localVarAxiosParamCreator =
-    LlmServiceControllerApiAxiosParamCreator(configuration);
+    NodeControllerApiAxiosParamCreator(configuration);
   return {
     /**
      *
-     * @param {{ [key: string]: Array<string>; }} requestBody
+     * @param {Node} node
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      */
-    async completeText(
-      requestBody: { [key: string]: Array<string> },
+    async createNode(
+      node: Node,
       options?: RawAxiosRequestConfig,
     ): Promise<
-      (
-        axios?: AxiosInstance,
-        basePath?: string,
-      ) => AxiosPromise<{ [key: string]: string }>
+      (axios?: AxiosInstance, basePath?: string) => AxiosPromise<Node>
     > {
-      const localVarAxiosArgs = await localVarAxiosParamCreator.completeText(
-        requestBody,
+      const localVarAxiosArgs = await localVarAxiosParamCreator.createNode(
+        node,
         options,
       );
       const localVarOperationServerIndex = configuration?.serverIndex ?? 0;
       const localVarOperationServerBasePath =
-        operationServerMap["LlmServiceControllerApi.completeText"]?.[
+        operationServerMap["NodeControllerApi.createNode"]?.[
           localVarOperationServerIndex
         ]?.url;
       return (axios, basePath) =>
@@ -527,22 +1314,53 @@ export const LlmServiceControllerApiFp = function (
     },
     /**
      *
+     * @param {string} id
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      */
-    async healthCheck(
+    async deleteNode(
+      id: string,
       options?: RawAxiosRequestConfig,
     ): Promise<
-      (
-        axios?: AxiosInstance,
-        basePath?: string,
-      ) => AxiosPromise<{ [key: string]: string }>
+      (axios?: AxiosInstance, basePath?: string) => AxiosPromise<void>
+    > {
+      const localVarAxiosArgs = await localVarAxiosParamCreator.deleteNode(
+        id,
+        options,
+      );
+      const localVarOperationServerIndex = configuration?.serverIndex ?? 0;
+      const localVarOperationServerBasePath =
+        operationServerMap["NodeControllerApi.deleteNode"]?.[
+          localVarOperationServerIndex
+        ]?.url;
+      return (axios, basePath) =>
+        createRequestFunction(
+          localVarAxiosArgs,
+          globalAxios,
+          BASE_PATH,
+          configuration,
+        )(axios, localVarOperationServerBasePath || basePath);
+    },
+    /**
+     *
+     * @param {number} whiteboardId
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     */
+    async getAllByWhiteboardId(
+      whiteboardId: number,
+      options?: RawAxiosRequestConfig,
+    ): Promise<
+      (axios?: AxiosInstance, basePath?: string) => AxiosPromise<Array<Node>>
     > {
       const localVarAxiosArgs =
-        await localVarAxiosParamCreator.healthCheck(options);
+        await localVarAxiosParamCreator.getAllByWhiteboardId(
+          whiteboardId,
+          options,
+        );
       const localVarOperationServerIndex = configuration?.serverIndex ?? 0;
       const localVarOperationServerBasePath =
-        operationServerMap["LlmServiceControllerApi.healthCheck"]?.[
+        operationServerMap["NodeControllerApi.getAllByWhiteboardId"]?.[
           localVarOperationServerIndex
         ]?.url;
       return (axios, basePath) =>
@@ -555,58 +1373,26 @@ export const LlmServiceControllerApiFp = function (
     },
     /**
      *
-     * @param {{ [key: string]: Array<string>; }} requestBody
+     * @param {string} id
+     * @param {NodeUpdateDTO} nodeUpdateDTO
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      */
-    async rephraseText(
-      requestBody: { [key: string]: Array<string> },
+    async patchNode(
+      id: string,
+      nodeUpdateDTO: NodeUpdateDTO,
       options?: RawAxiosRequestConfig,
     ): Promise<
-      (
-        axios?: AxiosInstance,
-        basePath?: string,
-      ) => AxiosPromise<{ [key: string]: string }>
+      (axios?: AxiosInstance, basePath?: string) => AxiosPromise<Node>
     > {
-      const localVarAxiosArgs = await localVarAxiosParamCreator.rephraseText(
-        requestBody,
+      const localVarAxiosArgs = await localVarAxiosParamCreator.patchNode(
+        id,
+        nodeUpdateDTO,
         options,
       );
       const localVarOperationServerIndex = configuration?.serverIndex ?? 0;
       const localVarOperationServerBasePath =
-        operationServerMap["LlmServiceControllerApi.rephraseText"]?.[
-          localVarOperationServerIndex
-        ]?.url;
-      return (axios, basePath) =>
-        createRequestFunction(
-          localVarAxiosArgs,
-          globalAxios,
-          BASE_PATH,
-          configuration,
-        )(axios, localVarOperationServerBasePath || basePath);
-    },
-    /**
-     *
-     * @param {{ [key: string]: Array<string>; }} requestBody
-     * @param {*} [options] Override http request option.
-     * @throws {RequiredError}
-     */
-    async summarizeText(
-      requestBody: { [key: string]: Array<string> },
-      options?: RawAxiosRequestConfig,
-    ): Promise<
-      (
-        axios?: AxiosInstance,
-        basePath?: string,
-      ) => AxiosPromise<{ [key: string]: string }>
-    > {
-      const localVarAxiosArgs = await localVarAxiosParamCreator.summarizeText(
-        requestBody,
-        options,
-      );
-      const localVarOperationServerIndex = configuration?.serverIndex ?? 0;
-      const localVarOperationServerBasePath =
-        operationServerMap["LlmServiceControllerApi.summarizeText"]?.[
+        operationServerMap["NodeControllerApi.patchNode"]?.[
           localVarOperationServerIndex
         ]?.url;
       return (axios, basePath) =>
@@ -621,137 +1407,141 @@ export const LlmServiceControllerApiFp = function (
 };
 
 /**
- * LlmServiceControllerApi - factory interface
+ * NodeControllerApi - factory interface
  * @export
  */
-export const LlmServiceControllerApiFactory = function (
+export const NodeControllerApiFactory = function (
   configuration?: Configuration,
   basePath?: string,
   axios?: AxiosInstance,
 ) {
-  const localVarFp = LlmServiceControllerApiFp(configuration);
+  const localVarFp = NodeControllerApiFp(configuration);
   return {
     /**
      *
-     * @param {{ [key: string]: Array<string>; }} requestBody
+     * @param {Node} node
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      */
-    completeText(
-      requestBody: { [key: string]: Array<string> },
+    createNode(
+      node: Node,
       options?: RawAxiosRequestConfig,
-    ): AxiosPromise<{ [key: string]: string }> {
+    ): AxiosPromise<Node> {
       return localVarFp
-        .completeText(requestBody, options)
+        .createNode(node, options)
         .then((request) => request(axios, basePath));
     },
     /**
      *
+     * @param {string} id
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      */
-    healthCheck(
+    deleteNode(
+      id: string,
       options?: RawAxiosRequestConfig,
-    ): AxiosPromise<{ [key: string]: string }> {
+    ): AxiosPromise<void> {
       return localVarFp
-        .healthCheck(options)
+        .deleteNode(id, options)
         .then((request) => request(axios, basePath));
     },
     /**
      *
-     * @param {{ [key: string]: Array<string>; }} requestBody
+     * @param {number} whiteboardId
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      */
-    rephraseText(
-      requestBody: { [key: string]: Array<string> },
+    getAllByWhiteboardId(
+      whiteboardId: number,
       options?: RawAxiosRequestConfig,
-    ): AxiosPromise<{ [key: string]: string }> {
+    ): AxiosPromise<Array<Node>> {
       return localVarFp
-        .rephraseText(requestBody, options)
+        .getAllByWhiteboardId(whiteboardId, options)
         .then((request) => request(axios, basePath));
     },
     /**
      *
-     * @param {{ [key: string]: Array<string>; }} requestBody
+     * @param {string} id
+     * @param {NodeUpdateDTO} nodeUpdateDTO
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      */
-    summarizeText(
-      requestBody: { [key: string]: Array<string> },
+    patchNode(
+      id: string,
+      nodeUpdateDTO: NodeUpdateDTO,
       options?: RawAxiosRequestConfig,
-    ): AxiosPromise<{ [key: string]: string }> {
+    ): AxiosPromise<Node> {
       return localVarFp
-        .summarizeText(requestBody, options)
+        .patchNode(id, nodeUpdateDTO, options)
         .then((request) => request(axios, basePath));
     },
   };
 };
 
 /**
- * LlmServiceControllerApi - object-oriented interface
+ * NodeControllerApi - object-oriented interface
  * @export
- * @class LlmServiceControllerApi
+ * @class NodeControllerApi
  * @extends {BaseAPI}
  */
-export class LlmServiceControllerApi extends BaseAPI {
+export class NodeControllerApi extends BaseAPI {
   /**
    *
-   * @param {{ [key: string]: Array<string>; }} requestBody
+   * @param {Node} node
    * @param {*} [options] Override http request option.
    * @throws {RequiredError}
-   * @memberof LlmServiceControllerApi
+   * @memberof NodeControllerApi
    */
-  public completeText(
-    requestBody: { [key: string]: Array<string> },
-    options?: RawAxiosRequestConfig,
-  ) {
-    return LlmServiceControllerApiFp(this.configuration)
-      .completeText(requestBody, options)
+  public createNode(node: Node, options?: RawAxiosRequestConfig) {
+    return NodeControllerApiFp(this.configuration)
+      .createNode(node, options)
       .then((request) => request(this.axios, this.basePath));
   }
 
   /**
    *
+   * @param {string} id
    * @param {*} [options] Override http request option.
    * @throws {RequiredError}
-   * @memberof LlmServiceControllerApi
+   * @memberof NodeControllerApi
    */
-  public healthCheck(options?: RawAxiosRequestConfig) {
-    return LlmServiceControllerApiFp(this.configuration)
-      .healthCheck(options)
+  public deleteNode(id: string, options?: RawAxiosRequestConfig) {
+    return NodeControllerApiFp(this.configuration)
+      .deleteNode(id, options)
       .then((request) => request(this.axios, this.basePath));
   }
 
   /**
    *
-   * @param {{ [key: string]: Array<string>; }} requestBody
+   * @param {number} whiteboardId
    * @param {*} [options] Override http request option.
    * @throws {RequiredError}
-   * @memberof LlmServiceControllerApi
+   * @memberof NodeControllerApi
    */
-  public rephraseText(
-    requestBody: { [key: string]: Array<string> },
+  public getAllByWhiteboardId(
+    whiteboardId: number,
     options?: RawAxiosRequestConfig,
   ) {
-    return LlmServiceControllerApiFp(this.configuration)
-      .rephraseText(requestBody, options)
+    return NodeControllerApiFp(this.configuration)
+      .getAllByWhiteboardId(whiteboardId, options)
       .then((request) => request(this.axios, this.basePath));
   }
 
   /**
    *
-   * @param {{ [key: string]: Array<string>; }} requestBody
+   * @param {string} id
+   * @param {NodeUpdateDTO} nodeUpdateDTO
    * @param {*} [options] Override http request option.
    * @throws {RequiredError}
-   * @memberof LlmServiceControllerApi
+   * @memberof NodeControllerApi
    */
-  public summarizeText(
-    requestBody: { [key: string]: Array<string> },
+  public patchNode(
+    id: string,
+    nodeUpdateDTO: NodeUpdateDTO,
     options?: RawAxiosRequestConfig,
   ) {
-    return LlmServiceControllerApiFp(this.configuration)
-      .summarizeText(requestBody, options)
+    return NodeControllerApiFp(this.configuration)
+      .patchNode(id, nodeUpdateDTO, options)
       .then((request) => request(this.axios, this.basePath));
   }
 }
@@ -888,6 +1678,537 @@ export class RootApi extends BaseAPI {
   public root(options?: RawAxiosRequestConfig) {
     return RootApiFp(this.configuration)
       .root(options)
+      .then((request) => request(this.axios, this.basePath));
+  }
+}
+
+/**
+ * ViewportControllerApi - axios parameter creator
+ * @export
+ */
+export const ViewportControllerApiAxiosParamCreator = function (
+  configuration?: Configuration,
+) {
+  return {
+    /**
+     *
+     * @param {ViewportCreateRequest} viewportCreateRequest
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     */
+    createViewport: async (
+      viewportCreateRequest: ViewportCreateRequest,
+      options: RawAxiosRequestConfig = {},
+    ): Promise<RequestArgs> => {
+      // verify required parameter 'viewportCreateRequest' is not null or undefined
+      assertParamExists(
+        "createViewport",
+        "viewportCreateRequest",
+        viewportCreateRequest,
+      );
+      const localVarPath = `/api/viewports`;
+      // use dummy base URL string because the URL constructor only accepts absolute URLs.
+      const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
+      let baseOptions;
+      if (configuration) {
+        baseOptions = configuration.baseOptions;
+      }
+
+      const localVarRequestOptions = {
+        method: "POST",
+        ...baseOptions,
+        ...options,
+      };
+      const localVarHeaderParameter = {} as any;
+      const localVarQueryParameter = {} as any;
+
+      // authentication keycloak required
+      // oauth required
+      await setOAuthToObject(
+        localVarHeaderParameter,
+        "keycloak",
+        [],
+        configuration,
+      );
+
+      localVarHeaderParameter["Content-Type"] = "application/json";
+
+      setSearchParams(localVarUrlObj, localVarQueryParameter);
+      let headersFromBaseOptions =
+        baseOptions && baseOptions.headers ? baseOptions.headers : {};
+      localVarRequestOptions.headers = {
+        ...localVarHeaderParameter,
+        ...headersFromBaseOptions,
+        ...options.headers,
+      };
+      localVarRequestOptions.data = serializeDataIfNeeded(
+        viewportCreateRequest,
+        localVarRequestOptions,
+        configuration,
+      );
+
+      return {
+        url: toPathString(localVarUrlObj),
+        options: localVarRequestOptions,
+      };
+    },
+    /**
+     *
+     * @param {number} id
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     */
+    deleteViewport: async (
+      id: number,
+      options: RawAxiosRequestConfig = {},
+    ): Promise<RequestArgs> => {
+      // verify required parameter 'id' is not null or undefined
+      assertParamExists("deleteViewport", "id", id);
+      const localVarPath = `/api/viewports/{id}`.replace(
+        `{${"id"}}`,
+        encodeURIComponent(String(id)),
+      );
+      // use dummy base URL string because the URL constructor only accepts absolute URLs.
+      const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
+      let baseOptions;
+      if (configuration) {
+        baseOptions = configuration.baseOptions;
+      }
+
+      const localVarRequestOptions = {
+        method: "DELETE",
+        ...baseOptions,
+        ...options,
+      };
+      const localVarHeaderParameter = {} as any;
+      const localVarQueryParameter = {} as any;
+
+      // authentication keycloak required
+      // oauth required
+      await setOAuthToObject(
+        localVarHeaderParameter,
+        "keycloak",
+        [],
+        configuration,
+      );
+
+      setSearchParams(localVarUrlObj, localVarQueryParameter);
+      let headersFromBaseOptions =
+        baseOptions && baseOptions.headers ? baseOptions.headers : {};
+      localVarRequestOptions.headers = {
+        ...localVarHeaderParameter,
+        ...headersFromBaseOptions,
+        ...options.headers,
+      };
+
+      return {
+        url: toPathString(localVarUrlObj),
+        options: localVarRequestOptions,
+      };
+    },
+    /**
+     *
+     * @param {number} whiteboardId
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     */
+    getViewportByWhiteboardId: async (
+      whiteboardId: number,
+      options: RawAxiosRequestConfig = {},
+    ): Promise<RequestArgs> => {
+      // verify required parameter 'whiteboardId' is not null or undefined
+      assertParamExists(
+        "getViewportByWhiteboardId",
+        "whiteboardId",
+        whiteboardId,
+      );
+      const localVarPath = `/api/viewports/whiteboard/{whiteboardId}`.replace(
+        `{${"whiteboardId"}}`,
+        encodeURIComponent(String(whiteboardId)),
+      );
+      // use dummy base URL string because the URL constructor only accepts absolute URLs.
+      const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
+      let baseOptions;
+      if (configuration) {
+        baseOptions = configuration.baseOptions;
+      }
+
+      const localVarRequestOptions = {
+        method: "GET",
+        ...baseOptions,
+        ...options,
+      };
+      const localVarHeaderParameter = {} as any;
+      const localVarQueryParameter = {} as any;
+
+      // authentication keycloak required
+      // oauth required
+      await setOAuthToObject(
+        localVarHeaderParameter,
+        "keycloak",
+        [],
+        configuration,
+      );
+
+      setSearchParams(localVarUrlObj, localVarQueryParameter);
+      let headersFromBaseOptions =
+        baseOptions && baseOptions.headers ? baseOptions.headers : {};
+      localVarRequestOptions.headers = {
+        ...localVarHeaderParameter,
+        ...headersFromBaseOptions,
+        ...options.headers,
+      };
+
+      return {
+        url: toPathString(localVarUrlObj),
+        options: localVarRequestOptions,
+      };
+    },
+    /**
+     *
+     * @param {number} whiteboardId
+     * @param {Viewport} viewport
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     */
+    updateViewportByWhiteboardId: async (
+      whiteboardId: number,
+      viewport: Viewport,
+      options: RawAxiosRequestConfig = {},
+    ): Promise<RequestArgs> => {
+      // verify required parameter 'whiteboardId' is not null or undefined
+      assertParamExists(
+        "updateViewportByWhiteboardId",
+        "whiteboardId",
+        whiteboardId,
+      );
+      // verify required parameter 'viewport' is not null or undefined
+      assertParamExists("updateViewportByWhiteboardId", "viewport", viewport);
+      const localVarPath = `/api/viewports/whiteboard/{whiteboardId}`.replace(
+        `{${"whiteboardId"}}`,
+        encodeURIComponent(String(whiteboardId)),
+      );
+      // use dummy base URL string because the URL constructor only accepts absolute URLs.
+      const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
+      let baseOptions;
+      if (configuration) {
+        baseOptions = configuration.baseOptions;
+      }
+
+      const localVarRequestOptions = {
+        method: "PUT",
+        ...baseOptions,
+        ...options,
+      };
+      const localVarHeaderParameter = {} as any;
+      const localVarQueryParameter = {} as any;
+
+      // authentication keycloak required
+      // oauth required
+      await setOAuthToObject(
+        localVarHeaderParameter,
+        "keycloak",
+        [],
+        configuration,
+      );
+
+      localVarHeaderParameter["Content-Type"] = "application/json";
+
+      setSearchParams(localVarUrlObj, localVarQueryParameter);
+      let headersFromBaseOptions =
+        baseOptions && baseOptions.headers ? baseOptions.headers : {};
+      localVarRequestOptions.headers = {
+        ...localVarHeaderParameter,
+        ...headersFromBaseOptions,
+        ...options.headers,
+      };
+      localVarRequestOptions.data = serializeDataIfNeeded(
+        viewport,
+        localVarRequestOptions,
+        configuration,
+      );
+
+      return {
+        url: toPathString(localVarUrlObj),
+        options: localVarRequestOptions,
+      };
+    },
+  };
+};
+
+/**
+ * ViewportControllerApi - functional programming interface
+ * @export
+ */
+export const ViewportControllerApiFp = function (
+  configuration?: Configuration,
+) {
+  const localVarAxiosParamCreator =
+    ViewportControllerApiAxiosParamCreator(configuration);
+  return {
+    /**
+     *
+     * @param {ViewportCreateRequest} viewportCreateRequest
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     */
+    async createViewport(
+      viewportCreateRequest: ViewportCreateRequest,
+      options?: RawAxiosRequestConfig,
+    ): Promise<
+      (axios?: AxiosInstance, basePath?: string) => AxiosPromise<Viewport>
+    > {
+      const localVarAxiosArgs = await localVarAxiosParamCreator.createViewport(
+        viewportCreateRequest,
+        options,
+      );
+      const localVarOperationServerIndex = configuration?.serverIndex ?? 0;
+      const localVarOperationServerBasePath =
+        operationServerMap["ViewportControllerApi.createViewport"]?.[
+          localVarOperationServerIndex
+        ]?.url;
+      return (axios, basePath) =>
+        createRequestFunction(
+          localVarAxiosArgs,
+          globalAxios,
+          BASE_PATH,
+          configuration,
+        )(axios, localVarOperationServerBasePath || basePath);
+    },
+    /**
+     *
+     * @param {number} id
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     */
+    async deleteViewport(
+      id: number,
+      options?: RawAxiosRequestConfig,
+    ): Promise<
+      (axios?: AxiosInstance, basePath?: string) => AxiosPromise<void>
+    > {
+      const localVarAxiosArgs = await localVarAxiosParamCreator.deleteViewport(
+        id,
+        options,
+      );
+      const localVarOperationServerIndex = configuration?.serverIndex ?? 0;
+      const localVarOperationServerBasePath =
+        operationServerMap["ViewportControllerApi.deleteViewport"]?.[
+          localVarOperationServerIndex
+        ]?.url;
+      return (axios, basePath) =>
+        createRequestFunction(
+          localVarAxiosArgs,
+          globalAxios,
+          BASE_PATH,
+          configuration,
+        )(axios, localVarOperationServerBasePath || basePath);
+    },
+    /**
+     *
+     * @param {number} whiteboardId
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     */
+    async getViewportByWhiteboardId(
+      whiteboardId: number,
+      options?: RawAxiosRequestConfig,
+    ): Promise<
+      (axios?: AxiosInstance, basePath?: string) => AxiosPromise<Viewport>
+    > {
+      const localVarAxiosArgs =
+        await localVarAxiosParamCreator.getViewportByWhiteboardId(
+          whiteboardId,
+          options,
+        );
+      const localVarOperationServerIndex = configuration?.serverIndex ?? 0;
+      const localVarOperationServerBasePath =
+        operationServerMap["ViewportControllerApi.getViewportByWhiteboardId"]?.[
+          localVarOperationServerIndex
+        ]?.url;
+      return (axios, basePath) =>
+        createRequestFunction(
+          localVarAxiosArgs,
+          globalAxios,
+          BASE_PATH,
+          configuration,
+        )(axios, localVarOperationServerBasePath || basePath);
+    },
+    /**
+     *
+     * @param {number} whiteboardId
+     * @param {Viewport} viewport
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     */
+    async updateViewportByWhiteboardId(
+      whiteboardId: number,
+      viewport: Viewport,
+      options?: RawAxiosRequestConfig,
+    ): Promise<
+      (axios?: AxiosInstance, basePath?: string) => AxiosPromise<Viewport>
+    > {
+      const localVarAxiosArgs =
+        await localVarAxiosParamCreator.updateViewportByWhiteboardId(
+          whiteboardId,
+          viewport,
+          options,
+        );
+      const localVarOperationServerIndex = configuration?.serverIndex ?? 0;
+      const localVarOperationServerBasePath =
+        operationServerMap[
+          "ViewportControllerApi.updateViewportByWhiteboardId"
+        ]?.[localVarOperationServerIndex]?.url;
+      return (axios, basePath) =>
+        createRequestFunction(
+          localVarAxiosArgs,
+          globalAxios,
+          BASE_PATH,
+          configuration,
+        )(axios, localVarOperationServerBasePath || basePath);
+    },
+  };
+};
+
+/**
+ * ViewportControllerApi - factory interface
+ * @export
+ */
+export const ViewportControllerApiFactory = function (
+  configuration?: Configuration,
+  basePath?: string,
+  axios?: AxiosInstance,
+) {
+  const localVarFp = ViewportControllerApiFp(configuration);
+  return {
+    /**
+     *
+     * @param {ViewportCreateRequest} viewportCreateRequest
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     */
+    createViewport(
+      viewportCreateRequest: ViewportCreateRequest,
+      options?: RawAxiosRequestConfig,
+    ): AxiosPromise<Viewport> {
+      return localVarFp
+        .createViewport(viewportCreateRequest, options)
+        .then((request) => request(axios, basePath));
+    },
+    /**
+     *
+     * @param {number} id
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     */
+    deleteViewport(
+      id: number,
+      options?: RawAxiosRequestConfig,
+    ): AxiosPromise<void> {
+      return localVarFp
+        .deleteViewport(id, options)
+        .then((request) => request(axios, basePath));
+    },
+    /**
+     *
+     * @param {number} whiteboardId
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     */
+    getViewportByWhiteboardId(
+      whiteboardId: number,
+      options?: RawAxiosRequestConfig,
+    ): AxiosPromise<Viewport> {
+      return localVarFp
+        .getViewportByWhiteboardId(whiteboardId, options)
+        .then((request) => request(axios, basePath));
+    },
+    /**
+     *
+     * @param {number} whiteboardId
+     * @param {Viewport} viewport
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     */
+    updateViewportByWhiteboardId(
+      whiteboardId: number,
+      viewport: Viewport,
+      options?: RawAxiosRequestConfig,
+    ): AxiosPromise<Viewport> {
+      return localVarFp
+        .updateViewportByWhiteboardId(whiteboardId, viewport, options)
+        .then((request) => request(axios, basePath));
+    },
+  };
+};
+
+/**
+ * ViewportControllerApi - object-oriented interface
+ * @export
+ * @class ViewportControllerApi
+ * @extends {BaseAPI}
+ */
+export class ViewportControllerApi extends BaseAPI {
+  /**
+   *
+   * @param {ViewportCreateRequest} viewportCreateRequest
+   * @param {*} [options] Override http request option.
+   * @throws {RequiredError}
+   * @memberof ViewportControllerApi
+   */
+  public createViewport(
+    viewportCreateRequest: ViewportCreateRequest,
+    options?: RawAxiosRequestConfig,
+  ) {
+    return ViewportControllerApiFp(this.configuration)
+      .createViewport(viewportCreateRequest, options)
+      .then((request) => request(this.axios, this.basePath));
+  }
+
+  /**
+   *
+   * @param {number} id
+   * @param {*} [options] Override http request option.
+   * @throws {RequiredError}
+   * @memberof ViewportControllerApi
+   */
+  public deleteViewport(id: number, options?: RawAxiosRequestConfig) {
+    return ViewportControllerApiFp(this.configuration)
+      .deleteViewport(id, options)
+      .then((request) => request(this.axios, this.basePath));
+  }
+
+  /**
+   *
+   * @param {number} whiteboardId
+   * @param {*} [options] Override http request option.
+   * @throws {RequiredError}
+   * @memberof ViewportControllerApi
+   */
+  public getViewportByWhiteboardId(
+    whiteboardId: number,
+    options?: RawAxiosRequestConfig,
+  ) {
+    return ViewportControllerApiFp(this.configuration)
+      .getViewportByWhiteboardId(whiteboardId, options)
+      .then((request) => request(this.axios, this.basePath));
+  }
+
+  /**
+   *
+   * @param {number} whiteboardId
+   * @param {Viewport} viewport
+   * @param {*} [options] Override http request option.
+   * @throws {RequiredError}
+   * @memberof ViewportControllerApi
+   */
+  public updateViewportByWhiteboardId(
+    whiteboardId: number,
+    viewport: Viewport,
+    options?: RawAxiosRequestConfig,
+  ) {
+    return ViewportControllerApiFp(this.configuration)
+      .updateViewportByWhiteboardId(whiteboardId, viewport, options)
       .then((request) => request(this.axios, this.basePath));
   }
 }
@@ -1113,6 +2434,130 @@ export const WhiteboardApiAxiosParamCreator = function (
       };
     },
     /**
+     * Returns the title of a whiteboard by its ID
+     * @summary Get whiteboard title
+     * @param {number} id ID of the whiteboard
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     */
+    getWhiteboardTitle: async (
+      id: number,
+      options: RawAxiosRequestConfig = {},
+    ): Promise<RequestArgs> => {
+      // verify required parameter 'id' is not null or undefined
+      assertParamExists("getWhiteboardTitle", "id", id);
+      const localVarPath = `/whiteboards/{id}/title`.replace(
+        `{${"id"}}`,
+        encodeURIComponent(String(id)),
+      );
+      // use dummy base URL string because the URL constructor only accepts absolute URLs.
+      const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
+      let baseOptions;
+      if (configuration) {
+        baseOptions = configuration.baseOptions;
+      }
+
+      const localVarRequestOptions = {
+        method: "GET",
+        ...baseOptions,
+        ...options,
+      };
+      const localVarHeaderParameter = {} as any;
+      const localVarQueryParameter = {} as any;
+
+      // authentication keycloak required
+      // oauth required
+      await setOAuthToObject(
+        localVarHeaderParameter,
+        "keycloak",
+        [],
+        configuration,
+      );
+
+      setSearchParams(localVarUrlObj, localVarQueryParameter);
+      let headersFromBaseOptions =
+        baseOptions && baseOptions.headers ? baseOptions.headers : {};
+      localVarRequestOptions.headers = {
+        ...localVarHeaderParameter,
+        ...headersFromBaseOptions,
+        ...options.headers,
+      };
+
+      return {
+        url: toPathString(localVarUrlObj),
+        options: localVarRequestOptions,
+      };
+    },
+    /**
+     *
+     * @param {number} whiteboardId
+     * @param {WhiteboardStateDto} whiteboardStateDto
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     */
+    saveWhiteboardState: async (
+      whiteboardId: number,
+      whiteboardStateDto: WhiteboardStateDto,
+      options: RawAxiosRequestConfig = {},
+    ): Promise<RequestArgs> => {
+      // verify required parameter 'whiteboardId' is not null or undefined
+      assertParamExists("saveWhiteboardState", "whiteboardId", whiteboardId);
+      // verify required parameter 'whiteboardStateDto' is not null or undefined
+      assertParamExists(
+        "saveWhiteboardState",
+        "whiteboardStateDto",
+        whiteboardStateDto,
+      );
+      const localVarPath = `/whiteboards/{whiteboardId}/save`.replace(
+        `{${"whiteboardId"}}`,
+        encodeURIComponent(String(whiteboardId)),
+      );
+      // use dummy base URL string because the URL constructor only accepts absolute URLs.
+      const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
+      let baseOptions;
+      if (configuration) {
+        baseOptions = configuration.baseOptions;
+      }
+
+      const localVarRequestOptions = {
+        method: "POST",
+        ...baseOptions,
+        ...options,
+      };
+      const localVarHeaderParameter = {} as any;
+      const localVarQueryParameter = {} as any;
+
+      // authentication keycloak required
+      // oauth required
+      await setOAuthToObject(
+        localVarHeaderParameter,
+        "keycloak",
+        [],
+        configuration,
+      );
+
+      localVarHeaderParameter["Content-Type"] = "application/json";
+
+      setSearchParams(localVarUrlObj, localVarQueryParameter);
+      let headersFromBaseOptions =
+        baseOptions && baseOptions.headers ? baseOptions.headers : {};
+      localVarRequestOptions.headers = {
+        ...localVarHeaderParameter,
+        ...headersFromBaseOptions,
+        ...options.headers,
+      };
+      localVarRequestOptions.data = serializeDataIfNeeded(
+        whiteboardStateDto,
+        localVarRequestOptions,
+        configuration,
+      );
+
+      return {
+        url: toPathString(localVarUrlObj),
+        options: localVarRequestOptions,
+      };
+    },
+    /**
      * Updates the title of an existing whiteboard.
      * @summary Update title
      * @param {number} id ID of the whiteboard
@@ -1298,6 +2743,67 @@ export const WhiteboardApiFp = function (configuration?: Configuration) {
         )(axios, localVarOperationServerBasePath || basePath);
     },
     /**
+     * Returns the title of a whiteboard by its ID
+     * @summary Get whiteboard title
+     * @param {number} id ID of the whiteboard
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     */
+    async getWhiteboardTitle(
+      id: number,
+      options?: RawAxiosRequestConfig,
+    ): Promise<
+      (axios?: AxiosInstance, basePath?: string) => AxiosPromise<string>
+    > {
+      const localVarAxiosArgs =
+        await localVarAxiosParamCreator.getWhiteboardTitle(id, options);
+      const localVarOperationServerIndex = configuration?.serverIndex ?? 0;
+      const localVarOperationServerBasePath =
+        operationServerMap["WhiteboardApi.getWhiteboardTitle"]?.[
+          localVarOperationServerIndex
+        ]?.url;
+      return (axios, basePath) =>
+        createRequestFunction(
+          localVarAxiosArgs,
+          globalAxios,
+          BASE_PATH,
+          configuration,
+        )(axios, localVarOperationServerBasePath || basePath);
+    },
+    /**
+     *
+     * @param {number} whiteboardId
+     * @param {WhiteboardStateDto} whiteboardStateDto
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     */
+    async saveWhiteboardState(
+      whiteboardId: number,
+      whiteboardStateDto: WhiteboardStateDto,
+      options?: RawAxiosRequestConfig,
+    ): Promise<
+      (axios?: AxiosInstance, basePath?: string) => AxiosPromise<void>
+    > {
+      const localVarAxiosArgs =
+        await localVarAxiosParamCreator.saveWhiteboardState(
+          whiteboardId,
+          whiteboardStateDto,
+          options,
+        );
+      const localVarOperationServerIndex = configuration?.serverIndex ?? 0;
+      const localVarOperationServerBasePath =
+        operationServerMap["WhiteboardApi.saveWhiteboardState"]?.[
+          localVarOperationServerIndex
+        ]?.url;
+      return (axios, basePath) =>
+        createRequestFunction(
+          localVarAxiosArgs,
+          globalAxios,
+          BASE_PATH,
+          configuration,
+        )(axios, localVarOperationServerBasePath || basePath);
+    },
+    /**
      * Updates the title of an existing whiteboard.
      * @summary Update title
      * @param {number} id ID of the whiteboard
@@ -1310,7 +2816,7 @@ export const WhiteboardApiFp = function (configuration?: Configuration) {
       title: string,
       options?: RawAxiosRequestConfig,
     ): Promise<
-      (axios?: AxiosInstance, basePath?: string) => AxiosPromise<Whiteboard>
+      (axios?: AxiosInstance, basePath?: string) => AxiosPromise<string>
     > {
       const localVarAxiosArgs = await localVarAxiosParamCreator.updateTitle(
         id,
@@ -1401,6 +2907,37 @@ export const WhiteboardApiFactory = function (
         .then((request) => request(axios, basePath));
     },
     /**
+     * Returns the title of a whiteboard by its ID
+     * @summary Get whiteboard title
+     * @param {number} id ID of the whiteboard
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     */
+    getWhiteboardTitle(
+      id: number,
+      options?: RawAxiosRequestConfig,
+    ): AxiosPromise<string> {
+      return localVarFp
+        .getWhiteboardTitle(id, options)
+        .then((request) => request(axios, basePath));
+    },
+    /**
+     *
+     * @param {number} whiteboardId
+     * @param {WhiteboardStateDto} whiteboardStateDto
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     */
+    saveWhiteboardState(
+      whiteboardId: number,
+      whiteboardStateDto: WhiteboardStateDto,
+      options?: RawAxiosRequestConfig,
+    ): AxiosPromise<void> {
+      return localVarFp
+        .saveWhiteboardState(whiteboardId, whiteboardStateDto, options)
+        .then((request) => request(axios, basePath));
+    },
+    /**
      * Updates the title of an existing whiteboard.
      * @summary Update title
      * @param {number} id ID of the whiteboard
@@ -1412,7 +2949,7 @@ export const WhiteboardApiFactory = function (
       id: number,
       title: string,
       options?: RawAxiosRequestConfig,
-    ): AxiosPromise<Whiteboard> {
+    ): AxiosPromise<string> {
       return localVarFp
         .updateTitle(id, title, options)
         .then((request) => request(axios, basePath));
@@ -1477,6 +3014,38 @@ export class WhiteboardApi extends BaseAPI {
   public getWhiteboardById(id: number, options?: RawAxiosRequestConfig) {
     return WhiteboardApiFp(this.configuration)
       .getWhiteboardById(id, options)
+      .then((request) => request(this.axios, this.basePath));
+  }
+
+  /**
+   * Returns the title of a whiteboard by its ID
+   * @summary Get whiteboard title
+   * @param {number} id ID of the whiteboard
+   * @param {*} [options] Override http request option.
+   * @throws {RequiredError}
+   * @memberof WhiteboardApi
+   */
+  public getWhiteboardTitle(id: number, options?: RawAxiosRequestConfig) {
+    return WhiteboardApiFp(this.configuration)
+      .getWhiteboardTitle(id, options)
+      .then((request) => request(this.axios, this.basePath));
+  }
+
+  /**
+   *
+   * @param {number} whiteboardId
+   * @param {WhiteboardStateDto} whiteboardStateDto
+   * @param {*} [options] Override http request option.
+   * @throws {RequiredError}
+   * @memberof WhiteboardApi
+   */
+  public saveWhiteboardState(
+    whiteboardId: number,
+    whiteboardStateDto: WhiteboardStateDto,
+    options?: RawAxiosRequestConfig,
+  ) {
+    return WhiteboardApiFp(this.configuration)
+      .saveWhiteboardState(whiteboardId, whiteboardStateDto, options)
       .then((request) => request(this.axios, this.basePath));
   }
 
