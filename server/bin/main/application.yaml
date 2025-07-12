@@ -25,3 +25,20 @@ spring:
   flyway:
     enabled: true
     validate-on-migrate: true
+
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: [ "prometheus" ]
+  endpoint:
+    prometheus:
+      enabled: true
+  metrics:
+    web:
+      server:
+        auto-time-requests: true
+    distribution:
+      percentiles-histogram:
+        http.server.requests: true
