@@ -50,15 +50,15 @@ const Dashboard = () => {
 
           <nav className="space-y-1">
             <div
-              className={`flex cursor-pointer items-center gap-3 rounded-md px-3 py-2 ${
+              className={`flex cursor-pointer items-center gap-4 rounded-md px-3 py-2 ${
                 activeSection === "home"
                   ? "bg-blue-50 text-gray-900"
                   : "text-gray-600 hover:bg-gray-100 hover:text-gray-900"
               }`}
               onClick={() => setActiveSection("home")}
             >
-              <Home className="h-4 w-4" />
-              <span className="text-sm font-medium">Home</span>
+              <Home className="h-5 w-5" />
+              <span>Home</span>
             </div>
 
             <div
@@ -69,9 +69,9 @@ const Dashboard = () => {
               }`}
               onClick={() => setActiveSection("recent")}
             >
-              <div className="flex items-center gap-3">
-                <Clock className="h-4 w-4" />
-                <span className="text-sm">Recent</span>
+              <div className="flex items-center gap-4">
+                <Clock className="h-5 w-5" />
+                <span>Recent</span>
               </div>
               <span className="text-xs text-gray-400">
                 {recentWhiteboards.length > 0 ? recentWhiteboards.length : ""}

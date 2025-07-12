@@ -79,8 +79,6 @@ export default function Sidebar({ onAddNode }: SidebarProps) {
       },
       position: { x: Math.random() * 300, y: Math.random() * 300 }, // Random position
     };
-    console.log("new node");
-    console.log(newNode);
     onAddNode(newNode);
   };
 

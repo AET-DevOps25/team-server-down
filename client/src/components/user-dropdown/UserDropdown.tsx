@@ -48,7 +48,7 @@ export default function UserDropdown() {
                 fallbackClassName="text-sm"
               />
             </button>
-            <span>Hey {user?.username} !</span>
+            <span>Hey {user?.username}!</span>
           </div>
         </DropdownMenuTrigger>
         <DropdownMenuContent align="start" className="mt-3 w-56">

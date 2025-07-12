@@ -3,7 +3,7 @@
 import React, { useState, useRef, useEffect } from "react";
 import formatDate from "@/util/formatDate";
 import { useRouter } from "next/navigation";
-import { Whiteboard } from "@/api/main/generated";
+import { WhiteboardResponse } from "@/api/main/generated";
 import {
   useDeleteWhiteboard,
   useUpdateWhiteboardTitle,
@@ -11,7 +11,7 @@ import {
 import WhiteboardThumbnail from "@/components/whiteboard-card/whiteboard-card-components/WhiteboardThumbnail";
 import WhiteboardEditPopover from "@/components/whiteboard-card/whiteboard-card-components/WhiteboardEditPopover";
 
-export default function ProjectCard({ project }: { project: Whiteboard }) {
+export default function ProjectCard({ project }: { project: WhiteboardResponse }) {
   const router = useRouter();
 
   const [isEditing, setIsEditing] = useState(false);

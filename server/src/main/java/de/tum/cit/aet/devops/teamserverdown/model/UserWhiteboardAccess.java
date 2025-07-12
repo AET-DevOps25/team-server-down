@@ -1,6 +1,8 @@
 package de.tum.cit.aet.devops.teamserverdown.model;
 
 import jakarta.persistence.*;
+import org.hibernate.annotations.OnDelete;
+import org.hibernate.annotations.OnDeleteAction;
 
 @Entity
 @Table(
@@ -13,10 +15,12 @@ public class UserWhiteboardAccess {
 
   @ManyToOne(fetch = FetchType.LAZY, optional = false)
   @JoinColumn(name = "user_id", nullable = false)
+  @OnDelete(action = OnDeleteAction.CASCADE)
   private User user;
 
   @ManyToOne(fetch = FetchType.LAZY, optional = false)
   @JoinColumn(name = "whiteboard_id", nullable = false)
+  @OnDelete(action = OnDeleteAction.CASCADE)
   private Whiteboard whiteboard;
 
   public UserWhiteboardAccess() {}
@@ -24,6 +28,14 @@ public class UserWhiteboardAccess {
   public UserWhiteboardAccess(User user, Whiteboard whiteboard) {
     this.user = user;
     this.whiteboard = whiteboard;
+  }
+
+  public Long getId() {
+    return id;
+  }
+
+  public void setId(Long id) {
+    this.id = id;
   }
 
   public User getUser() {

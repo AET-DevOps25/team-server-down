@@ -25,14 +25,16 @@ const CollaborationTopbar = ({ whiteboardId }: CollaborationTopbarProps) => {
     <div className="flex gap-8">
       <div className="flex gap-2">
         <Avatar
-          username={user?.username}
+          firstname={user?.firstName ?? ""}
+          lastname={user?.lastName ?? ""}
           className="h-8 w-8"
           fallbackClassName="text-sm"
         />
         {collaboratorsWithoutSelf?.map((collaborator, i) => (
           <Avatar
             key={i}
-            username={collaborator?.username}
+            firstname={collaborator?.firstName ?? ""}
+            lastname={collaborator?.lastName ?? ""}
             className="h-8 w-8"
             fallbackClassName="text-sm"
           />
