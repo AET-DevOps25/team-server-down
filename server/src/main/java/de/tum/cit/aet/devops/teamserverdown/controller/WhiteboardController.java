@@ -33,11 +33,10 @@ public class WhiteboardController {
 
   private static final Logger logger = LoggerFactory.getLogger(WhiteboardController.class);
 
-  private WhiteboardRepository whiteboardRepository;
-  private NodeRepository nodeRepository;
-  private EdgeRepository edgeRepository;
-  private ViewportRepository viewportRepository;
   private final WhiteboardRepository whiteboardRepository;
+  private final NodeRepository nodeRepository;
+  private final EdgeRepository edgeRepository;
+  private final ViewportRepository viewportRepository;
   private final UserWhiteboardAccessRepository userWhiteboardAccessRepository;
   private final UserWhiteboardAccessService userWhiteboardAccessService;
 

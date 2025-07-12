@@ -12,9 +12,12 @@ interface CollaborationTopbarProps {
 
 const CollaborationTopbar = ({ whiteboardId }: CollaborationTopbarProps) => {
   const { data: user } = useGetMe();
-  const { data: collaboratorsData } = useGetWhiteboardCollaborators(whiteboardId);
+  const { data: collaboratorsData } =
+    useGetWhiteboardCollaborators(whiteboardId);
 
-  const collaboratorsWithoutSelf = collaboratorsData?.filter(collaborator => collaborator.username !== user?.username)
+  const collaboratorsWithoutSelf = collaboratorsData?.filter(
+    (collaborator) => collaborator.username !== user?.username,
+  );
 
   const [isInviteDialogOpen, setIsInviteDialogOpen] = useState(false);
 

@@ -65,17 +65,26 @@ export const useInviteCollaboratorsToWhiteboard = () => {
   const queryClient = useQueryClient();
 
   return useMutation({
-    mutationFn: ({whiteboardId, emails}: {whiteboardId: number, emails: string[]}) => {
+    mutationFn: ({
+      whiteboardId,
+      emails,
+    }: {
+      whiteboardId: number;
+      emails: string[];
+    }) => {
       const inviteCollaboratorsRequest = {
-        "emails": emails
-      }
-      return whiteboardApiFactory.inviteCollaborators(whiteboardId, inviteCollaboratorsRequest)
+        emails: emails,
+      };
+      return whiteboardApiFactory.inviteCollaborators(
+        whiteboardId,
+        inviteCollaboratorsRequest,
+      );
     },
     onSuccess: () => {
-      queryClient.invalidateQueries({queryKey: ["whiteboard-collaborators"]});
-    }
-  })
-}
+      queryClient.invalidateQueries({ queryKey: ["whiteboard-collaborators"] });
+    },
+  });
+};
 
 export const useGetWhiteboardCollaborators = (whiteboardId: number) => {
   return useQuery({

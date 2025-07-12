@@ -1,4 +1,4 @@
-import React, {Dispatch, SetStateAction, useState} from "react";
+import React, { Dispatch, SetStateAction, useState } from "react";
 import { Button } from "@/components/ui/button";
 import {
   Dialog,
@@ -8,7 +8,7 @@ import {
 } from "@/components/ui/dialog";
 import { Input } from "@/components/ui/input";
 import EmailBadge from "@/components/email-badge/EmailBadge";
-import {useInviteCollaboratorsToWhiteboard} from "@/hooks/api/whiteboard.api";
+import { useInviteCollaboratorsToWhiteboard } from "@/hooks/api/whiteboard.api";
 
 interface InviteDialogProps {
   whiteboardId: number;
@@ -16,7 +16,11 @@ interface InviteDialogProps {
   setIsOpen: Dispatch<SetStateAction<boolean>>;
 }
 
-const InviteDialog = ({ whiteboardId, isOpen, setIsOpen }: InviteDialogProps) => {
+const InviteDialog = ({
+  whiteboardId,
+  isOpen,
+  setIsOpen,
+}: InviteDialogProps) => {
   const [invitees, setInvitees] = useState<string[]>([]);
 
   const inviteCollaborators = useInviteCollaboratorsToWhiteboard();
@@ -35,9 +39,9 @@ const InviteDialog = ({ whiteboardId, isOpen, setIsOpen }: InviteDialogProps) =>
   }
 
   function onSendInvitationsClick() {
-    inviteCollaborators.mutate({whiteboardId, emails: invitees});
+    inviteCollaborators.mutate({ whiteboardId, emails: invitees });
     setInvitees([]);
-    setIsOpen(false)
+    setIsOpen(false);
   }
 
   return (
@@ -57,7 +61,12 @@ const InviteDialog = ({ whiteboardId, isOpen, setIsOpen }: InviteDialogProps) =>
           ))}
         </div>
         <div className="flex justify-end">
-          <Button className="w-32" variant="default" disabled={invitees.length === 0} onClick={onSendInvitationsClick}>
+          <Button
+            className="w-32"
+            variant="default"
+            disabled={invitees.length === 0}
+            onClick={onSendInvitationsClick}
+          >
             Send invitations
           </Button>
         </div>

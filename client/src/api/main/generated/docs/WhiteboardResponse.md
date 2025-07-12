@@ -7,7 +7,7 @@ Name | Type | Description | Notes
 ------------ | ------------- | ------------- | -------------
 **id** | **number** |  | [optional] [default to undefined]
 **title** | **string** |  | [optional] [default to undefined]
-**userId** | **number** |  | [optional] [default to undefined]
+**user** | [**User**](User.md) |  | [optional] [default to undefined]
 **createdAt** | **string** |  | [optional] [default to undefined]
 **lastUpdatedAt** | **string** |  | [optional] [default to undefined]
 
@@ -19,7 +19,7 @@ import { WhiteboardResponse } from './api';
 const instance: WhiteboardResponse = {
     id,
     title,
-    userId,
+    user,
     createdAt,
     lastUpdatedAt,
 };

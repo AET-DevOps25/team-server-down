@@ -22,6 +22,8 @@ import { useSaveWhiteboardState } from "@/hooks/api/whiteboard.save.state.api";
 import { useRestoreWhiteboard } from "@/hooks/api/whiteboard.restore.state.api";
 import useInterval from "@/hooks/useInterval";
 import MenuBar from "./menu-bar/MenuBar";
+import CollaborationTopbar from "@/components/collaboration-topbar/CollaborationTopbar";
+import {Button} from "@/components/ui/button";
 
 const nodeTypes = {
   text: TextNode,
@@ -80,6 +82,9 @@ export default function Whiteboard({ whiteboardId }: WhiteboardProps) {
       <div className="fixed top-1/2 left-4 z-10 -translate-y-1/2">
         <Sidebar onAddNode={handleAddNode} />
       </div>
+      <div className="fixed top-4 right-4 z-10">
+          <CollaborationTopbar whiteboardId={whiteboardId} />
+      </div>
       <ReactFlow
         nodes={nodes}
         edges={edges}
@@ -87,7 +92,6 @@ export default function Whiteboard({ whiteboardId }: WhiteboardProps) {
         onEdgesChange={onEdgesChange}
         onConnect={onConnect}
         onInit={(instance) => {
-          console.log("Initialized", instance);
           setRfInstance(instance);
         }}
         nodeTypes={nodeTypes}
