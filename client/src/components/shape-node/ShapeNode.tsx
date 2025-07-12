@@ -19,6 +19,7 @@ export interface ShapeNodeParams extends NodeProps {
   id: string;
   data: {
     label: string;
+    shapeType: string;
     Shape: React.ComponentType<React.SVGProps<SVGSVGElement>>;
     nodeProperties: NodeProperties;
   };

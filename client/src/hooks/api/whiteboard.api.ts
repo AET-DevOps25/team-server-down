@@ -12,6 +12,17 @@ export function useWhiteboards() {
   });
 }
 
+export function useGetWhiteboardTitle(whiteboardId: number) {
+  return useQuery({
+    queryKey: ["whiteboardTitle", whiteboardId],
+    queryFn: async () => {
+      const { data } =
+        await whiteboardApiFactory.getWhiteboardTitle(whiteboardId);
+      return data;
+    },
+  });
+}
+
 export function useCreateWhiteboard() {
   const queryClient = useQueryClient();
   const router = useRouter();
