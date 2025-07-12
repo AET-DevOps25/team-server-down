@@ -52,3 +52,7 @@ spotless {
         googleJavaFormat()
     }
 }
+
+tasks.withType(JavaCompile) {
+    options.compilerArgs << "-parameters"
+}

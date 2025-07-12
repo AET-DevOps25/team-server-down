@@ -2,9 +2,11 @@ import {
   AccountApiFactory,
   Configuration,
   RootApiFactory,
-} from "@/api/generated";
+  WhiteboardApiFactory,
+} from "@/api/main/generated";
 import globalAxios from "axios";
 import { getSession } from "next-auth/react";
+import { DefaultApiFactory } from "./genai/generated";
 
 globalAxios.interceptors.request.use(async (request) => {
   const session = await getSession();
@@ -31,5 +33,21 @@ const configuration: Configuration = {
   basePath: process.env.NEXT_PUBLIC_API_URL,
 };
 
+const configurationAI: Configuration = {
+  isJsonMime(mime: string): boolean {
+    const jsonMime = new RegExp(
+      "^(application/json|[^;/ \t]+/[^;/ \t]+[+]json)[ \t]*(;.*)?$",
+      "i",
+    );
+    return (
+      mime !== null &&
+      (jsonMime.test(mime) ||
+        mime.toLowerCase() === "application/json-patch+json")
+    );
+  },
+  basePath: process.env.NEXT_PUBLIC_GENAI_URL,
+};
 export const rootApiFactory = RootApiFactory(configuration);
 export const accountApiFactory = AccountApiFactory(configuration);
+export const llmApiFactory = DefaultApiFactory(configurationAI);
+export const whiteboardApiFactory = WhiteboardApiFactory(configuration);

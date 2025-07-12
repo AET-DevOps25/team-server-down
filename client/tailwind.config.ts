@@ -21,7 +21,12 @@ const config: Config = {
                 poppins: ['Poppins', 'sans-serif'],
                 georgia: ['Georgia', 'serif'],
                 helvetica: ['Helvetica', 'sans-serif'],
-            }
+            },
+            animation: {
+                'spin-slow': 'spin 5s linear infinite', // Slower spinning animation
+                'spin-medium': 'spin 2s linear infinite', // Medium speed
+                'spin-fast': 'spin 1s linear infinite', // Fast spinning
+            },
         },
     },
 

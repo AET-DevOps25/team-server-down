@@ -10,7 +10,7 @@ import org.springframework.web.bind.annotation.RestController;
 @Tag(name = "Account", description = "User Accounts")
 public class AccountController {
   @GetMapping("/me")
-  public String getCurrentUser(@CurrentUser User user) {
-    return user.getUsername();
+  public User getCurrentUser(@CurrentUser User user) {
+    return user;
   }
 }

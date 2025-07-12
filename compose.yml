@@ -84,6 +84,7 @@ services:
       interval: 5s
     environment:
       NEXT_PUBLIC_API_URL: ${NEXT_PUBLIC_API_URL:-http://localhost:9091}
+      NEXT_PUBLIC_GENAI_URL: ${NEXT_PUBLIC_GENAI_URL:-http://localhost:8000}
       NEXTAUTH_URL: ${NEXTAUTH_URL:-http://localhost:3000/api/auth/}
       NEXTAUTH_SECRET: ${NEXTAUTH_SECRET:-feZJWB3mcQ93VBmqHKQI5er5NEIxcDPb3wtT/KaLB9s=}
       KEYCLOAK_CLIENT_ID: ${KEYCLOAK_CLIENT_ID:-webclient}

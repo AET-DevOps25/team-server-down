@@ -35,3 +35,4 @@ https://api.teamserverdown.devops.aet.cit.tum.de/swagger-ui/index.html
 
 ## Run tests
 `gradle test`
+
