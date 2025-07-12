@@ -7,7 +7,7 @@ Name | Type | Description | Notes
 ------------ | ------------- | ------------- | -------------
 **nodes** | [**Array&lt;Node&gt;**](Node.md) |  | [optional] [default to undefined]
 **edges** | [**Array&lt;Edge&gt;**](Edge.md) |  | [optional] [default to undefined]
-**viewportDto** | [**ViewportDto**](ViewportDto.md) |  | [optional] [default to undefined]
+**viewportResponse** | [**ViewportDto**](ViewportDto.md) |  | [optional] [default to undefined]
 
 ## Example
 
@@ -17,7 +17,7 @@ import { WhiteboardStateDto } from './api';
 const instance: WhiteboardStateDto = {
     nodes,
     edges,
-    viewportDto,
+    viewportResponse,
 };
 ```
 

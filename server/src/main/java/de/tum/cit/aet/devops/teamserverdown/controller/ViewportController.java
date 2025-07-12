@@ -1,6 +1,6 @@
 package de.tum.cit.aet.devops.teamserverdown.controller;
 
-import de.tum.cit.aet.devops.teamserverdown.dto.ViewportCreateRequest;
+import de.tum.cit.aet.devops.teamserverdown.controller.dtos.CreateViewportRequest;
 import de.tum.cit.aet.devops.teamserverdown.model.Viewport;
 import de.tum.cit.aet.devops.teamserverdown.repository.ViewportRepository;
 import java.util.Optional;
@@ -11,14 +11,14 @@ import org.springframework.web.bind.annotation.*;
 @RequestMapping("/api/viewports")
 public class ViewportController {
 
-  private ViewportRepository viewportRepository;
+  private final ViewportRepository viewportRepository;
 
   public ViewportController(ViewportRepository viewportRepository) {
     this.viewportRepository = viewportRepository;
   }
 
   @PostMapping
-  public ResponseEntity<Viewport> createViewport(@RequestBody ViewportCreateRequest request) {
+  public ResponseEntity<Viewport> createViewport(@RequestBody CreateViewportRequest request) {
     Viewport viewport = new Viewport();
     viewport.setX(request.getX());
     viewport.setY(request.getY());

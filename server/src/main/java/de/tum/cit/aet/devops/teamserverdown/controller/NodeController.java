@@ -1,6 +1,6 @@
 package de.tum.cit.aet.devops.teamserverdown.controller;
 
-import de.tum.cit.aet.devops.teamserverdown.dto.NodeUpdateDTO;
+import de.tum.cit.aet.devops.teamserverdown.controller.dtos.UpdateNodeRequest;
 import de.tum.cit.aet.devops.teamserverdown.model.Node;
 import de.tum.cit.aet.devops.teamserverdown.repository.NodeRepository;
 import java.util.List;
@@ -32,7 +32,7 @@ public class NodeController {
 
   @PatchMapping("/nodes/{id}")
   public ResponseEntity<Node> patchNode(
-      @PathVariable String id, @RequestBody NodeUpdateDTO updateDTO) {
+      @PathVariable String id, @RequestBody UpdateNodeRequest updateDTO) {
     Optional<Node> existingNodeOpt = nodeRepository.findById(id);
 
     if (existingNodeOpt.isEmpty()) {

@@ -1,6 +1,6 @@
-package de.tum.cit.aet.devops.teamserverdown.dto;
+package de.tum.cit.aet.devops.teamserverdown.controller.dtos;
 
-public class ViewportDto {
+public class ViewportResponse {
   private Double x;
   private Double y;
   private Double zoom;

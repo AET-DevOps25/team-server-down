@@ -1,10 +1,6 @@
 package de.tum.cit.aet.devops.teamserverdown.controller;
 
-import de.tum.cit.aet.devops.teamserverdown.controller.dtos.InviteCollaboratorsRequest;
-import de.tum.cit.aet.devops.teamserverdown.controller.dtos.UserResponse;
-import de.tum.cit.aet.devops.teamserverdown.controller.dtos.WhiteboardResponse;
-import de.tum.cit.aet.devops.teamserverdown.dto.ViewportDto;
-import de.tum.cit.aet.devops.teamserverdown.dto.WhiteboardStateDto;
+import de.tum.cit.aet.devops.teamserverdown.controller.dtos.*;
 import de.tum.cit.aet.devops.teamserverdown.model.User;
 import de.tum.cit.aet.devops.teamserverdown.model.Viewport;
 import de.tum.cit.aet.devops.teamserverdown.model.Whiteboard;
@@ -210,32 +206,32 @@ public class WhiteboardController {
 
   @PostMapping("/{whiteboardId}/save")
   public ResponseEntity<Void> saveWhiteboardState(
-      @PathVariable Long whiteboardId, @RequestBody WhiteboardStateDto whiteboardStateDto) {
+      @PathVariable Long whiteboardId, @RequestBody SaveWhiteboardStateRequest saveWhiteboardStateRequest) {
 
     nodeRepository.deleteByWhiteboardId(whiteboardId);
     edgeRepository.deleteByWhiteboardId(whiteboardId);
 
-    whiteboardStateDto.getNodes().forEach(node -> node.setWhiteboardId(whiteboardId));
-    whiteboardStateDto.getEdges().forEach(edge -> edge.setWhiteboardId(whiteboardId));
+    saveWhiteboardStateRequest.getNodes().forEach(node -> node.setWhiteboardId(whiteboardId));
+    saveWhiteboardStateRequest.getEdges().forEach(edge -> edge.setWhiteboardId(whiteboardId));
 
-    nodeRepository.saveAll(whiteboardStateDto.getNodes());
-    edgeRepository.saveAll(whiteboardStateDto.getEdges());
+    nodeRepository.saveAll(saveWhiteboardStateRequest.getNodes());
+    edgeRepository.saveAll(saveWhiteboardStateRequest.getEdges());
 
-    ViewportDto viewportDto = whiteboardStateDto.getViewportDto();
-    if (viewportDto != null) {
+    ViewportResponse viewportResponse = saveWhiteboardStateRequest.getViewportResponse();
+    if (viewportResponse != null) {
       Optional<Viewport> existingOpt = viewportRepository.findByWhiteboardId(whiteboardId);
 
       if (existingOpt.isPresent()) {
         Viewport existing = existingOpt.get();
-        existing.setX(viewportDto.getX());
-        existing.setY(viewportDto.getY());
-        existing.setZoom(viewportDto.getZoom());
+        existing.setX(viewportResponse.getX());
+        existing.setY(viewportResponse.getY());
+        existing.setZoom(viewportResponse.getZoom());
         viewportRepository.save(existing);
       } else {
         Viewport newViewport = new Viewport();
-        newViewport.setX(viewportDto.getX());
-        newViewport.setY(viewportDto.getY());
-        newViewport.setZoom(viewportDto.getZoom());
+        newViewport.setX(viewportResponse.getX());
+        newViewport.setY(viewportResponse.getY());
+        newViewport.setZoom(viewportResponse.getZoom());
         newViewport.setWhiteboardId(whiteboardId);
         viewportRepository.save(newViewport);
       }

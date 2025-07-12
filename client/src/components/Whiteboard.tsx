@@ -23,7 +23,6 @@ import { useRestoreWhiteboard } from "@/hooks/api/whiteboard.restore.state.api";
 import useInterval from "@/hooks/useInterval";
 import MenuBar from "./menu-bar/MenuBar";
 import CollaborationTopbar from "@/components/collaboration-topbar/CollaborationTopbar";
-import {Button} from "@/components/ui/button";
 
 const nodeTypes = {
   text: TextNode,
@@ -77,7 +76,7 @@ export default function Whiteboard({ whiteboardId }: WhiteboardProps) {
   return (
     <div style={{ width: "100vw", height: "100vh" }}>
       <div className="fixed top-0 right-0 left-0 z-20 mx-4 my-6">
-        <MenuBar whiteboardId={whiteboardId} />
+        {/*<MenuBar whiteboardId={whiteboardId} />*/}
       </div>
       <div className="fixed top-1/2 left-4 z-10 -translate-y-1/2">
         <Sidebar onAddNode={handleAddNode} />
