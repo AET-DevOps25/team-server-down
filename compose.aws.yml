@@ -76,6 +76,7 @@ services:
       - /mnt/ebs/db-data:/var/lib/postgresql/data
     networks:
       - server
+  
 
 volumes:
   db-data:

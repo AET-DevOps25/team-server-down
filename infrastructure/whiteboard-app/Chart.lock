@@ -5,5 +5,8 @@ dependencies:
 - name: keycloak
   repository: https://charts.bitnami.com/bitnami
   version: 21.0.1
-digest: sha256:d211da30c74e68badc164fafe54f188c03e20f5c5a44495b78c22180177f60e2
-generated: "2025-06-22T09:50:01.565919+02:00"
+- name: grafana
+  repository: https://charts.bitnami.com/bitnami
+  version: 12.1.0
+digest: sha256:9e2fc53d4fdbe7a42f2c7781fe4213e72315eedb3d82b09c30785408575878ec
+generated: "2025-07-12T17:08:34.57565+02:00"

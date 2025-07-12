@@ -100,6 +100,27 @@ keycloak:
     - name: realm-export
       mountPath: /opt/bitnami/keycloak/data/import
 
+grafana:
+  ingress: 
+    enabled: false
+  extraEnvVars: 
+    - name: GF_AUTH_ANONYMOUS_ENABLED
+      value: "true"
+    - name: GF_SECURITY_ADMIN_USER
+      value: admin
+    - name: GF_SECURITY_ADMIN_PASSWORD
+      value: admin
+    - name: GF_USERS_ALLOW_SIGN_UP
+      value: "false"
+    - name: GF_FEATURE_TOGGLES_ENABLE
+      value: logsInExplore
+    - name: GF_LOG_CONSOLECOLORS
+      value: "true"
+
+ 
+
+  
+
 ingress:
   enabled: true
   className: "nginx"
@@ -113,6 +134,7 @@ ingress:
       - '{{ .Values.client.url }}'
       - '{{ .Values.server.url }}'
       - '{{ .Values.auth.url }}'
+      - '{{ .Values.metrics.url }}'
     secretName: '{{ .Values.namespace }}-whiteboard-devops25-tls'
   rules:
     - host: '{{ .Values.client.url }}'
