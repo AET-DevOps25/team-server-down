@@ -25,7 +25,7 @@ const Dashboard = () => {
             <FilterBar />
           </div>
 
-          <div className="mx-8 flex-1 overflow-y-auto">
+          <div className="flex-1 overflow-y-auto">
             <div className="grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
               <CreateProjectCard />
               {[...projects]

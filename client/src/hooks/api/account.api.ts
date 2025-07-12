@@ -4,6 +4,9 @@ import { accountApiFactory } from "@/api";
 export const useGetMe = () => {
   return useQuery({
     queryKey: ["me"],
-    queryFn: accountApiFactory.getCurrentUser,
+    queryFn: async () => {
+      const { data } = await accountApiFactory.getCurrentUser();
+      return data;
+    },
   });
 };

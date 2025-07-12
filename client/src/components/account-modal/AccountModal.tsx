@@ -9,7 +9,6 @@ import {
   DialogTitle,
   DialogDescription,
 } from "@/components/ui/dialog";
-import { User } from "@/api/main/generated/api";
 import { useGetMe } from "@/hooks/api/account.api";
 import Avatar from "@/components/avatar/Avatar";
 
@@ -19,8 +18,7 @@ interface AccountModalProps {
 }
 
 export default function AccountModal({ isOpen, onClose }: AccountModalProps) {
-  const { data } = useGetMe();
-  const user: User | undefined = data?.data;
+  const { data: user } = useGetMe();
 
   return (
     <Dialog open={isOpen} onOpenChange={onClose}>

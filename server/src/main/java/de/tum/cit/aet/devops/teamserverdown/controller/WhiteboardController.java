@@ -1,18 +1,26 @@
 package de.tum.cit.aet.devops.teamserverdown.controller;
 
+import de.tum.cit.aet.devops.teamserverdown.controller.dtos.InviteCollaboratorsRequest;
+import de.tum.cit.aet.devops.teamserverdown.controller.dtos.UserResponse;
+import de.tum.cit.aet.devops.teamserverdown.controller.dtos.WhiteboardResponse;
 import de.tum.cit.aet.devops.teamserverdown.model.User;
 import de.tum.cit.aet.devops.teamserverdown.model.Whiteboard;
+import de.tum.cit.aet.devops.teamserverdown.repository.UserWhiteboardAccessRepository;
 import de.tum.cit.aet.devops.teamserverdown.repository.WhiteboardRepository;
 import de.tum.cit.aet.devops.teamserverdown.security.CurrentUser;
+import de.tum.cit.aet.devops.teamserverdown.services.UserWhiteboardAccessService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.tags.Tag;
-import java.util.List;
-import java.util.Optional;
+import jakarta.validation.Valid;
+
+import java.util.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+
+import javax.swing.text.html.Option;
 
 @RestController
 @RequestMapping("/whiteboards")
@@ -21,76 +29,101 @@ public class WhiteboardController {
 
   private static final Logger logger = LoggerFactory.getLogger(WhiteboardController.class);
 
-  private WhiteboardRepository whiteboardRepository;
+  private final WhiteboardRepository whiteboardRepository;
+  private final UserWhiteboardAccessRepository userWhiteboardAccessRepository;
+  private final UserWhiteboardAccessService userWhiteboardAccessService;
 
-  public WhiteboardController(WhiteboardRepository whiteboardRepository) {
+  public WhiteboardController(
+      WhiteboardRepository whiteboardRepository,
+      UserWhiteboardAccessRepository userWhiteboardAccessRepository,
+      UserWhiteboardAccessService userWhiteboardAccessService) {
     this.whiteboardRepository = whiteboardRepository;
+    this.userWhiteboardAccessRepository = userWhiteboardAccessRepository;
+    this.userWhiteboardAccessService = userWhiteboardAccessService;
   }
 
   @PostMapping
   @Operation(summary = "Create whiteboard", description = "Creates a new whiteboard for a user.")
-  public Whiteboard createWhiteboard(@CurrentUser User user, @RequestParam String title) {
-
+  public ResponseEntity<WhiteboardResponse> createWhiteboard(
+      @CurrentUser User user, @RequestParam String title) {
     logger.info("Creating whiteboard for userId={} with title='{}'", user.getId(), title);
 
-    Whiteboard whiteboard = new Whiteboard(title, user.getId());
+    Whiteboard whiteboard = new Whiteboard(title, user);
     Whiteboard saved = whiteboardRepository.save(whiteboard);
     logger.info("Whiteboard created with id={}", saved.getId());
-    return saved;
+
+    WhiteboardResponse response = WhiteboardResponse.fromEntity(saved);
+    return ResponseEntity.ok(response);
   }
 
   @GetMapping("/{id}")
-  public ResponseEntity<Whiteboard> getWhiteboardById(
+  public ResponseEntity<WhiteboardResponse> getWhiteboardById(
       @Parameter(description = "ID of the whiteboard", required = true) @PathVariable Long id,
       @CurrentUser User user) {
 
     logger.info("Fetching whiteboard with id={} for userId={}", id, user.getId());
     Optional<Whiteboard> whiteboardOpt = whiteboardRepository.findByIdAndUserId(id, user.getId());
 
-    if (whiteboardOpt.isPresent()) {
-      logger.info("Whiteboard found: id={}", id);
-      return ResponseEntity.ok(whiteboardOpt.get());
-    } else {
+    if (whiteboardOpt.isEmpty()) {
       logger.warn(
           "Whiteboard not found or unauthorized access for id={} and userId={}", id, user.getId());
       return ResponseEntity.status(404).build();
     }
+
+    logger.info("Whiteboard found: id={}", id);
+    WhiteboardResponse response = WhiteboardResponse.fromEntity(whiteboardOpt.get());
+    return ResponseEntity.ok(response);
   }
 
   @GetMapping
   @Operation(
       summary = "Get whiteboards by user ID",
       description = "Returns a list of whiteboards for the current user.")
-  public List<Whiteboard> getUserWhiteboards(@CurrentUser User user) {
+  public ResponseEntity<List<WhiteboardResponse>> getUserWhiteboards(@CurrentUser User user) {
     logger.info("Fetching all whiteboards for userId={}", user.getId());
-    return whiteboardRepository.findByUserId(user.getId());
+    List<Whiteboard> ownedWhiteboards = whiteboardRepository.findByUserId(user.getId());
+    List<Whiteboard> collaborativeWhiteboards = userWhiteboardAccessRepository.findWhiteboardsByUserId(user.getId());
+
+    Set<Whiteboard> allAccessible = new HashSet<>(ownedWhiteboards);
+    allAccessible.addAll(collaborativeWhiteboards);
+
+    List<WhiteboardResponse> whiteboardResponseList = new ArrayList<>();
+    for (Whiteboard whiteboard : allAccessible) {
+      whiteboardResponseList.add(WhiteboardResponse.fromEntity(whiteboard));
+    }
+
+    return ResponseEntity.ok(whiteboardResponseList);
   }
 
   @PutMapping("/{id}/title")
   @Operation(summary = "Update title", description = "Updates the title of an existing whiteboard.")
-  public Whiteboard updateTitle(
+  public ResponseEntity<WhiteboardResponse> updateTitle(
       @Parameter(description = "ID of the whiteboard", required = true) @PathVariable Long id,
       @RequestParam String title,
       @CurrentUser User user) {
     logger.info("Updating title for whiteboard id={} to '{}'", id, title);
     Optional<Whiteboard> optional = whiteboardRepository.findById(id);
-    if (optional.isPresent()) {
-      Whiteboard w = optional.get();
-      if (w.getUserId() != user.getId()) {
-        throw new RuntimeException("Not autherized for this request");
-      }
-      w.setTitle(title);
-      Whiteboard updated = whiteboardRepository.save(w);
-      logger.info("Whiteboard title updated successfully for id={}", id);
-      return updated;
+
+    if (optional.isEmpty()) {
+      logger.error("Failed to update title - Whiteboard not found for id={}", id);
+      throw new RuntimeException("Whiteboard not found");
     }
-    logger.error("Failed to update title - Whiteboard not found for id={}", id);
-    throw new RuntimeException("Whiteboard not found");
+
+    Whiteboard w = optional.get();
+    if (!Objects.equals(w.getUser(), user)) {
+      throw new RuntimeException("Not authorized for this request");
+    }
+
+    w.setTitle(title);
+    Whiteboard updated = whiteboardRepository.save(w);
+    logger.info("Whiteboard title updated successfully for id={}", id);
+
+    WhiteboardResponse response = WhiteboardResponse.fromEntity(updated);
+    return ResponseEntity.ok(response);
   }
 
   @DeleteMapping("/{id}")
   public ResponseEntity<Void> deleteWhiteboard(@PathVariable Long id, @CurrentUser User user) {
-
     logger.info("Attempting to delete whiteboard with id={} by userId={}", id, user.getId());
 
     Optional<Whiteboard> whiteboardOpt = whiteboardRepository.findByIdAndUserId(id, user.getId());
@@ -103,6 +136,47 @@ public class WhiteboardController {
 
     whiteboardRepository.delete(whiteboardOpt.get());
     logger.info("Whiteboard deleted: id={}, userId={}", id, user.getId());
+
+    return ResponseEntity.noContent().build();
+  }
+
+  @GetMapping("/{id}/collaborators")
+  public ResponseEntity<List<UserResponse>> getCollaborators(
+      @Parameter(description = "ID of the whiteboard", required = true) @PathVariable Long id,
+      @CurrentUser User user
+  ) {
+    Optional<Whiteboard> whiteboardOpt = whiteboardRepository.findById(id);
+    if (whiteboardOpt.isEmpty()) {
+      logger.warn("Whiteboard not found: id={}", id);
+      return ResponseEntity.status(404).build();
+    }
+
+    List<User> collaborators = userWhiteboardAccessRepository.findUsersByWhiteboardId(id);
+    collaborators.add(whiteboardOpt.get().getUser());
+
+    List<UserResponse> whiteboardUserListResponse = new ArrayList<>();
+    for (User collaborator : collaborators) {
+      whiteboardUserListResponse.add(UserResponse.fromEntity(collaborator));
+    }
+
+    return ResponseEntity.ok(whiteboardUserListResponse);
+  }
+
+  @PostMapping("/{id}/invitations")
+  @Operation(summary = "Invite users to collaborate on the whiteboard")
+  public ResponseEntity<Void> inviteCollaborators(
+      @Parameter(description = "ID of the whiteboard", required = true) @PathVariable Long id,
+      @Valid @RequestBody InviteCollaboratorsRequest inviteCollaboratorsRequest,
+      @CurrentUser User user) {
+    Optional<Whiteboard> whiteboardOpt = whiteboardRepository.findByIdAndUserId(id, user.getId());
+    if (whiteboardOpt.isEmpty()) {
+      logger.warn(
+          "[Invitations] Whiteboard not found or unauthorized access: id={}, userId={}", id, user.getId());
+      return ResponseEntity.status(403).build();
+    }
+
+    List<String> emails = inviteCollaboratorsRequest.getEmails();
+    this.userWhiteboardAccessService.inviteUsersToWhiteboard(emails, whiteboardOpt.get().getId());
 
     return ResponseEntity.noContent().build();
   }

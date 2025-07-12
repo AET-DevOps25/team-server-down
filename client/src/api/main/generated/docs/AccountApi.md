@@ -7,7 +7,7 @@ All URIs are relative to *http://localhost:9091*
 |[**getCurrentUser**](#getcurrentuser) | **GET** /me | |
 
 # **getCurrentUser**
-> User getCurrentUser()
+> UserResponse getCurrentUser()
 
 
 ### Example
@@ -30,7 +30,7 @@ This endpoint does not have any parameters.
 
 ### Return type
 
-**User**
+**UserResponse**
 
 ### Authorization
 

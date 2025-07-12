@@ -49,3 +49,30 @@ export const useUpdateWhiteboardTitle = (whiteboardId: number) => {
     },
   });
 };
+
+export const useInviteCollaboratorsToWhiteboard = () => {
+  const queryClient = useQueryClient();
+
+  return useMutation({
+    mutationFn: ({whiteboardId, emails}: {whiteboardId: number, emails: string[]}) => {
+      const inviteCollaboratorsRequest = {
+        "emails": emails
+      }
+      return whiteboardApiFactory.inviteCollaborators(whiteboardId, inviteCollaboratorsRequest)
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({queryKey: ["whiteboard-collaborators"]});
+    }
+  })
+}
+
+export const useGetWhiteboardCollaborators = (whiteboardId: number) => {
+  return useQuery({
+    queryKey: ["whiteboard-collaborators"],
+    queryFn: async () => {
+      const { data } =
+        await whiteboardApiFactory.getCollaborators(whiteboardId);
+      return data;
+    },
+  });
+};

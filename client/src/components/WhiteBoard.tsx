@@ -14,13 +14,18 @@ import "@xyflow/react/dist/style.css";
 import Sidebar from "@/components/sidebar/Sidebar";
 import TextNode from "@/components/text-node/TextNode";
 import ShapeNode from "@/components/shape-node/ShapeNode";
+import CollaborationTopbar from "@/components/collaboration-topbar/CollaborationTopbar";
 
 const nodeTypes = {
   text: TextNode,
   shapeNode: ShapeNode,
 };
 
-export default function WhiteBoard() {
+interface WhiteboardProps {
+  id: number;
+}
+
+export default function WhiteBoard({ id }: WhiteboardProps) {
   const [nodes, setNodes, onNodesChange] = useNodesState<Node>([]);
 
   const handleAddNode = useCallback(
@@ -41,6 +46,9 @@ export default function WhiteBoard() {
     <div style={{ width: "100vw", height: "100vh" }}>
       <div className="fixed top-1/2 left-4 z-10 -translate-y-1/2">
         <Sidebar onAddNode={handleAddNode} />
+      </div>
+      <div className="fixed top-4 right-4 z-10">
+        <CollaborationTopbar whiteboardId={id} />
       </div>
       <ReactFlow
         nodes={nodes}

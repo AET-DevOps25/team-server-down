@@ -6,12 +6,14 @@ All URIs are relative to *http://localhost:9091*
 |------------- | ------------- | -------------|
 |[**createWhiteboard**](#createwhiteboard) | **POST** /whiteboards | Create whiteboard|
 |[**deleteWhiteboard**](#deletewhiteboard) | **DELETE** /whiteboards/{id} | |
+|[**getCollaborators**](#getcollaborators) | **GET** /whiteboards/{id}/collaborators | |
 |[**getUserWhiteboards**](#getuserwhiteboards) | **GET** /whiteboards | Get whiteboards by user ID|
 |[**getWhiteboardById**](#getwhiteboardbyid) | **GET** /whiteboards/{id} | |
+|[**inviteCollaborators**](#invitecollaborators) | **POST** /whiteboards/{id}/invitations | Invite users to collaborate on the whiteboard|
 |[**updateTitle**](#updatetitle) | **PUT** /whiteboards/{id}/title | Update title|
 
 # **createWhiteboard**
-> Whiteboard createWhiteboard()
+> WhiteboardResponse createWhiteboard()
 
 Creates a new whiteboard for a user.
 
@@ -42,7 +44,7 @@ const { status, data } = await apiInstance.createWhiteboard(
 
 ### Return type
 
-**Whiteboard**
+**WhiteboardResponse**
 
 ### Authorization
 
@@ -111,8 +113,58 @@ void (empty response body)
 
 [[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to Model list]](../README.md#documentation-for-models) [[Back to README]](../README.md)
 
+# **getCollaborators**
+> Array<UserResponse> getCollaborators()
+
+
+### Example
+
+```typescript
+import {
+    WhiteboardApi,
+    Configuration
+} from './api';
+
+const configuration = new Configuration();
+const apiInstance = new WhiteboardApi(configuration);
+
+let id: number; //ID of the whiteboard (default to undefined)
+
+const { status, data } = await apiInstance.getCollaborators(
+    id
+);
+```
+
+### Parameters
+
+|Name | Type | Description  | Notes|
+|------------- | ------------- | ------------- | -------------|
+| **id** | [**number**] | ID of the whiteboard | defaults to undefined|
+
+
+### Return type
+
+**Array<UserResponse>**
+
+### Authorization
+
+[keycloak](../README.md#keycloak)
+
+### HTTP request headers
+
+ - **Content-Type**: Not defined
+ - **Accept**: */*
+
+
+### HTTP response details
+| Status code | Description | Response headers |
+|-------------|-------------|------------------|
+|**200** | OK |  -  |
+
+[[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to Model list]](../README.md#documentation-for-models) [[Back to README]](../README.md)
+
 # **getUserWhiteboards**
-> Array<Whiteboard> getUserWhiteboards()
+> Array<WhiteboardResponse> getUserWhiteboards()
 
 Returns a list of whiteboards for the current user.
 
@@ -136,7 +188,7 @@ This endpoint does not have any parameters.
 
 ### Return type
 
-**Array<Whiteboard>**
+**Array<WhiteboardResponse>**
 
 ### Authorization
 
@@ -156,7 +208,7 @@ This endpoint does not have any parameters.
 [[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to Model list]](../README.md#documentation-for-models) [[Back to README]](../README.md)
 
 # **getWhiteboardById**
-> Whiteboard getWhiteboardById()
+> WhiteboardResponse getWhiteboardById()
 
 
 ### Example
@@ -186,7 +238,7 @@ const { status, data } = await apiInstance.getWhiteboardById(
 
 ### Return type
 
-**Whiteboard**
+**WhiteboardResponse**
 
 ### Authorization
 
@@ -205,8 +257,62 @@ const { status, data } = await apiInstance.getWhiteboardById(
 
 [[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to Model list]](../README.md#documentation-for-models) [[Back to README]](../README.md)
 
+# **inviteCollaborators**
+> inviteCollaborators(inviteCollaboratorsRequest)
+
+
+### Example
+
+```typescript
+import {
+    WhiteboardApi,
+    Configuration,
+    InviteCollaboratorsRequest
+} from './api';
+
+const configuration = new Configuration();
+const apiInstance = new WhiteboardApi(configuration);
+
+let id: number; //ID of the whiteboard (default to undefined)
+let inviteCollaboratorsRequest: InviteCollaboratorsRequest; //
+
+const { status, data } = await apiInstance.inviteCollaborators(
+    id,
+    inviteCollaboratorsRequest
+);
+```
+
+### Parameters
+
+|Name | Type | Description  | Notes|
+|------------- | ------------- | ------------- | -------------|
+| **inviteCollaboratorsRequest** | **InviteCollaboratorsRequest**|  | |
+| **id** | [**number**] | ID of the whiteboard | defaults to undefined|
+
+
+### Return type
+
+void (empty response body)
+
+### Authorization
+
+[keycloak](../README.md#keycloak)
+
+### HTTP request headers
+
+ - **Content-Type**: application/json
+ - **Accept**: Not defined
+
+
+### HTTP response details
+| Status code | Description | Response headers |
+|-------------|-------------|------------------|
+|**200** | OK |  -  |
+
+[[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to Model list]](../README.md#documentation-for-models) [[Back to README]](../README.md)
+
 # **updateTitle**
-> Whiteboard updateTitle()
+> WhiteboardResponse updateTitle()
 
 Updates the title of an existing whiteboard.
 
@@ -240,7 +346,7 @@ const { status, data } = await apiInstance.updateTitle(
 
 ### Return type
 
-**Whiteboard**
+**WhiteboardResponse**
 
 ### Authorization
 

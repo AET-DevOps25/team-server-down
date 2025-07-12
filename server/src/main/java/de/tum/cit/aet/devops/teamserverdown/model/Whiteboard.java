@@ -3,10 +3,7 @@ package de.tum.cit.aet.devops.teamserverdown.model;
 import static org.hibernate.generator.EventType.INSERT;
 import static org.hibernate.generator.EventType.UPDATE;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
+import jakarta.persistence.*;
 import java.time.Instant;
 import org.hibernate.annotations.CurrentTimestamp;
 
@@ -25,13 +22,15 @@ public class Whiteboard {
   @CurrentTimestamp(event = {INSERT, UPDATE})
   private Instant lastUpdatedAt;
 
-  private Long userId;
+  @ManyToOne(fetch = FetchType.EAGER)
+  @JoinColumn(name = "user_id")
+  private User user;
 
   public Whiteboard() {}
 
-  public Whiteboard(String title, Long userId) {
+  public Whiteboard(String title, User user) {
     this.title = title;
-    this.userId = userId;
+    this.user = user;
   }
 
   public Long getId() {
@@ -66,11 +65,11 @@ public class Whiteboard {
     this.lastUpdatedAt = lastUpdatedAt;
   }
 
-  public Long getUserId() {
-    return userId;
+  public User getUser() {
+    return user;
   }
 
-  public void setUserId(Long userId) {
-    this.userId = userId;
+  public void setUser(User user) {
+    this.user = user;
   }
 }
