@@ -8,7 +8,6 @@ import de.tum.cit.aet.devops.teamserverdown.repository.UserWhiteboardAccessRepos
 import de.tum.cit.aet.devops.teamserverdown.repository.WhiteboardRepository;
 import java.util.List;
 import java.util.Optional;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -41,8 +40,8 @@ public class UserWhiteboardAccessService {
     for (String email : emails) {
       Optional<User> user = userRepository.findByEmail(email);
       if (user.isEmpty()) {
-          logger.warn("User with email {} not found. Skipping invitation.", email);
-          continue;
+        logger.warn("User with email {} not found. Skipping invitation.", email);
+        continue;
       }
       UserWhiteboardAccess access = new UserWhiteboardAccess(user.get(), whiteboard);
       userWhiteboardAccessRepository.save(access);

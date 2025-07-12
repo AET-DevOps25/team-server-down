@@ -4,9 +4,9 @@ import de.tum.cit.aet.devops.teamserverdown.controller.dtos.*;
 import de.tum.cit.aet.devops.teamserverdown.model.User;
 import de.tum.cit.aet.devops.teamserverdown.model.Viewport;
 import de.tum.cit.aet.devops.teamserverdown.model.Whiteboard;
-import de.tum.cit.aet.devops.teamserverdown.repository.UserWhiteboardAccessRepository;
 import de.tum.cit.aet.devops.teamserverdown.repository.EdgeRepository;
 import de.tum.cit.aet.devops.teamserverdown.repository.NodeRepository;
+import de.tum.cit.aet.devops.teamserverdown.repository.UserWhiteboardAccessRepository;
 import de.tum.cit.aet.devops.teamserverdown.repository.ViewportRepository;
 import de.tum.cit.aet.devops.teamserverdown.repository.WhiteboardRepository;
 import de.tum.cit.aet.devops.teamserverdown.security.CurrentUser;
@@ -15,7 +15,6 @@ import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
-
 import java.util.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -47,8 +46,8 @@ public class WhiteboardController {
     this.nodeRepository = nodeRepository;
     this.edgeRepository = edgeRepository;
     this.viewportRepository = viewportRepository;
-      this.userWhiteboardAccessRepository = userWhiteboardAccessRepository;
-      this.userWhiteboardAccessService = userWhiteboardAccessService;
+    this.userWhiteboardAccessRepository = userWhiteboardAccessRepository;
+    this.userWhiteboardAccessService = userWhiteboardAccessService;
   }
 
   @PostMapping
@@ -91,7 +90,8 @@ public class WhiteboardController {
   public ResponseEntity<List<WhiteboardResponse>> getUserWhiteboards(@CurrentUser User user) {
     logger.info("Fetching all whiteboards for userId={}", user.getId());
     List<Whiteboard> ownedWhiteboards = whiteboardRepository.findByUserId(user.getId());
-    List<Whiteboard> collaborativeWhiteboards = userWhiteboardAccessRepository.findWhiteboardsByUserId(user.getId());
+    List<Whiteboard> collaborativeWhiteboards =
+        userWhiteboardAccessRepository.findWhiteboardsByUserId(user.getId());
 
     Set<Whiteboard> allAccessible = new HashSet<>(ownedWhiteboards);
     allAccessible.addAll(collaborativeWhiteboards);
@@ -166,8 +166,7 @@ public class WhiteboardController {
   @GetMapping("/{id}/collaborators")
   public ResponseEntity<List<UserResponse>> getCollaborators(
       @Parameter(description = "ID of the whiteboard", required = true) @PathVariable Long id,
-      @CurrentUser User user
-  ) {
+      @CurrentUser User user) {
     Optional<Whiteboard> whiteboardOpt = whiteboardRepository.findById(id);
     if (whiteboardOpt.isEmpty()) {
       logger.warn("Whiteboard not found: id={}", id);
@@ -194,7 +193,9 @@ public class WhiteboardController {
     Optional<Whiteboard> whiteboardOpt = whiteboardRepository.findByIdAndUserId(id, user.getId());
     if (whiteboardOpt.isEmpty()) {
       logger.warn(
-          "[Invitations] Whiteboard not found or unauthorized access: id={}, userId={}", id, user.getId());
+          "[Invitations] Whiteboard not found or unauthorized access: id={}, userId={}",
+          id,
+          user.getId());
       return ResponseEntity.status(403).build();
     }
 
@@ -206,7 +207,8 @@ public class WhiteboardController {
 
   @PostMapping("/{whiteboardId}/save")
   public ResponseEntity<Void> saveWhiteboardState(
-      @PathVariable Long whiteboardId, @RequestBody SaveWhiteboardStateRequest saveWhiteboardStateRequest) {
+      @PathVariable Long whiteboardId,
+      @RequestBody SaveWhiteboardStateRequest saveWhiteboardStateRequest) {
 
     nodeRepository.deleteByWhiteboardId(whiteboardId);
     edgeRepository.deleteByWhiteboardId(whiteboardId);

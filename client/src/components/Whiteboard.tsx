@@ -1,5 +1,5 @@
 "use client";
-import React, { useCallback, useState } from "react";
+import React, {useCallback, useEffect, useState} from "react";
 import {
   ReactFlow,
   Node,
@@ -37,6 +37,8 @@ export default function Whiteboard({ whiteboardId }: WhiteboardProps) {
   const [nodes, setNodes, onNodesChange] = useNodesState<Node>([]);
   const [edges, setEdges, onEdgesChange] = useEdgesState<Edge>([]);
   const [rfInstance, setRfInstance] = useState<ReactFlowInstance | null>(null);
+  const [mousePosition, setMousePosition] = useState({x: 0, y: 0});
+
   const { getNodes, getEdges, getViewport } = useReactFlow();
 
   const { saveWhiteboardState } = useSaveWhiteboardState({
@@ -46,7 +48,19 @@ export default function Whiteboard({ whiteboardId }: WhiteboardProps) {
     viewport: getViewport(),
   });
 
-  useInterval(saveWhiteboardState, 3000);
+  useEffect(() => {
+      const mouseCursor = (e: MouseEvent) => {
+          setMousePosition({ x: e.clientX, y: e.clientY });
+      };
+      window.addEventListener('mousemove', mouseCursor);
+      return () => window.removeEventListener('mousemove', mouseCursor);
+  }, [])
+
+    useEffect(() => {
+        console.log(mousePosition)
+    }, [mousePosition])
+
+  useInterval(saveWhiteboardState, 1000);
 
   useRestoreWhiteboard({
     whiteboardId,
@@ -55,15 +69,6 @@ export default function Whiteboard({ whiteboardId }: WhiteboardProps) {
   const handleAddNode = useCallback(
     (newNode: Node) => {
       setNodes((nds) => [...nds, newNode]);
-      console.log("here");
-      console.log(newNode);
-      console.log(rfInstance);
-      if (rfInstance) {
-        const flow = rfInstance.toObject();
-        console.log(JSON.stringify(flow));
-      } else {
-        console.log("else");
-      }
     },
     [setNodes, rfInstance],
   );
