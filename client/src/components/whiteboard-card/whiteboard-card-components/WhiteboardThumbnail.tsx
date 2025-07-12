@@ -195,7 +195,7 @@ export default function WhiteboardThumbnail({
           <div className="bg-opacity-70 relative flex h-20 w-20 items-center justify-center rounded-full bg-white">
             <span className="text-3xl">{visualElements.emoji}</span>
           </div>
-          <div className="absolute right-3 bottom-3 text-lg font-medium text-gray-700">
+          <div className="absolute right-1/4 bottom-1/3 text-lg font-medium text-gray-700">
             {visualElements.initials}
           </div>
         </div>

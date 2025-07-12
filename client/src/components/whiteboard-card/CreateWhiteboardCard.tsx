@@ -1,9 +1,11 @@
 import { Plus } from "lucide-react";
 import { useCreateWhiteboard } from "@/hooks/api/whiteboard.api";
+import generateWhiteboardName from "@/util/generateWhiteboardName";
 
 export default function CreateWhiteboardCard() {
   const createMutation = useCreateWhiteboard();
-  const handleCreate = () => createMutation.mutate("Untitled");
+  const title = generateWhiteboardName();
+  const handleCreate = () => createMutation.mutate(title);
 
   return (
     <div
