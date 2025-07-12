@@ -217,6 +217,7 @@ services:
     volumes:
       - ./alertManager:/etc/alertmanager:ro
       - alertmanager_data:/alertmanager
+      
     command:
       - '--config.file=/etc/alertmanager/config.yml'
       - '--storage.path=/alertmanager'
