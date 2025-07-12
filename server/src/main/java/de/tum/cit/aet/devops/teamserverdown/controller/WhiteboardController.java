@@ -119,8 +119,7 @@ public class WhiteboardController {
       logger.info("Whiteboard title updated successfully for id={}", id);
       return ResponseEntity.ok(updated.getTitle());
     }
-    logger.warn(
-            "Whiteboard not found or unauthorized access: id={}, userId={}", id, user.getId());
+    logger.warn("Whiteboard not found or unauthorized access: id={}, userId={}", id, user.getId());
     return ResponseEntity.status(403).build();
   }
 

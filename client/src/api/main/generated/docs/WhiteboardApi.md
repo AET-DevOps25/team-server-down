@@ -313,7 +313,7 @@ void (empty response body)
 [[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to Model list]](../README.md#documentation-for-models) [[Back to README]](../README.md)
 
 # **updateTitle**
-> Whiteboard updateTitle()
+> string updateTitle()
 
 Updates the title of an existing whiteboard.
 
@@ -347,7 +347,7 @@ const { status, data } = await apiInstance.updateTitle(
 
 ### Return type
 
-**Whiteboard**
+**string**
 
 ### Authorization
 

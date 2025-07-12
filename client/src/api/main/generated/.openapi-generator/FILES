@@ -4,12 +4,6 @@ api.ts
 base.ts
 common.ts
 configuration.ts
-docs/DefaultApi.md
-docs/HTTPValidationError.md
-docs/TextRequest.md
-docs/TextResponse.md
-docs/ValidationError.md
-docs/ValidationErrorLocInner.md
 docs/AccountApi.md
 docs/Edge.md
 docs/EdgeControllerApi.md
