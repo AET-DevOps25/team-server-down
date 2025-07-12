@@ -4,7 +4,7 @@ import {
   Node as BackendNode,
   Edge as BackendEdge,
   ViewportDto,
-} from "@/api/generated/api";
+} from "@/api/main/generated/api";
 import { whiteboardApiFactory } from "@/api";
 
 import { Node, Edge } from "@xyflow/react";

@@ -1,5 +1,5 @@
 import { useState, useMemo } from "react";
-import { Whiteboard } from "@/api/generated/api";
+import { Whiteboard } from "@/api/main/generated/api";
 import { SortOption } from "@/types/SortingType";
 
 export function useSortedWhiteboards(whiteboards: Whiteboard[]) {
