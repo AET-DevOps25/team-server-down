@@ -1,3 +1,8 @@
+from contextlib import asynccontextmanager
+from fastapi import FastAPI
+from app.routes import root
+from app.db.client import WeaviateClientSingleton
+from prometheus_fastapi_instrumentator import Instrumentator
 import os
 import requests
 from typing import Any, List, Optional
@@ -19,9 +24,13 @@ load_dotenv()
 
 router = APIRouter()
 
+app = FastAPI(lifespan=lifespan)
+Instrumentator().instrument(app).expose(app)
+
 # Environment configuration
 CHAIR_API_KEY = os.getenv("CHAIR_API_KEY")
 API_URL = "https://gpu.aet.cit.tum.de/api/chat/completions"
+
 
 
 class OpenWebUILLM(LLM):
