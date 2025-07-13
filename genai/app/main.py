@@ -21,8 +21,10 @@ router = APIRouter()
 
 # Environment configuration
 OPEN_WEB_UI_API_KEY = os.getenv("OPEN_WEB_UI_API_KEY")
-API_URL = "https://gpu.aet.cit.tum.de/api/chat/completions"
-
+API_URL = os.getenv("API_URL")
+SERVER_URL = os.getenv("SERVER_URL")
+CLIENT_URL = os.getenv("CLIENT_URL")
+GENAI_URL = os.getenv("GENAI_URL")
 
 class OpenWebUILLM(LLM):
     api_url: str = API_URL
@@ -97,14 +99,14 @@ def custom_openapi():
             title=app.title,
             version=app.version,
             routes=app.routes,
-            servers=[{"url": "http://localhost:8000"}],
+            servers=[{"url": GENAI_URL}],
         )
     )
 
 
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["http://localhost:3000", "http://localhost:9091"],
+    allow_origins=[CLIENT_URL, SERVER_URL],
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
