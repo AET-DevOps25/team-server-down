@@ -1,5 +1,5 @@
 "use client";
-import React, { useCallback, useState } from "react";
+import React, { MouseEventHandler, useCallback, useState } from "react";
 import {
   ReactFlow,
   Node,
@@ -22,6 +22,9 @@ import { useSaveWhiteboardState } from "@/hooks/api/whiteboard.save.state.api";
 import { useRestoreWhiteboard } from "@/hooks/api/whiteboard.restore.state.api";
 import useInterval from "@/hooks/useInterval";
 import MenuBar from "./menu-bar/MenuBar";
+import CustomCursor from "@/components/custom-cursor/CustomCursor";
+import { useGetMe } from "@/hooks/api/account.api";
+import { User } from "@/api/main/generated";
 
 const nodeTypes = {
   text: TextNode,
@@ -32,11 +35,122 @@ interface WhiteboardProps {
   whiteboardId: number;
 }
 
+interface Cursor {
+  position?: { x: number; y: number };
+  username: string;
+  firstname: string;
+  lastname: string;
+}
+
 export default function Whiteboard({ whiteboardId }: WhiteboardProps) {
   const [nodes, setNodes, onNodesChange] = useNodesState<Node>([]);
   const [edges, setEdges, onEdgesChange] = useEdgesState<Edge>([]);
   const [rfInstance, setRfInstance] = useState<ReactFlowInstance | null>(null);
   const { getNodes, getEdges, getViewport } = useReactFlow();
+
+  const { data } = useGetMe();
+  const user: User | undefined = data?.data;
+
+  const [dragStart, setDragStart] = useState<{
+    cursor: { x: number; y: number };
+    node: { x: number; y: number };
+  } | null>(null);
+
+  const [cursor, setCursor] = useState<Cursor>({
+    username:  user?.username ?? "",
+    firstname: user?.firstName ?? "",
+    lastname: user?.lastName ?? "",
+    position: undefined,
+  });
+
+  const onMouseMove: MouseEventHandler = (event) => {
+    if (!rfInstance) return;
+
+    const position = rfInstance.screenToFlowPosition({
+      x: event.clientX,
+      y: event.clientY,
+    });
+
+    setCursor((prev) => ({
+      ...prev,
+      position,
+    }));
+
+    // updateUserCursor(position);
+  };
+
+  const onMove = () => {
+    if (cursor.position) {
+      const x = cursor.position.x;
+      const y = cursor.position.y;
+
+      const position = { x, y };
+
+      setCursor((prev) => ({
+        ...prev,
+        position,
+      }));
+    }
+  };
+
+  const handleNodeDragStart = (event: React.MouseEvent, node: Node) => {
+    if (!rfInstance) return;
+    const flowPos = rfInstance.screenToFlowPosition({
+      x: event.clientX,
+      y: event.clientY,
+    });
+    setDragStart({
+      cursor: { x: flowPos.x, y: flowPos.y },
+      node: { x: node.position.x, y: node.position.y },
+    });
+  };
+
+  const handleNodeDrag = (event: React.MouseEvent, node: Node) => {
+    if (!dragStart) return;
+
+    const dx = node.position.x - dragStart.node.x;
+    const dy = node.position.y - dragStart.node.y;
+
+    const x = dragStart.cursor.x + dx;
+    const y = dragStart.cursor.y + dy;
+
+    setCursor((prev) => ({
+      ...prev,
+      position: { x, y },
+    }));
+  };
+
+  const handleNodeDragStop = () => {
+    setDragStart(null);
+  };
+
+  const handleMouseLeave = () => {
+    setCursor((prev) => ({
+      ...prev,
+      position: undefined,
+    }));
+  };
+
+  const renderCursor = useCallback(() => {
+    if (!cursor.position || !rfInstance) return null;
+
+    const viewport = rfInstance.getViewport();
+    const position = {
+      x: (cursor.position.x + viewport.x / viewport.zoom) * viewport.zoom,
+      y: (cursor.position.y + viewport.y / viewport.zoom) * viewport.zoom,
+    };
+
+    return (
+      <CustomCursor
+        key={cursor.username}
+        username={cursor.username}
+        firstname={cursor.firstname}
+        lastname={cursor.lastname}
+        position={position}
+        visible={true}
+      />
+    );
+  }, [cursor, rfInstance]);
 
   const { saveWhiteboardState } = useSaveWhiteboardState({
     whiteboardId,
@@ -54,15 +168,6 @@ export default function Whiteboard({ whiteboardId }: WhiteboardProps) {
   const handleAddNode = useCallback(
     (newNode: Node) => {
       setNodes((nds) => [...nds, newNode]);
-      console.log("here");
-      console.log(newNode);
-      console.log(rfInstance);
-      if (rfInstance) {
-        const flow = rfInstance.toObject();
-        console.log(JSON.stringify(flow));
-      } else {
-        console.log("else");
-      }
     },
     [setNodes, rfInstance],
   );
@@ -80,19 +185,28 @@ export default function Whiteboard({ whiteboardId }: WhiteboardProps) {
       <div className="fixed top-1/2 left-4 z-10 -translate-y-1/2">
         <Sidebar onAddNode={handleAddNode} />
       </div>
+
       <ReactFlow
         nodes={nodes}
         edges={edges}
         onNodesChange={onNodesChange}
         onEdgesChange={onEdgesChange}
         onConnect={onConnect}
+        onMove={onMove}
+        onNodeDragStart={handleNodeDragStart}
+        onNodeDrag={handleNodeDrag}
+        onNodeDragStop={handleNodeDragStop}
+        onMouseMove={onMouseMove}
+        onMouseLeave={handleMouseLeave}
         onInit={(instance) => {
-          console.log("Initialized", instance);
           setRfInstance(instance);
         }}
         nodeTypes={nodeTypes}
         fitView
       >
+        <div className="pointer-events-none absolute top-0 left-0 h-full w-full">
+          {renderCursor()}
+        </div>
         <Controls position="bottom-right" />
         <Background variant={BackgroundVariant.Dots} gap={16} size={1} />
       </ReactFlow>
