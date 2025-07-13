@@ -10,9 +10,13 @@ export function useFilteredWhiteboards(whiteboards: WhiteboardResponse[]) {
   const filteredWhiteboards = useMemo(() => {
     switch (filterBy) {
       case "my-boards":
-        return whiteboards.filter(board => board.user?.id === getCurrentUser.data?.id);
+        return whiteboards.filter(
+          (board) => board.user?.id === getCurrentUser.data?.id,
+        );
       case "shared":
-        return whiteboards.filter(board => board.user?.id != getCurrentUser.data?.id);
+        return whiteboards.filter(
+          (board) => board.user?.id != getCurrentUser.data?.id,
+        );
       case "all-boards":
       default:
         return whiteboards;

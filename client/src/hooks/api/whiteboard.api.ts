@@ -1,7 +1,7 @@
-import {useMutation, useQuery, useQueryClient} from "@tanstack/react-query";
-import {useRouter} from "next/navigation";
-import {whiteboardApiFactory} from "@/api";
-import {useCallback, useEffect, useRef} from "react";
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
+import { useRouter } from "next/navigation";
+import { whiteboardApiFactory } from "@/api";
+import { useCallback, useEffect, useRef } from "react";
 
 export function useWhiteboards() {
   return useQuery({

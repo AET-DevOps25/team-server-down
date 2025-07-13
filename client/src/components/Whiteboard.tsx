@@ -1,5 +1,5 @@
 "use client";
-import React, {useCallback, useEffect, useRef, useState} from "react";
+import React, { useCallback, useEffect, useRef, useState } from "react";
 import {
   ReactFlow,
   Node,
@@ -89,10 +89,12 @@ export default function Whiteboard({ whiteboardId }: WhiteboardProps) {
 
   useEffect(() => {
     const interval = setInterval(() => {
-      publishEvent(JSON.stringify({
-        type: "mousePosition",
-        payload: latestPositionRef.current,
-      }));
+      publishEvent(
+        JSON.stringify({
+          type: "mousePosition",
+          payload: latestPositionRef.current,
+        }),
+      );
     }, 1000);
 
     return () => clearInterval(interval);
@@ -100,7 +102,7 @@ export default function Whiteboard({ whiteboardId }: WhiteboardProps) {
 
   return (
     <div style={{ width: "100vw", height: "100vh" }}>
-      <div className="fixed top-0 right-0 left-0 z-20 mx-4 my-6 ">
+      <div className="fixed top-0 right-0 left-0 z-20 mx-4 my-6">
         <div className="flex flex-row justify-between">
           <MenuBar whiteboardId={whiteboardId} />
           <CollaborationTopbar whiteboardId={whiteboardId} />

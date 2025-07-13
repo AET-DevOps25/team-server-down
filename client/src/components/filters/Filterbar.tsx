@@ -16,14 +16,20 @@ interface FilterBarProps {
   onFilterChange: (value: FilterOption) => void;
 }
 
-export default function FilterBar({ sortBy, onSortChange, filterBy, onFilterChange }: FilterBarProps) {
+export default function FilterBar({
+  sortBy,
+  onSortChange,
+  filterBy,
+  onFilterChange,
+}: FilterBarProps) {
   return (
     <div className="mb-6 flex items-center gap-4">
       <div className="flex items-center gap-2">
         <span className="text-sm text-gray-600">Filter by</span>
-        <Select 
-        value={filterBy}
-        onValueChange={(value) => onFilterChange(value as FilterOption)}>
+        <Select
+          value={filterBy}
+          onValueChange={(value) => onFilterChange(value as FilterOption)}
+        >
           <SelectTrigger className="w-36">
             <SelectValue />
           </SelectTrigger>

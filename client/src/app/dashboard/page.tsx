@@ -12,7 +12,8 @@ import { useFilteredWhiteboards } from "@/hooks/useFilteredWhiteboards";
 
 const Dashboard = () => {
   const { data: whiteboards = [] } = useWhiteboards();
-  const {filteredWhiteboards, filterBy, setFilterBy} = useFilteredWhiteboards(whiteboards);
+  const { filteredWhiteboards, filterBy, setFilterBy } =
+    useFilteredWhiteboards(whiteboards);
   const { sortedWhiteboards, sortBy, setSortBy } =
     useSortedWhiteboards(filteredWhiteboards);
   const [activeSection, setActiveSection] = useState<"home" | "recent">("home");
@@ -92,7 +93,12 @@ const Dashboard = () => {
               {activeSection === "home" ? "Your Boards" : "Recent Boards"}
             </h2>
             {activeSection === "home" && (
-              <FilterBar sortBy={sortBy} onSortChange={setSortBy} filterBy={filterBy} onFilterChange={setFilterBy} />
+              <FilterBar
+                sortBy={sortBy}
+                onSortChange={setSortBy}
+                filterBy={filterBy}
+                onFilterChange={setFilterBy}
+              />
             )}
           </div>
 
