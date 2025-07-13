@@ -1,5 +1,3 @@
-import os
-os.environ["OPEN_WEB_UI_API_KEY"] = "dummy-api-key"
 from fastapi.testclient import TestClient
 from app.main import app
 
