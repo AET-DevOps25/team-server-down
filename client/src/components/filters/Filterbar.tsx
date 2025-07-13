@@ -7,18 +7,23 @@ import {
 } from "@/components/ui/select";
 import React from "react";
 import { SORT_OPTIONS, SortOption } from "@/types/SortingType";
+import { FilterOption } from "@/types/FilterType";
 
 interface FilterBarProps {
   sortBy: SortOption;
   onSortChange: (value: SortOption) => void;
+  filterBy: string;
+  onFilterChange: (value: FilterOption) => void;
 }
 
-export default function FilterBar({ sortBy, onSortChange }: FilterBarProps) {
+export default function FilterBar({ sortBy, onSortChange, filterBy, onFilterChange }: FilterBarProps) {
   return (
     <div className="mb-6 flex items-center gap-4">
       <div className="flex items-center gap-2">
         <span className="text-sm text-gray-600">Filter by</span>
-        <Select defaultValue="all-boards">
+        <Select 
+        value={filterBy}
+        onValueChange={(value) => onFilterChange(value as FilterOption)}>
           <SelectTrigger className="w-36">
             <SelectValue />
           </SelectTrigger>
