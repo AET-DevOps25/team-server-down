@@ -1,5 +1,11 @@
 "use client";
-import React, { MouseEventHandler, useCallback, useState } from "react";
+import React, {
+  MouseEventHandler,
+  ReactNode,
+  useCallback,
+  useEffect,
+  useState,
+} from "react";
 import {
   ReactFlow,
   Node,
@@ -36,6 +42,7 @@ interface WhiteboardProps {
 }
 
 interface Cursor {
+  id: number;
   position?: { x: number; y: number };
   username: string;
   firstname: string;
@@ -51,17 +58,51 @@ export default function Whiteboard({ whiteboardId }: WhiteboardProps) {
   const { data } = useGetMe();
   const user: User | undefined = data?.data;
 
+  const fallbackId = Math.random();
+
   const [dragStart, setDragStart] = useState<{
     cursor: { x: number; y: number };
     node: { x: number; y: number };
   } | null>(null);
 
   const [cursor, setCursor] = useState<Cursor>({
-    username:  user?.username ?? "",
+    id: user?.id ?? fallbackId,
+    username: user?.username ?? "",
     firstname: user?.firstName ?? "",
     lastname: user?.lastName ?? "",
     position: undefined,
   });
+
+  const [allCursors, setAllCursors] = useState<Cursor[]>([]);
+
+  // whiteboard logic
+
+  const { saveWhiteboardState } = useSaveWhiteboardState({
+    whiteboardId,
+    nodes: getNodes(),
+    edges: getEdges(),
+    viewport: getViewport(),
+  });
+
+  useInterval(saveWhiteboardState, 3000);
+
+  useRestoreWhiteboard({
+    whiteboardId,
+  });
+
+  const handleAddNode = useCallback(
+    (newNode: Node) => {
+      setNodes((nds) => [...nds, newNode]);
+    },
+    [setNodes, rfInstance],
+  );
+
+  const onConnect = useCallback(
+    (params: Connection) => setEdges((eds) => addEdge(params, eds)),
+    [setEdges],
+  );
+
+  // cursor render logic
 
   const onMouseMove: MouseEventHandler = (event) => {
     if (!rfInstance) return;
@@ -131,51 +172,38 @@ export default function Whiteboard({ whiteboardId }: WhiteboardProps) {
     }));
   };
 
-  const renderCursor = useCallback(() => {
-    if (!cursor.position || !rfInstance) return null;
+  useEffect(() => {
+    if (!cursor.id) return;
+    setAllCursors((prevCursors) => {
+      const otherCursors = prevCursors.filter((c) => c.id !== cursor.id);
+      return [...otherCursors, cursor];
+    });
+  }, [cursor]);
+
+  function renderCursors(): ReactNode[] {
+    if (!rfInstance) return [];
 
     const viewport = rfInstance.getViewport();
-    const position = {
-      x: (cursor.position.x + viewport.x / viewport.zoom) * viewport.zoom,
-      y: (cursor.position.y + viewport.y / viewport.zoom) * viewport.zoom,
-    };
 
-    return (
-      <CustomCursor
-        key={cursor.username}
-        username={cursor.username}
-        firstname={cursor.firstname}
-        lastname={cursor.lastname}
-        position={position}
-        visible={true}
-      />
-    );
-  }, [cursor, rfInstance]);
-
-  const { saveWhiteboardState } = useSaveWhiteboardState({
-    whiteboardId,
-    nodes: getNodes(),
-    edges: getEdges(),
-    viewport: getViewport(),
-  });
-
-  useInterval(saveWhiteboardState, 3000);
-
-  useRestoreWhiteboard({
-    whiteboardId,
-  });
-
-  const handleAddNode = useCallback(
-    (newNode: Node) => {
-      setNodes((nds) => [...nds, newNode]);
-    },
-    [setNodes, rfInstance],
-  );
-
-  const onConnect = useCallback(
-    (params: Connection) => setEdges((eds) => addEdge(params, eds)),
-    [setEdges],
-  );
+    return allCursors
+      .filter((cursor) => cursor.position)
+      .map((cursor) => {
+        const position = {
+          x: cursor.position!.x * viewport.zoom + viewport.x,
+          y: cursor.position!.y * viewport.zoom + viewport.y,
+        };
+        return (
+          <CustomCursor
+            key={cursor.id}
+            username={cursor.username}
+            firstname={cursor.firstname}
+            lastname={cursor.lastname}
+            position={position}
+            visible={true}
+          />
+        );
+      });
+  }
 
   return (
     <div style={{ width: "100vw", height: "100vh" }}>
@@ -205,7 +233,7 @@ export default function Whiteboard({ whiteboardId }: WhiteboardProps) {
         fitView
       >
         <div className="pointer-events-none absolute top-0 left-0 h-full w-full">
-          {renderCursor()}
+          {renderCursors()}
         </div>
         <Controls position="bottom-right" />
         <Background variant={BackgroundVariant.Dots} gap={16} size={1} />
