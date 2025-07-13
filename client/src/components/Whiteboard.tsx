@@ -100,15 +100,17 @@ export default function Whiteboard({ whiteboardId }: WhiteboardProps) {
 
   return (
     <div style={{ width: "100vw", height: "100vh" }}>
-      <div className="fixed top-0 right-0 left-0 z-20 mx-4 my-6">
-        {/*<MenuBar whiteboardId={whiteboardId} />*/}
+      <div className="fixed top-0 right-0 left-0 z-20 mx-4 my-6 ">
+        <div className="flex flex-row justify-between">
+          <MenuBar whiteboardId={whiteboardId} />
+          <CollaborationTopbar whiteboardId={whiteboardId} />
+        </div>
       </div>
+
       <div className="fixed top-1/2 left-4 z-10 -translate-y-1/2">
         <Sidebar onAddNode={handleAddNode} />
       </div>
-      <div className="fixed top-4 right-4 z-10">
-        <CollaborationTopbar whiteboardId={whiteboardId} />
-      </div>
+
       <ReactFlow
         nodes={nodes}
         edges={edges}
