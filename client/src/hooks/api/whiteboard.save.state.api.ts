@@ -1,9 +1,9 @@
 import { useState, useCallback } from "react";
 import {
-  WhiteboardStateDto,
+  SaveWhiteboardStateRequest,
   Node as BackendNode,
   Edge as BackendEdge,
-  ViewportDto,
+  ViewportResponse,
 } from "@/api/main/generated/api";
 import { whiteboardApiFactory } from "@/api";
 
@@ -80,16 +80,16 @@ export function useSaveWhiteboardState({
         targetHandle: edge.targetHandle || undefined,
       }));
 
-      const viewportDto: ViewportDto = {
+      const viewportResponse: ViewportResponse = {
         x: viewport.x,
         y: viewport.y,
         zoom: viewport.zoom,
       };
 
-      const whiteboardStateDto: WhiteboardStateDto = {
+      const whiteboardStateDto: SaveWhiteboardStateRequest = {
         nodes: mappedNodes,
         edges: mappedEdges,
-        viewportDto,
+        viewportResponse,
       };
 
       const response = await whiteboardApiFactory.saveWhiteboardState(

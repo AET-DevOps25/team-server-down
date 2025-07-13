@@ -365,7 +365,7 @@ void (empty response body)
 [[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to Model list]](../README.md#documentation-for-models) [[Back to README]](../README.md)
 
 # **saveWhiteboardState**
-> saveWhiteboardState(whiteboardStateRequest)
+> saveWhiteboardState(saveWhiteboardStateRequest)
 
 
 ### Example
@@ -374,18 +374,18 @@ void (empty response body)
 import {
     WhiteboardApi,
     Configuration,
-    WhiteboardStateDto
+    SaveWhiteboardStateRequest
 } from './api';
 
 const configuration = new Configuration();
 const apiInstance = new WhiteboardApi(configuration);
 
 let whiteboardId: number; // (default to undefined)
-let whiteboardStateRequest: WhiteboardStateDto; //
+let saveWhiteboardStateRequest: SaveWhiteboardStateRequest; //
 
 const { status, data } = await apiInstance.saveWhiteboardState(
     whiteboardId,
-    whiteboardStateRequest
+    saveWhiteboardStateRequest
 );
 ```
 
@@ -393,7 +393,7 @@ const { status, data } = await apiInstance.saveWhiteboardState(
 
 |Name | Type | Description  | Notes|
 |------------- | ------------- | ------------- | -------------|
-| **whiteboardStateRequest** | **WhiteboardStateDto**|  | |
+| **saveWhiteboardStateRequest** | **SaveWhiteboardStateRequest**|  | |
 | **whiteboardId** | [**number**] |  | defaults to undefined|
 
 

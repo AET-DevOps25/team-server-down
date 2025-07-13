@@ -129,13 +129,16 @@ export function useRestoreWhiteboard({
       setNodes(reactFlowNodes);
       setEdges(reactFlowEdges);
 
-      if (viewportDto && viewportDto.x && viewportDto.y && viewportDto.zoom) {
-        setViewport({
-          x: viewportDto.x,
-          y: viewportDto.y,
-          zoom: viewportDto.zoom,
-        });
-      }
+      setTimeout(() => {
+        if (viewportDto && viewportDto.x && viewportDto.y && viewportDto.zoom) {
+          setViewport({
+            x: viewportDto.x,
+            y: viewportDto.y,
+            zoom: viewportDto.zoom,
+          });
+        }
+      }, 0)
+
     }
   }, [data, isLoading, setNodes, setEdges, setViewport]);
 

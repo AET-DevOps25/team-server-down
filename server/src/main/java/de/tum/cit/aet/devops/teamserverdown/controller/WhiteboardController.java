@@ -210,11 +210,10 @@ public class WhiteboardController {
       @PathVariable Long whiteboardId,
       @RequestBody SaveWhiteboardStateRequest saveWhiteboardStateRequest) {
 
+    logger.info("Starting to save whiteboard state for whiteboardId={}", whiteboardId);
+
     nodeRepository.deleteByWhiteboardId(whiteboardId);
     edgeRepository.deleteByWhiteboardId(whiteboardId);
-
-    saveWhiteboardStateRequest.getNodes().forEach(node -> node.setWhiteboardId(whiteboardId));
-    saveWhiteboardStateRequest.getEdges().forEach(edge -> edge.setWhiteboardId(whiteboardId));
 
     nodeRepository.saveAll(saveWhiteboardStateRequest.getNodes());
     edgeRepository.saveAll(saveWhiteboardStateRequest.getEdges());
@@ -238,7 +237,6 @@ public class WhiteboardController {
         viewportRepository.save(newViewport);
       }
     }
-
     return ResponseEntity.ok().build();
   }
 }
