@@ -41,7 +41,7 @@ class OpenWebUILLM(LLM):
         **kwargs: Any,
     ) -> str:
         if not self.api_key:
-            raise ValueError("CHAIR_API_KEY environment variable is required")
+            raise ValueError("API_KEY environment variable is required")
 
         headers = {
             "Authorization": f"Bearer {self.api_key}",
