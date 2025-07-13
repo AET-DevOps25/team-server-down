@@ -20,13 +20,13 @@ load_dotenv()
 router = APIRouter()
 
 # Environment configuration
-CHAIR_API_KEY = os.getenv("CHAIR_API_KEY")
+OPEN_WEB_UI_API_KEY = os.getenv("OPEN_WEB_UI_API_KEY")
 API_URL = "https://gpu.aet.cit.tum.de/api/chat/completions"
 
 
 class OpenWebUILLM(LLM):
     api_url: str = API_URL
-    api_key: str = CHAIR_API_KEY
+    api_key: str = OPEN_WEB_UI_API_KEY
     model_name: str = "llama3.3:latest"
 
     @property
