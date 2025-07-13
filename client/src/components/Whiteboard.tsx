@@ -78,8 +78,8 @@ export default function Whiteboard({ whiteboardId }: WhiteboardProps) {
     [setEdges],
   );
 
-  useSubscribeToWhiteboardEvents();
-  const publishEvent = usePublishWhiteboardEvents();
+  useSubscribeToWhiteboardEvents(whiteboardId);
+  const publishEvent = usePublishWhiteboardEvents(whiteboardId);
 
   const latestPositionRef = useRef(mousePosition);
 

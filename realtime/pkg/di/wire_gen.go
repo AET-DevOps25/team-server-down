@@ -10,13 +10,19 @@ import (
 	"github.com/AET-DevOps25/team-server-down/pkg/api"
 	"github.com/AET-DevOps25/team-server-down/pkg/api/handler"
 	"github.com/AET-DevOps25/team-server-down/pkg/config"
+	"github.com/AET-DevOps25/team-server-down/pkg/eventbus"
+	"github.com/AET-DevOps25/team-server-down/pkg/mq"
 )
 
 // Injectors from wire.go:
 
 func InitializeAPI(cfg config.Config) (*http.Server, error) {
 	rootHandler := handler.NewRootHandler()
-	whiteboardHandler := handler.NewWhiteboardHandler()
+	writer := mq.NewWriter(cfg)
+	publisher := eventbus.NewPublisher(writer)
+	reader := mq.NewReader(cfg)
+	subscriber := eventbus.NewSubscriber(reader)
+	whiteboardHandler := handler.NewWhiteboardHandler(publisher, subscriber)
 	server := http.NewServer(rootHandler, whiteboardHandler)
 	return server, nil
 }

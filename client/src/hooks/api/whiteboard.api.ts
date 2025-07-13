@@ -98,10 +98,10 @@ export const useGetWhiteboardCollaborators = (whiteboardId: number) => {
   });
 };
 
-export const useSubscribeToWhiteboardEvents = () => {
+export const useSubscribeToWhiteboardEvents = (whiteboardId: number) => {
   useEffect(() => {
     const ws = new WebSocket(
-      "ws://localhost:9090/ws/whiteboard/subscribe",
+      `ws://localhost:9090/ws/whiteboard/${whiteboardId}/subscribe`,
     );
     ws.onopen = () => {
       console.log("connected to subscription channel");
@@ -117,12 +117,12 @@ export const useSubscribeToWhiteboardEvents = () => {
   }, []);
 };
 
-export const usePublishWhiteboardEvents = () => {
+export const usePublishWhiteboardEvents = (whiteboardId: number) => {
   const wsRef = useRef<WebSocket | null>(null);
 
   useEffect(() => {
     const ws = new WebSocket(
-      "ws://localhost:9090/ws/whiteboard/publish",
+      `ws://localhost:9090/ws/whiteboard/${whiteboardId}/publish`,
     );
     wsRef.current = ws;
 
