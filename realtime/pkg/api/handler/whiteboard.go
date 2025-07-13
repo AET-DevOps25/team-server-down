@@ -2,6 +2,7 @@ package handler
 
 import (
 	"fmt"
+	"github.com/AET-DevOps25/team-server-down/pkg/eventbus"
 	"github.com/gin-gonic/gin"
 	"github.com/gorilla/websocket"
 	"net/http"
@@ -9,10 +10,16 @@ import (
 	"time"
 )
 
-type WhiteboardHandler struct{}
+type WhiteboardHandler struct {
+	publisher  *eventbus.Publisher
+	subscriber *eventbus.Subscriber
+}
 
-func NewWhiteboardHandler() *WhiteboardHandler {
-	return &WhiteboardHandler{}
+func NewWhiteboardHandler(p *eventbus.Publisher, s *eventbus.Subscriber) *WhiteboardHandler {
+	return &WhiteboardHandler{
+		publisher:  p,
+		subscriber: s,
+	}
 }
 
 var upgrader = websocket.Upgrader{
@@ -24,6 +31,8 @@ var upgrader = websocket.Upgrader{
 }
 
 func (wh *WhiteboardHandler) GetWhiteboardEvents(c *gin.Context) {
+	whiteboardId := c.Param("id")
+
 	conn, err := upgrader.Upgrade(c.Writer, c.Request, nil)
 	if err != nil {
 		return
@@ -33,12 +42,14 @@ func (wh *WhiteboardHandler) GetWhiteboardEvents(c *gin.Context) {
 	i := 0
 	for {
 		i++
-		conn.WriteMessage(websocket.TextMessage, []byte("New message (#"+strconv.Itoa(i)+")"))
+		conn.WriteMessage(websocket.TextMessage, []byte("New msg for whiteboard "+whiteboardId+" (#"+strconv.Itoa(i)+")"))
 		time.Sleep(time.Second)
 	}
 }
 
 func (wh *WhiteboardHandler) PublishWhiteboardEvents(c *gin.Context) {
+	whiteboardId := c.Param("id")
+
 	conn, err := upgrader.Upgrade(c.Writer, c.Request, nil)
 	if err != nil {
 		return
@@ -50,6 +61,6 @@ func (wh *WhiteboardHandler) PublishWhiteboardEvents(c *gin.Context) {
 		if err != nil {
 			break
 		}
-		fmt.Printf("messageType: %d, message: %s\n", messageType, message)
+		fmt.Printf("messageType: %d, whiteboard: %s, message: %s\n", messageType, whiteboardId, message)
 	}
 }
