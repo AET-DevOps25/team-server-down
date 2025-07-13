@@ -1,3 +1,5 @@
+import os
+os.environ["OPEN_WEB_UI_API_KEY"] = "dummy_api_key"
 from fastapi.testclient import TestClient
 from unittest.mock import patch, MagicMock
 from app.main import app
