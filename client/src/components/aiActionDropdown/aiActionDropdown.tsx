@@ -42,7 +42,7 @@ export function AIActionDropdown({
             className={`p-2 transition-all ${
               disabled
                 ? "cursor-not-allowed opacity-50"
-                : "bg-purple-100 text-purple-600 hover:bg-purple-200"
+                : "bg-purple-100 text-purple-600 hover:bg-purple-200 hover:text-purple-600"
             }`}
             disabled={disabled || loading}
           >

@@ -122,7 +122,7 @@ const StyleBar = ({
 
   return (
     <>
-      <div className="flex items-center gap-4 rounded-md border border-gray-200 bg-white px-3 py-1.5 shadow-lg">
+      <div className="flex items-center gap-4 rounded-md border border-gray-200 bg-white px-3 py-1 shadow-lg">
         <StylePopover
           title="Background Style"
           color={bgColor}
