@@ -117,8 +117,6 @@ grafana:
     - name: GF_LOG_CONSOLECOLORS
       value: "true"
 
- 
-
   
 
 ingress:

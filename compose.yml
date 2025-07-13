@@ -176,7 +176,6 @@ services:
       - GF_USERS_ALLOW_SIGN_UP=false
       - GF_FEATURE_TOGGLES_ENABLE=logsInExplore
       - GF_LOG_CONSOLECOLORS=true
-   # entrypoint: ["sh", "-c", "/etc/grafana/provisioning/init_grafana.sh"]
     depends_on:
       - prometheus
       - loki
@@ -217,7 +216,7 @@ services:
     volumes:
       - ./alertManager:/etc/alertmanager:ro
       - alertmanager_data:/alertmanager
-      
+
     command:
       - '--config.file=/etc/alertmanager/config.yml'
       - '--storage.path=/alertmanager'
