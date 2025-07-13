@@ -12,7 +12,7 @@ type Server struct {
 	engine *gin.Engine
 }
 
-func NewServer(rootHandler *handler.RootHandler) *Server {
+func NewServer(rootHandler *handler.RootHandler, whiteboardHandler *handler.WhiteboardHandler) *Server {
 	engine := gin.New()
 
 	engine.Use(gin.Logger())
@@ -20,6 +20,8 @@ func NewServer(rootHandler *handler.RootHandler) *Server {
 	engine.GET("/", rootHandler.GetRoot)
 	engine.GET("/swagger/*any", ginSwagger.WrapHandler(swaggerFiles.Handler))
 
+	engine.GET("/ws/whiteboard/subscribe", whiteboardHandler.GetWhiteboardEvents)
+	engine.GET("/ws/whiteboard/publish", whiteboardHandler.PublishWhiteboardEvents)
 	return &Server{engine: engine}
 }
 

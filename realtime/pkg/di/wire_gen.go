@@ -16,6 +16,7 @@ import (
 
 func InitializeAPI(cfg config.Config) (*http.Server, error) {
 	rootHandler := handler.NewRootHandler()
-	server := http.NewServer(rootHandler)
+	whiteboardHandler := handler.NewWhiteboardHandler()
+	server := http.NewServer(rootHandler, whiteboardHandler)
 	return server, nil
 }

@@ -1,6 +1,7 @@
-import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
-import { useRouter } from "next/navigation";
-import { whiteboardApiFactory } from "@/api";
+import {useMutation, useQuery, useQueryClient} from "@tanstack/react-query";
+import {useRouter} from "next/navigation";
+import {whiteboardApiFactory} from "@/api";
+import {useCallback, useEffect, useRef} from "react";
 
 export function useWhiteboards() {
   return useQuery({
@@ -95,4 +96,48 @@ export const useGetWhiteboardCollaborators = (whiteboardId: number) => {
       return data;
     },
   });
+};
+
+export const useSubscribeToWhiteboardEvents = () => {
+  useEffect(() => {
+    const ws = new WebSocket(
+      "ws://localhost:9090/ws/whiteboard/subscribe",
+    );
+    ws.onopen = () => {
+      console.log("connected to subscription channel");
+    };
+
+    ws.onmessage = (event) => {
+      console.log(event.data);
+    };
+
+    return () => {
+      ws.close();
+    };
+  }, []);
+};
+
+export const usePublishWhiteboardEvents = () => {
+  const wsRef = useRef<WebSocket | null>(null);
+
+  useEffect(() => {
+    const ws = new WebSocket(
+      "ws://localhost:9090/ws/whiteboard/publish",
+    );
+    wsRef.current = ws;
+
+    ws.onopen = () => {
+      console.log("connected to publishing channel");
+    };
+
+    return () => {
+      ws.close();
+    };
+  }, []);
+
+  return useCallback((message: string) => {
+    if (wsRef.current?.readyState === WebSocket.OPEN) {
+      wsRef.current.send(message);
+    }
+  }, []);
 };

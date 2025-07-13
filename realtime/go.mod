@@ -32,6 +32,7 @@ require (
 	github.com/goccy/go-json v0.10.5 // indirect
 	github.com/gohugoio/hugo v0.147.6 // indirect
 	github.com/google/wire v0.6.0 // indirect
+	github.com/gorilla/websocket v1.5.3 // indirect
 	github.com/jinzhu/copier v0.4.0 // indirect
 	github.com/josharian/intern v1.0.0 // indirect
 	github.com/json-iterator/go v1.1.12 // indirect

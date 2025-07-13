@@ -21,14 +21,14 @@ interface PopoverOptionProps {
 function PopoverOption({ label, Icon, onClick }: PopoverOptionProps) {
   return (
     <div
-      className="flex flex-row rounded-sm p-2 text-center items-center text-gray-700 hover:cursor-pointer hover:bg-gray-100"
+      className="flex flex-row items-center rounded-sm p-2 text-center text-gray-700 hover:cursor-pointer hover:bg-gray-100"
       onClick={() => {
         if (onClick) {
           onClick();
         }
       }}
     >
-      <Icon className="mr-3 pl-1 h-4" strokeWidth={1.5} />
+      <Icon className="mr-3 h-4 pl-1" strokeWidth={1.5} />
       <span className="py-auto text-sm">{label}</span>
     </div>
   );

@@ -1,5 +1,5 @@
 "use client";
-import React, {useCallback, useEffect, useState} from "react";
+import React, {useCallback, useEffect, useRef, useState} from "react";
 import {
   ReactFlow,
   Node,
@@ -23,6 +23,10 @@ import { useRestoreWhiteboard } from "@/hooks/api/whiteboard.restore.state.api";
 import useInterval from "@/hooks/useInterval";
 import MenuBar from "./menu-bar/MenuBar";
 import CollaborationTopbar from "@/components/collaboration-topbar/CollaborationTopbar";
+import {
+  usePublishWhiteboardEvents,
+  useSubscribeToWhiteboardEvents,
+} from "@/hooks/api/whiteboard.api";
 
 const nodeTypes = {
   text: TextNode,
@@ -37,7 +41,7 @@ export default function Whiteboard({ whiteboardId }: WhiteboardProps) {
   const [nodes, setNodes, onNodesChange] = useNodesState<Node>([]);
   const [edges, setEdges, onEdgesChange] = useEdgesState<Edge>([]);
   const [rfInstance, setRfInstance] = useState<ReactFlowInstance | null>(null);
-  const [mousePosition, setMousePosition] = useState({x: 0, y: 0});
+  const [mousePosition, setMousePosition] = useState({ x: 0, y: 0 });
 
   const { getNodes, getEdges, getViewport } = useReactFlow();
 
@@ -49,16 +53,12 @@ export default function Whiteboard({ whiteboardId }: WhiteboardProps) {
   });
 
   useEffect(() => {
-      const mouseCursor = (e: MouseEvent) => {
-          setMousePosition({ x: e.clientX, y: e.clientY });
-      };
-      window.addEventListener('mousemove', mouseCursor);
-      return () => window.removeEventListener('mousemove', mouseCursor);
-  }, [])
-
-    useEffect(() => {
-        console.log(mousePosition)
-    }, [mousePosition])
+    const mouseCursor = (e: MouseEvent) => {
+      setMousePosition({ x: e.clientX, y: e.clientY });
+    };
+    window.addEventListener("mousemove", mouseCursor);
+    return () => window.removeEventListener("mousemove", mouseCursor);
+  }, []);
 
   useInterval(saveWhiteboardState, 1000);
 
@@ -78,6 +78,26 @@ export default function Whiteboard({ whiteboardId }: WhiteboardProps) {
     [setEdges],
   );
 
+  useSubscribeToWhiteboardEvents();
+  const publishEvent = usePublishWhiteboardEvents();
+
+  const latestPositionRef = useRef(mousePosition);
+
+  useEffect(() => {
+    latestPositionRef.current = mousePosition;
+  }, [mousePosition]);
+
+  useEffect(() => {
+    const interval = setInterval(() => {
+      publishEvent(JSON.stringify({
+        type: "mousePosition",
+        payload: latestPositionRef.current,
+      }));
+    }, 1000);
+
+    return () => clearInterval(interval);
+  }, []);
+
   return (
     <div style={{ width: "100vw", height: "100vh" }}>
       <div className="fixed top-0 right-0 left-0 z-20 mx-4 my-6">
@@ -87,7 +107,7 @@ export default function Whiteboard({ whiteboardId }: WhiteboardProps) {
         <Sidebar onAddNode={handleAddNode} />
       </div>
       <div className="fixed top-4 right-4 z-10">
-          <CollaborationTopbar whiteboardId={whiteboardId} />
+        <CollaborationTopbar whiteboardId={whiteboardId} />
       </div>
       <ReactFlow
         nodes={nodes}

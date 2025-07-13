@@ -12,7 +12,7 @@ import (
 import http "github.com/AET-DevOps25/team-server-down/pkg/api"
 
 func InitializeAPI(cfg config.Config) (*http.Server, error) {
-	wire.Build(http.NewServer, handler.NewRootHandler)
+	wire.Build(http.NewServer, handler.NewRootHandler, handler.NewWhiteboardHandler)
 
 	return &http.Server{}, nil
 }
