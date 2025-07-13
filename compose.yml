@@ -119,6 +119,7 @@ services:
       DB_HOST: ${DB_HOST:-weaviate}
       DB_PORT: ${DB_PORT:-9090}
       DB_GRPC_PORT: ${DB_GRPC_PORT:-50051}
+      OPEN_WEB_UI_API_KEY: ${OPEN_WEB_UI_API_KEY}
     depends_on:
       - weaviate
     volumes:
