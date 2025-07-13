@@ -120,6 +120,11 @@ services:
       DB_HOST: ${DB_HOST:-weaviate}
       DB_PORT: ${DB_PORT:-9090}
       DB_GRPC_PORT: ${DB_GRPC_PORT:-50051}
+      OPEN_WEB_UI_API_KEY: ${OPEN_WEB_UI_API_KEY}
+      SERVER_URL: ${SERVER_URL:-http://localhost:9091}
+      CLIENT_URL: ${CLIENT_URL:-http://localhost:3000}
+      GENAI_URL: ${GENAI_URL:-http://localhost:8000}
+      API_URL: ${API_URL:-https://gpu.aet.cit.tum.de/api/chat/completions}
     depends_on:
       - weaviate
     volumes:
