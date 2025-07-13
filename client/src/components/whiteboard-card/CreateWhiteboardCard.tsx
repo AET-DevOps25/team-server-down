@@ -20,7 +20,7 @@ export default function CreateWhiteboardCard() {
         </div>
       </div>
       <div className="p-4">
-        <h3 className="text-center font-medium text-gray-600">Blank board</h3>
+        <h3 className="text-center font-medium text-gray-600">Create a new board</h3>
       </div>
     </div>
   );

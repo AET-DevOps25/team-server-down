@@ -75,7 +75,7 @@ export default function ProjectCard({ project }: { project: WhiteboardResponse }
       className="group relative cursor-pointer rounded-lg border-2 border-gray-200 bg-white transition-all duration-200 hover:border-gray-300 hover:shadow-md"
       onClick={() => router.push(`/board/${project.id}`)}
     >
-      <div className="flex aspect-video items-center justify-center rounded-t-lg bg-gray-50 p-4">
+      <div className="flex aspect-video items-center justify-center rounded-t-lg bg-gray-50 p-2">
         <WhiteboardThumbnail id={project.id!} title={project.title} />
       </div>
       <div className="flex flex-row justify-between p-4">

@@ -69,7 +69,7 @@ export default function Sidebar({ onAddNode }: SidebarProps) {
 
   const handleAddShapeNode = (item: (typeof menuItems)[0]) => {
     const newNode: Node = {
-      id: `shape-${Date.now()}`, // Use timestamp for unique ID // TODO combine tih user id so it s actually unique
+      id: `shape-${Date.now()}`, // Use timestamp for unique ID // TODO combine with user id so it s actually unique
       type: "shapeNode",
       data: {
         shapeType: item.shape,
@@ -83,7 +83,7 @@ export default function Sidebar({ onAddNode }: SidebarProps) {
   };
 
   return (
-    <div className="flex h-auto w-16 flex-col items-center justify-center rounded-xl border border-gray-200/50 bg-white/50 p-3 shadow-lg backdrop-blur-sm">
+    <div className="flex h-auto w-16 flex-col items-center justify-center rounded-lg border border-gray-200 bg-white p-3 shadow-lg backdrop-blur-sm">
       {additionalItems.map((item, index) => {
         const IconComponent = item.icon;
         return (
@@ -98,9 +98,9 @@ export default function Sidebar({ onAddNode }: SidebarProps) {
         );
       })}
 
-      <div className="my-2 h-px w-8 bg-gray-300"></div>
+      <div className="my-2 h-px w-10 bg-gray-300"></div>
 
-      <div className="flex flex-col items-center space-y-2 py-4">
+      <div className="flex flex-col items-center space-y-2">
         {menuItems.map((item, index) => {
           const IconComponent = item.icon;
           return (

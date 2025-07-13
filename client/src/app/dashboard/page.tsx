@@ -73,7 +73,7 @@ const Dashboard = () => {
                 <Clock className="h-5 w-5" />
                 <span>Recent</span>
               </div>
-              <span className="text-xs text-gray-400">
+              <span className="text-sm text-gray-400">
                 {recentWhiteboards.length > 0 ? recentWhiteboards.length : ""}
               </span>
             </div>

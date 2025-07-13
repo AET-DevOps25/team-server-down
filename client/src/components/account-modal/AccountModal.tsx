@@ -22,7 +22,7 @@ export default function AccountModal({ isOpen, onClose }: AccountModalProps) {
 
   return (
     <Dialog open={isOpen} onOpenChange={onClose}>
-      <DialogContent className="sm:max-w-md">
+      <DialogContent>
         <DialogHeader>
           <DialogTitle>Account</DialogTitle>
           <DialogDescription>View your account details</DialogDescription>
@@ -38,7 +38,7 @@ export default function AccountModal({ isOpen, onClose }: AccountModalProps) {
             />
           </div>
 
-          <div className="items-center space-y-8">
+          <div className="items-center space-y-4">
             <div>
               <h3 className="mb-2 text-sm font-medium text-gray-700">
                 Username
@@ -55,7 +55,7 @@ export default function AccountModal({ isOpen, onClose }: AccountModalProps) {
             <div className="space-y-2">
               <h3 className="text-sm font-medium text-gray-700">Email</h3>
               <div className="flex items-center space-x-2">
-                <Mail className="h-4 w-4 text-gray-400" />
+                <Mail className="h-4 w-4 text-gray-500" />
                 <p className="text-base text-gray-900">{user?.email}</p>
               </div>
             </div>
