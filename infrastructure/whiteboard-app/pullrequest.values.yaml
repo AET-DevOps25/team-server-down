@@ -111,7 +111,7 @@ genai:
     targetPort: 8000
   env:
     - name: OPEN_WEB_UI_API_KEY
-      value: ${OPEN_WEB_UI_API_KEY}
+      value: ${.Values.genai.apiKey}
     - name: SERVER_URL
       value: 'https://{{ .Values.server.url }}'
     - name: CLIENT_URL

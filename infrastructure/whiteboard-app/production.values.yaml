@@ -112,7 +112,7 @@ genai:
   replicaCount: 1
   env:
     - name: OPEN_WEB_UI_API_KEY
-      value: ${OPEN_WEB_UI_API_KEY}
+      value: ${.Values.genai.apiKey}
     - name: API_URL
       value: https://gpu.aet.cit.tum.de/api/chat/completions
     - name: SERVER_URL
