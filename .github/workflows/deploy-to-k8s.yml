@@ -174,7 +174,7 @@ jobs:
           context: ./genai
           file: ./genai/Dockerfile
           push: true
-          tags: ghcr.io/${{ needs.setup.outputs.repo }}/server:${{ needs.setup.outputs.tag }}
+          tags: ghcr.io/${{ needs.setup.outputs.repo }}/genai:${{ needs.setup.outputs.tag }}
           build-args: API_URL=${{ needs.setup.outputs.api_url }}
           platforms: linux/amd64
 
