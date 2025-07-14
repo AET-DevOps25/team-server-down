@@ -119,7 +119,7 @@ genai:
     - name: GENAI_URL
       value: 'https://{{ .Values.genai.url }}'
     - name: API_URL
-      value: 'https://gpu.aet.cit.tum.de/api/chat/completions
+      value: 'https://gpu.aet.cit.tum.de/api/chat/completions'
 
 ingress:
   enabled: true
