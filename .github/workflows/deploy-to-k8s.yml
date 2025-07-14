@@ -319,7 +319,7 @@ jobs:
             - **Client:** [${clientUrl}](${clientUrl})
             - **Server:** [${serverUrl}/swagger-ui/index.html](${serverUrl}/swagger-ui/index.html)
             - **Keycloak:** [${authUrl}](${authUrl})
-            - **GenAI:** [${genaiUrl}/swagger-ui/index.html](${genaiUrl}/swagger-ui/index.html)
+            - **GenAI:** [${genaiUrl}/swagger-ui/index.html](${genaiUrl}/docs)
             `;
           
             await github.rest.issues.createComment({
