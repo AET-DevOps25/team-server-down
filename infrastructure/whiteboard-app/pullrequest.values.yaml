@@ -121,9 +121,6 @@ genai:
     - name: API_URL
       value: 'https://gpu.aet.cit.tum.de/api/chat/completions'
 
-
-grafana: 
-
 ingress:
   enabled: true
   className: "nginx"
