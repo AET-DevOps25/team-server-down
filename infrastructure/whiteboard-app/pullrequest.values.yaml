@@ -138,6 +138,7 @@ ingress:
       - '{{ .Values.server.url }}'
       - '{{ .Values.auth.url }}'
       - '{{ .Values.genai.url }}'
+      - '{{ .Values.grafana.url }}'
     secretName: '{{ .Values.namespace }}-whiteboard-devops25-tls'
   rules:
     - host: '{{ .Values.client.url }}'
