@@ -59,8 +59,7 @@ jobs:
             BRANCH_SAFE=${BRANCH//\//-}
             echo "tag=$BRANCH_SAFE" >> $GITHUB_OUTPUT
             echo "api_url=https://$BRANCH_SAFE.api.whiteboard.student.k8s.aet.cit.tum.de" >> $GITHUB_OUTPUT
-            echo "base_url=https://$BRANCH_SAFE.whiteboard.student.k8s.aet.cit.tum.de" >> $GITHUB_OUTPUT
-          
+            echo "base_url=https://$BRANCH_SAFE.whiteboard.student.k8s.aet.cit.tum.de" >> $GITHUB_OUTPUT  
             echo "genai_url=https://$BRANCH_SAFE.genai.whiteboard.student.k8s.aet.cit.tum.de" >> $GITHUB_OUTPUT
           fi
 
@@ -280,7 +279,8 @@ jobs:
             --set client.url="${{ env.CLIENT_URL }}" \
             --set server.url="${{ env.SERVER_URL }}" \
             --set auth.url="${{ env.AUTH_URL }}" \
-            --set genai.url="${{ env.OPEN_WEB_UI_API_KEY }}" \
+            --set genai.url="${{ env.GENAI_URL }}" \
+            --set genai.apiKey="${{ env.OPEN_WEB_UI_API_KEY }}" \
 
   comment-pr:
     needs: deploy
