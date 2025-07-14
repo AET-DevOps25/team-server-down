@@ -1,6 +1,9 @@
 package eventbus
 
-import "github.com/segmentio/kafka-go"
+import (
+	"context"
+	"github.com/segmentio/kafka-go"
+)
 
 type Publisher struct {
 	writer *kafka.Writer
@@ -12,6 +15,10 @@ func NewPublisher(w *kafka.Writer) *Publisher {
 	}
 }
 
-func (p *Publisher) Publish() {
-
+func (p *Publisher) Publish(key, value string) error {
+	msg := kafka.Message{
+		Key:   []byte(key),
+		Value: []byte(value),
+	}
+	return p.writer.WriteMessages(context.Background(), msg)
 }

@@ -1,13 +1,10 @@
 package handler
 
 import (
-	"fmt"
 	"github.com/AET-DevOps25/team-server-down/pkg/eventbus"
 	"github.com/gin-gonic/gin"
 	"github.com/gorilla/websocket"
 	"net/http"
-	"strconv"
-	"time"
 )
 
 type WhiteboardHandler struct {
@@ -37,14 +34,14 @@ func (wh *WhiteboardHandler) GetWhiteboardEvents(c *gin.Context) {
 	if err != nil {
 		return
 	}
-	defer conn.Close()
 
-	i := 0
-	for {
-		i++
-		conn.WriteMessage(websocket.TextMessage, []byte("New msg for whiteboard "+whiteboardId+" (#"+strconv.Itoa(i)+")"))
-		time.Sleep(time.Second)
-	}
+	_ = wh.subscriber.Subscribe(c, func(key, value string) {
+		if key == whiteboardId {
+			err := conn.WriteMessage(websocket.TextMessage, []byte(value))
+			if err != nil {
+			}
+		}
+	})
 }
 
 func (wh *WhiteboardHandler) PublishWhiteboardEvents(c *gin.Context) {
@@ -57,10 +54,10 @@ func (wh *WhiteboardHandler) PublishWhiteboardEvents(c *gin.Context) {
 	defer conn.Close()
 
 	for {
-		messageType, message, err := conn.ReadMessage()
+		_, message, err := conn.ReadMessage()
 		if err != nil {
 			break
 		}
-		fmt.Printf("messageType: %d, whiteboard: %s, message: %s\n", messageType, whiteboardId, message)
+		err = wh.publisher.Publish(whiteboardId, string(message))
 	}
 }

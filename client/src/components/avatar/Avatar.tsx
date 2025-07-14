@@ -6,6 +6,7 @@ import {
 import generateColorFromString from "@/util/generateUserUniqueColor";
 
 interface PersonalAvatarProps {
+  username: string;
   firstname: string;
   lastname: string;
   className?: string;
@@ -13,13 +14,13 @@ interface PersonalAvatarProps {
 }
 
 export default function Avatar({
+  username,
   firstname,
   lastname,
   className = "",
   fallbackClassName = "",
 }: PersonalAvatarProps) {
-  const concatenated = firstname.concat(lastname);
-  const color = generateColorFromString(concatenated);
+  const color = generateColorFromString(username);
   return (
     <ShadeCnAvatar className={`h-10 w-10 ${className}`}>
       <AvatarFallback

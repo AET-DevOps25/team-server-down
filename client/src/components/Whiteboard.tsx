@@ -50,8 +50,6 @@ interface Cursor {
   id: number;
   position?: { x: number; y: number };
   username: string;
-  firstname: string;
-  lastname: string;
 }
 
 export default function Whiteboard({ whiteboardId }: WhiteboardProps) {
@@ -63,25 +61,25 @@ export default function Whiteboard({ whiteboardId }: WhiteboardProps) {
 
   const { data: user } = useGetMe();
 
-  const fallbackId = Math.random();
-
   const [dragStart, setDragStart] = useState<{
     cursor: { x: number; y: number };
     node: { x: number; y: number };
   } | null>(null);
 
-  const [cursor, setCursor] = useState<Cursor>({
-    id: user?.id ?? fallbackId,
-    username: user?.username ?? "",
-    firstname: user?.firstName ?? "",
-    lastname: user?.lastName ?? "",
-    position: undefined,
-  });
+  useEffect(() => {
+    if (user && user.id && user.username)
+      setCursor({
+        id: user.id,
+        username: user.username,
+        position: undefined,
+      });
+  }, [user]);
+
+  const [cursor, setCursor] = useState<Cursor>();
 
   const [allCursors, setAllCursors] = useState<Cursor[]>([]);
 
   // whiteboard logic
-
   const { saveWhiteboardState } = useSaveWhiteboardState({
     whiteboardId,
     nodes: getNodes(),
@@ -107,8 +105,7 @@ export default function Whiteboard({ whiteboardId }: WhiteboardProps) {
     [setEdges],
   );
 
-  // cursor render logic
-
+  // custom cursor logic
   const onMouseMove: MouseEventHandler = (event) => {
     if (!rfInstance) return;
 
@@ -117,23 +114,31 @@ export default function Whiteboard({ whiteboardId }: WhiteboardProps) {
       y: event.clientY,
     });
 
-    setCursor((prev) => ({
-      ...prev,
-      position,
-    }));
+    setCursor((prev) => {
+      if (!prev) return prev;
+
+      return {
+        ...prev,
+        position,
+      };
+    });
   };
 
   const onMove = () => {
-    if (cursor.position) {
+    if (cursor && cursor.position) {
       const x = cursor.position.x;
       const y = cursor.position.y;
 
       const position = { x, y };
 
-      setCursor((prev) => ({
-        ...prev,
-        position,
-      }));
+      setCursor((prev) => {
+        if (!prev) return prev;
+
+        return {
+          ...prev,
+          position,
+        };
+      });
     }
   };
 
@@ -158,10 +163,14 @@ export default function Whiteboard({ whiteboardId }: WhiteboardProps) {
     const x = dragStart.cursor.x + dx;
     const y = dragStart.cursor.y + dy;
 
-    setCursor((prev) => ({
-      ...prev,
-      position: { x, y },
-    }));
+    setCursor((prev) => {
+      if (!prev) return prev;
+
+      return {
+        ...prev,
+        position: { x, y },
+      };
+    });
   };
 
   const handleNodeDragStop = () => {
@@ -169,18 +178,21 @@ export default function Whiteboard({ whiteboardId }: WhiteboardProps) {
   };
 
   const handleMouseLeave = () => {
-    setCursor((prev) => ({
-      ...prev,
-      position: undefined,
-    }));
+    if (cursor)
+      setCursor((prev) => {
+        if (!prev) return prev;
+
+        return { ...prev, position: undefined };
+      });
   };
 
   useEffect(() => {
-    if (!cursor.id) return;
-    setAllCursors((prevCursors) => {
-      const otherCursors = prevCursors.filter((c) => c.id !== cursor.id);
-      return [...otherCursors, cursor];
-    });
+    if (!cursor || !cursor.id) return;
+    if (cursor)
+      setAllCursors((prevCursors) => {
+        const otherCursors = prevCursors.filter((c) => c.id !== cursor.id);
+        return [...otherCursors, cursor];
+      });
   }, [cursor]);
 
   function renderCursors(): ReactNode[] {
@@ -199,8 +211,6 @@ export default function Whiteboard({ whiteboardId }: WhiteboardProps) {
           <CustomCursor
             key={cursor.id}
             username={cursor.username}
-            firstname={cursor.firstname}
-            lastname={cursor.lastname}
             position={position}
             visible={true}
           />
@@ -208,6 +218,7 @@ export default function Whiteboard({ whiteboardId }: WhiteboardProps) {
       });
   }
 
+  // Realtime synchronisation logic
   useSubscribeToWhiteboardEvents(whiteboardId);
   const publishEvent = usePublishWhiteboardEvents(whiteboardId);
 

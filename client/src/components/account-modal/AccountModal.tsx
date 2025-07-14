@@ -31,6 +31,7 @@ export default function AccountModal({ isOpen, onClose }: AccountModalProps) {
         <div className="my-4 flex flex-row space-x-10 px-4">
           <div className="h-full">
             <Avatar
+              username={user?.username ?? ""}
               firstname={user?.firstName ?? ""}
               lastname={user?.lastName ?? ""}
               className="h-20 w-20"
