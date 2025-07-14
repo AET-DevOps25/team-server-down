@@ -59,8 +59,7 @@ jobs:
             BRANCH_SAFE=${BRANCH//\//-}
             echo "tag=$BRANCH_SAFE" >> $GITHUB_OUTPUT
             echo "api_url=https://$BRANCH_SAFE.api.whiteboard.student.k8s.aet.cit.tum.de" >> $GITHUB_OUTPUT
-            echo "base_url=https://$BRANCH_SAFE.whiteboard.student.k8s.aet.cit.tum.de" >> $GITHUB_OUTPUT
-          
+            echo "base_url=https://$BRANCH_SAFE.whiteboard.student.k8s.aet.cit.tum.de" >> $GITHUB_OUTPUT  
             echo "genai_url=https://$BRANCH_SAFE.genai.whiteboard.student.k8s.aet.cit.tum.de" >> $GITHUB_OUTPUT
           fi
 
@@ -141,15 +140,55 @@ jobs:
           build-args: API_URL=${{ needs.setup.outputs.api_url }}
           platforms: linux/amd64
 
+  build-genai:
+    needs: setup
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+        with:
+          fetch-depth: 0
+          ref: ${{ needs.setup.outputs.merge_commit || github.sha }}
+
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v2
+
+      - name: Log in to GHCR
+        uses: docker/login-action@v2
+        with:
+          registry: ghcr.io
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Cache Docker layers
+        uses: actions/cache@v3
+        with:
+          path: /tmp/.buildx-cache-genai
+          key: ${{ runner.os }}-genai-${{ github.sha }}
+          restore-keys: |
+            ${{ runner.os }}-genai-
+
+      - name: Build and push genai image
+        uses: docker/build-push-action@v3
+        with:
+          context: ./genai
+          file: ./genai/Dockerfile
+          push: true
+          tags: ghcr.io/${{ needs.setup.outputs.repo }}/genai:${{ needs.setup.outputs.tag }}
+          build-args: API_URL=${{ needs.setup.outputs.api_url }}
+          platforms: linux/amd64
+
+
   deploy:
     needs:
       - build-client
       - build-server
+      - build-genai
     runs-on: ubuntu-latest
     outputs:
       client_url: ${{ steps.set-vars.outputs.CLIENT_URL }}
       server_url: ${{ steps.set-vars.outputs.SERVER_URL }}
       auth_url: ${{ steps.set-vars.outputs.AUTH_URL }}
+      genai_url: ${{ steps.set-vars.outputs.GENAI_URL }}
     steps:
       - name: Checkout repository
         uses: actions/checkout@v3
@@ -165,6 +204,7 @@ jobs:
             CLIENT_URL=whiteboard.student.k8s.aet.cit.tum.de
             SERVER_URL=api.whiteboard.student.k8s.aet.cit.tum.de
             AUTH_URL=auth.whiteboard.student.k8s.aet.cit.tum.de
+            GENAI_URL=genai.whiteboard.student.k8s.aet.cit.tum.de
             echo "NAMESPACE=production" >> $GITHUB_ENV
             echo "IMAGE_TAG=latest" >> $GITHUB_ENV
             echo "VALUES_FILE=./infrastructure/whiteboard-app/production.values.yaml" >> $GITHUB_ENV
@@ -172,6 +212,7 @@ jobs:
             CLIENT_URL=staging.whiteboard.student.k8s.aet.cit.tum.de
             SERVER_URL=staging.api.whiteboard.student.k8s.aet.cit.tum.de
             AUTH_URL=staging.auth.whiteboard.student.k8s.aet.cit.tum.de
+            GENAI_URL=staging.genai.whiteboard.student.k8s.aet.cit.tum.de
             echo "NAMESPACE=staging" >> $GITHUB_ENV
             echo "IMAGE_TAG=develop" >> $GITHUB_ENV
             echo "VALUES_FILE=./infrastructure/whiteboard-app/staging.values.yaml" >> $GITHUB_ENV
@@ -180,6 +221,7 @@ jobs:
             CLIENT_URL=$BRANCH_SAFE.whiteboard.student.k8s.aet.cit.tum.de
             SERVER_URL=$BRANCH_SAFE.api.whiteboard.student.k8s.aet.cit.tum.de
             AUTH_URL=$BRANCH_SAFE.auth.whiteboard.student.k8s.aet.cit.tum.de
+            GENAI_URL=$BRANCH_SAFE.genai.whiteboard.student.k8s.aet.cit.tum.de
             echo "NAMESPACE=$BRANCH_SAFE" >> $GITHUB_ENV
             echo "IMAGE_TAG=$BRANCH_SAFE" >> $GITHUB_ENV
             echo "VALUES_FILE=./infrastructure/whiteboard-app/pullrequest.values.yaml" >> $GITHUB_ENV
@@ -188,10 +230,13 @@ jobs:
           echo "CLIENT_URL=$CLIENT_URL" >> $GITHUB_ENV
           echo "SERVER_URL=$SERVER_URL" >> $GITHUB_ENV
           echo "AUTH_URL=$AUTH_URL" >> $GITHUB_ENV
+          echo "GENAI_URL=$GENAI_URL" >> $GITHUB_ENV
+          echo "OPEN_WEB_UI_API_KEY=${{ secrets.OPEN_WEB_UI_API_KEY }}" >> $GITHUB_ENV
           
           echo "CLIENT_URL=$CLIENT_URL" >> $GITHUB_OUTPUT
           echo "SERVER_URL=$SERVER_URL" >> $GITHUB_OUTPUT
           echo "AUTH_URL=$AUTH_URL" >> $GITHUB_OUTPUT
+          echo "GENAI_URL=$GENAI_URL" >> $GITHUB_OUTPUT
 
       - name: Set up Kubeconfig
         run: |
@@ -230,9 +275,12 @@ jobs:
             --set namespace="${{ env.NAMESPACE }}" \
             --set server.image.tag="${{ env.IMAGE_TAG }}" \
             --set client.image.tag="${{ env.IMAGE_TAG }}" \
+            --set genai.image.tag="${{ env.IMAGE_TAG }}" \
             --set client.url="${{ env.CLIENT_URL }}" \
             --set server.url="${{ env.SERVER_URL }}" \
-            --set auth.url="${{ env.AUTH_URL }}"
+            --set auth.url="${{ env.AUTH_URL }}" \
+            --set genai.url="${{ env.GENAI_URL }}" \
+            --set genai.apiKey="${{ env.OPEN_WEB_UI_API_KEY }}" \
 
   comment-pr:
     needs: deploy
@@ -242,6 +290,7 @@ jobs:
       CLIENT_URL: ${{ needs.deploy.outputs.client_url }}
       SERVER_URL: ${{ needs.deploy.outputs.server_url }}
       AUTH_URL: ${{ needs.deploy.outputs.auth_url }}
+      GENAI_URL: ${{ needs.deploy.outputs.genai_url }}
     steps:
       - name: Comment on Pull Request with URLs
         uses: actions/github-script@v6
@@ -252,6 +301,7 @@ jobs:
             const clientUrl = `https://${process.env.CLIENT_URL}`;
             const serverUrl = `https://${process.env.SERVER_URL}`;
             const authUrl = `https://${process.env.AUTH_URL}`;
+            const genaiUrl = `https://${process.env.GENAI_URL}`;
             
             // Check existing comments to avoid duplicates
             const { data: comments } = await github.rest.issues.listComments({
@@ -269,6 +319,7 @@ jobs:
             - **Client:** [${clientUrl}](${clientUrl})
             - **Server:** [${serverUrl}/swagger-ui/index.html](${serverUrl}/swagger-ui/index.html)
             - **Keycloak:** [${authUrl}](${authUrl})
+            - **GenAI:** [${genaiUrl}/docs](${genaiUrl}/docs)
             `;
           
             await github.rest.issues.createComment({

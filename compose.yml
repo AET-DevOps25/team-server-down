@@ -117,9 +117,6 @@ services:
     ports:
       - "8000:8000"
     environment:
-      DB_HOST: ${DB_HOST:-weaviate}
-      DB_PORT: ${DB_PORT:-9090}
-      DB_GRPC_PORT: ${DB_GRPC_PORT:-50051}
       OPEN_WEB_UI_API_KEY: ${OPEN_WEB_UI_API_KEY}
       SERVER_URL: ${SERVER_URL:-http://localhost:9091}
       CLIENT_URL: ${CLIENT_URL:-http://localhost:3000}
