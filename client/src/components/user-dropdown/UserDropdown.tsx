@@ -42,6 +42,7 @@ export default function UserDropdown() {
           <div className="flex flex-row items-center gap-2">
             <button className="flex items-center gap-2 rounded-full p-1 hover:cursor-pointer hover:bg-gray-100 focus:outline-none">
               <Avatar
+                username={user?.username ?? ""}
                 firstname={user?.firstName ?? ""}
                 lastname={user?.lastName ?? ""}
                 className="h-8 w-8"
@@ -54,6 +55,7 @@ export default function UserDropdown() {
         <DropdownMenuContent align="start" className="mt-3 w-56">
           <div className="flex flex-col items-center gap-3 p-3">
             <Avatar
+              username={user?.username ?? ""}
               firstname={user?.firstName ?? ""}
               lastname={user?.lastName ?? ""}
               className="h-10 w-10"

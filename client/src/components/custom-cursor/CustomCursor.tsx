@@ -4,21 +4,16 @@ import generateColorFromString from "@/util/generateUserUniqueColor";
 
 interface CustomCursorProps {
   username: string;
-  firstname: string;
-  lastname: string;
   position: { x: number; y: number };
   visible: boolean;
 }
 
 export default function CustomCursor({
   username,
-  firstname,
-  lastname,
   position,
   visible,
 }: CustomCursorProps) {
-  const concatenated = firstname.concat(lastname);
-  const color = generateColorFromString(concatenated);
+  const color = generateColorFromString(username);
 
   return (
     <div
