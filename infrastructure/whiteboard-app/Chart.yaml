@@ -9,4 +9,11 @@ dependencies:
     repository: "https://charts.bitnami.com/bitnami"
   - name: keycloak
     version: 21.0.1
+    repository: "https://charts.bitnami.com/bitnami"  
+  - name: grafana
+    version: 12.1.0
     repository: "https://charts.bitnami.com/bitnami"
+
+
+  
+  

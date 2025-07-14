@@ -50,10 +50,13 @@ jobs:
             echo "api_url=https://api.whiteboard.student.k8s.aet.cit.tum.de" >> $GITHUB_OUTPUT
             echo "base_url=https://whiteboard.student.k8s.aet.cit.tum.de" >> $GITHUB_OUTPUT
             echo "genai_url=https://genai.whiteboard.student.k8s.aet.cit.tum.de" >> $GITHUB_OUTPUT
+            echo "metrics_url=https://metrics.whiteboard.student.k8s.aet.cit.tum.de" >> $GITHUB_OUTPUT
+
           elif [[ "$BRANCH" == "develop" ]]; then
             echo "tag=develop" >> $GITHUB_OUTPUT
             echo "api_url=https://staging.api.whiteboard.student.k8s.aet.cit.tum.de" >> $GITHUB_OUTPUT
             echo "genai_url=https://staging.genai.whiteboard.student.k8s.aet.cit.tum.de" >> $GITHUB_OUTPUT
+            echo "metrics_url=https://staging.metrics.whiteboard.student.k8s.aet.cit.tum.de" >> $GITHUB_OUTPUT
             echo "base_url=https://staging.whiteboard.student.k8s.aet.cit.tum.de" >> $GITHUB_OUTPUT
           else
             BRANCH_SAFE=${BRANCH//\//-}
@@ -62,6 +65,7 @@ jobs:
             echo "base_url=https://$BRANCH_SAFE.whiteboard.student.k8s.aet.cit.tum.de" >> $GITHUB_OUTPUT
           
             echo "genai_url=https://$BRANCH_SAFE.genai.whiteboard.student.k8s.aet.cit.tum.de" >> $GITHUB_OUTPUT
+            echo "metrics_url=https://$BRANCH_SAFE.metrics.whiteboard.student.k8s.aet.cit.tum.de" >> $GITHUB_OUTPUT
           fi
 
   build-client:
@@ -150,6 +154,7 @@ jobs:
       client_url: ${{ steps.set-vars.outputs.CLIENT_URL }}
       server_url: ${{ steps.set-vars.outputs.SERVER_URL }}
       auth_url: ${{ steps.set-vars.outputs.AUTH_URL }}
+      metrics_url: ${{ steps.set-vars.outputs.METRICS_URL }}
     steps:
       - name: Checkout repository
         uses: actions/checkout@v3
@@ -165,6 +170,7 @@ jobs:
             CLIENT_URL=whiteboard.student.k8s.aet.cit.tum.de
             SERVER_URL=api.whiteboard.student.k8s.aet.cit.tum.de
             AUTH_URL=auth.whiteboard.student.k8s.aet.cit.tum.de
+            METRICS_URL=metrics.whiteboard.student.k8s.aet.cit.tum.de
             echo "NAMESPACE=production" >> $GITHUB_ENV
             echo "IMAGE_TAG=latest" >> $GITHUB_ENV
             echo "VALUES_FILE=./infrastructure/whiteboard-app/production.values.yaml" >> $GITHUB_ENV
@@ -172,6 +178,7 @@ jobs:
             CLIENT_URL=staging.whiteboard.student.k8s.aet.cit.tum.de
             SERVER_URL=staging.api.whiteboard.student.k8s.aet.cit.tum.de
             AUTH_URL=staging.auth.whiteboard.student.k8s.aet.cit.tum.de
+            METRICS_URL=staging.metrics.whiteboard.student.k8s.aet.cit.tum.de
             echo "NAMESPACE=staging" >> $GITHUB_ENV
             echo "IMAGE_TAG=develop" >> $GITHUB_ENV
             echo "VALUES_FILE=./infrastructure/whiteboard-app/staging.values.yaml" >> $GITHUB_ENV
@@ -180,6 +187,7 @@ jobs:
             CLIENT_URL=$BRANCH_SAFE.whiteboard.student.k8s.aet.cit.tum.de
             SERVER_URL=$BRANCH_SAFE.api.whiteboard.student.k8s.aet.cit.tum.de
             AUTH_URL=$BRANCH_SAFE.auth.whiteboard.student.k8s.aet.cit.tum.de
+            METRICS_URL=$BRANCH_SAFE.metrics.whiteboard.student.k8s.aet.cit.tum.de
             echo "NAMESPACE=$BRANCH_SAFE" >> $GITHUB_ENV
             echo "IMAGE_TAG=$BRANCH_SAFE" >> $GITHUB_ENV
             echo "VALUES_FILE=./infrastructure/whiteboard-app/pullrequest.values.yaml" >> $GITHUB_ENV
@@ -188,10 +196,12 @@ jobs:
           echo "CLIENT_URL=$CLIENT_URL" >> $GITHUB_ENV
           echo "SERVER_URL=$SERVER_URL" >> $GITHUB_ENV
           echo "AUTH_URL=$AUTH_URL" >> $GITHUB_ENV
+          echo "METRICS_URL=$METRICS_URL" >> $GITHUB_ENV
           
           echo "CLIENT_URL=$CLIENT_URL" >> $GITHUB_OUTPUT
           echo "SERVER_URL=$SERVER_URL" >> $GITHUB_OUTPUT
           echo "AUTH_URL=$AUTH_URL" >> $GITHUB_OUTPUT
+          echo "METRICS_URL=$METRICS_URL" >> $GITHUB_OUTPUT
 
       - name: Set up Kubeconfig
         run: |
@@ -232,7 +242,8 @@ jobs:
             --set client.image.tag="${{ env.IMAGE_TAG }}" \
             --set client.url="${{ env.CLIENT_URL }}" \
             --set server.url="${{ env.SERVER_URL }}" \
-            --set auth.url="${{ env.AUTH_URL }}"
+            --set auth.url="${{ env.AUTH_URL }}" \
+            --set metrics.url="${{ env.METRICS_URL }}"
 
   comment-pr:
     needs: deploy
@@ -242,6 +253,7 @@ jobs:
       CLIENT_URL: ${{ needs.deploy.outputs.client_url }}
       SERVER_URL: ${{ needs.deploy.outputs.server_url }}
       AUTH_URL: ${{ needs.deploy.outputs.auth_url }}
+      METRICS_URL: ${{ needs.deploy.outputs.metrics_url }}
     steps:
       - name: Comment on Pull Request with URLs
         uses: actions/github-script@v6
@@ -252,6 +264,7 @@ jobs:
             const clientUrl = `https://${process.env.CLIENT_URL}`;
             const serverUrl = `https://${process.env.SERVER_URL}`;
             const authUrl = `https://${process.env.AUTH_URL}`;
+            const metricsUrl = `https://${process.env.METRICS_URL}`;
             
             // Check existing comments to avoid duplicates
             const { data: comments } = await github.rest.issues.listComments({
@@ -269,6 +282,7 @@ jobs:
             - **Client:** [${clientUrl}](${clientUrl})
             - **Server:** [${serverUrl}/swagger-ui/index.html](${serverUrl}/swagger-ui/index.html)
             - **Keycloak:** [${authUrl}](${authUrl})
+            - **Metrics:** [${metricsUrl}](${metricsUrl})
             `;
           
             await github.rest.issues.createComment({

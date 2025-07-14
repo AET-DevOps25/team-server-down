@@ -52,6 +52,14 @@ services:
       IDP_INTERNAL_URI: ${IDP_INTERNAL_URI:-http://keycloak:8080/realms/development}
       IDP_EXTERNAL_URI: ${IDP_EXTERNAL_URI:-http://localhost:8080/realms/development}
       SERVER_URL: ${SERVER_URL:-http://localhost:9091}
+      MANAGEMENT_ENDPOINTS_WEB_EXPOSURE_INCLUDE: "health,metrics,prometheus"
+      MANAGEMENT_ENDPOINT_HEALTH_SHOW_DETAILS: "always"
+      MANAGEMENT_ENDPOINT_METRICS_ENABLED: "true"
+      MANAGEMENT_ENDPOINT_PROMETHEUS_ENABLED: "true"
+      MANAGEMENT_METRICS_EXPORT_PROMETHEUS_ENABLED: "true"
+      MANAGEMENT_ENDPOINTS_WEB_BASE_PATH: "/api/actuator"
+      SPRING_SECURITY_IGNORED_PATHS: "/api/actuator/**"
+      SERVER_ADDRESS: "0.0.0.0" 
     depends_on:
       db:
         condition: service_healthy
@@ -118,7 +126,7 @@ services:
       - "8000:8000"
     environment:
       DB_HOST: ${DB_HOST:-weaviate}
-      DB_PORT: ${DB_PORT:-9090}
+      DB_PORT: ${DB_PORT:-9092}
       DB_GRPC_PORT: ${DB_GRPC_PORT:-50051}
       OPEN_WEB_UI_API_KEY: ${OPEN_WEB_UI_API_KEY}
       SERVER_URL: ${SERVER_URL:-http://localhost:9091}
@@ -133,46 +141,100 @@ services:
       - server
       - rag
 
-  weaviate:
-    command: [ "--host", "0.0.0.0", "--port", "9090", "--scheme", "http"]
-    image: cr.weaviate.io/semitechnologies/weaviate:1.30.0
+
+  node_exporter:
+    image: prom/node-exporter
+    container_name: node_exporter
     ports:
-      - "9090:9090"
-      - "50051:50051"
+      - "9100:9100"
+    networks:
+      - server
+      - rag
+
+  prometheus:
+    image: prom/prometheus:v2.52.0
+    container_name: prometheus
+    ports:
+      - "${PROMETHEUS_PORT}:9090"
     volumes:
-      - weaviate-data:/var/lib/weaviate
-    restart: on-failure:0
-    environment:
-      TRANSFORMERS_INFERENCE_API: 'http://t2v-transformers:8080'
-      IMAGE_INFERENCE_API: 'http://i2v-neural:8080'
-      SPELLCHECK_INFERENCE_API: 'http://text-spellcheck:8080'
-      QUERY_DEFAULTS_LIMIT: 25
-      AUTHENTICATION_ANONYMOUS_ACCESS_ENABLED: 'true'
-      PERSISTENCE_DATA_PATH: '/var/lib/weaviate'
-      DEFAULT_VECTORIZER_MODULE: 'text2vec-transformers'
-      ENABLE_MODULES: 'text2vec-transformers,text-spellcheck,img2vec-neural'
-      CLUSTER_HOSTNAME: 'node1'
+      - ./prometheus:/etc/prometheus
+      - prometheus_data:/prometheus
+    command:
+      - '--config.file=/etc/prometheus/prometheus.yml'
+      - '--storage.tsdb.path=/prometheus'
+      - '--web.console.libraries=/etc/prometheus/console_libraries'
+      - '--web.console.templates=/etc/prometheus/consoles'
+      - '--web.enable-lifecycle'
+    restart: unless-stopped
     networks:
+      - server
       - rag
 
-  t2v-transformers:
-    image: cr.weaviate.io/semitechnologies/transformers-inference:sentence-transformers-multi-qa-MiniLM-L6-cos-v1
+  grafana:
+    image: grafana/grafana-oss:latest
+    container_name: grafana
+    ports:
+      - "3001:3000"
+    volumes:
+      - grafana-storage:/var/lib/grafana
+      - ./grafana/provisioning:/etc/grafana/provisioning:ro
     environment:
-      ENABLE_CUDA: '0'
+      - GF_SECURITY_ADMIN_USER=admin
+      - GF_SECURITY_ADMIN_PASSWORD=admin
+      - GF_USERS_ALLOW_SIGN_UP=false
+      - GF_FEATURE_TOGGLES_ENABLE=logsInExplore
+      - GF_LOG_CONSOLECOLORS=true
+    depends_on:
+      - prometheus
+      - loki
+    restart: unless-stopped
     networks:
+      - server
       - rag
 
-  text-spellcheck:
-    image: cr.weaviate.io/semitechnologies/text-spellcheck-model:pyspellchecker-en
+  promtail:
+    image: grafana/promtail:latest
+    volumes:
+      - /var/lib/docker/containers:/var/lib/docker/containers:ro
+      - ./promtail/promtail.yml:/etc/promtail/promtail.yml
+    command: -config.file=/etc/promtail/promtail.yml
+    depends_on:
+      - loki
+    restart: unless-stopped
     networks:
+      - server
       - rag
 
-  i2v-neural:
-    image: cr.weaviate.io/semitechnologies/img2vec-pytorch:resnet50
-    environment:
-      ENABLE_CUDA: '0'
+  loki:
+    image: grafana/loki:2.9.0
+    ports:
+      - "3100:3100"
+    volumes:
+      - ./loki/loki-config.yaml:/loki/loki-config.yaml:ro
+      - loki-storage:/loki/data   
+    command: -config.file=/loki/loki-config.yaml
+    restart: unless-stopped
     networks:
+      - server
       - rag
+  
+  alertmanager:
+    image: prom/alertmanager:v0.26.0
+    container_name: alertmanager
+    volumes:
+      - ./alertManager:/etc/alertmanager:ro
+      - alertmanager_data:/alertmanager
+
+    command:
+      - '--config.file=/etc/alertmanager/config.yml'
+      - '--storage.path=/alertmanager'
+      - '--log.level=debug'
+    ports:
+      - "9093:9093"
+    networks:
+      - server
+      - rag
+    restart: unless-stopped
 
 networks:
   server:
@@ -182,3 +244,8 @@ volumes:
   db-data:
   node-modules-client:
   weaviate-data:
+  prometheus_data:
+  grafana-storage:
+  loki-storage:
+  alertmanager_data:
+

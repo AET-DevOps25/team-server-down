@@ -1,3 +1,8 @@
+from contextlib import asynccontextmanager
+from fastapi import FastAPI
+from app.routes import root
+from app.db.client import WeaviateClientSingleton
+from prometheus_fastapi_instrumentator import Instrumentator, metrics
 import os
 import requests
 from typing import Any, List, Optional
@@ -11,6 +16,13 @@ from fastapi.responses import JSONResponse
 from fastapi.openapi.utils import get_openapi
 from dotenv import load_dotenv
 
+# Initialize FastAPI app
+app = FastAPI(
+    title="LLM Service",
+    description="OpenWebUI powered LLM service for text operations",
+    version="1.0.0",
+)
+
 # Setup logging
 logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)
@@ -19,12 +31,15 @@ load_dotenv()
 
 router = APIRouter()
 
+Instrumentator().instrument(app).expose(app)
+
 # Environment configuration
 OPEN_WEB_UI_API_KEY = os.getenv("OPEN_WEB_UI_API_KEY")
 API_URL = os.getenv("API_URL")
 SERVER_URL = os.getenv("SERVER_URL")
 CLIENT_URL = os.getenv("CLIENT_URL")
 GENAI_URL = os.getenv("GENAI_URL")
+
 
 class OpenWebUILLM(LLM):
     api_url: str = API_URL
@@ -84,12 +99,6 @@ class OpenWebUILLM(LLM):
             raise Exception(f"API request failed: {str(e)}")
 
 
-# Initialize FastAPI app
-app = FastAPI(
-    title="LLM Service",
-    description="OpenWebUI powered LLM service for text operations",
-    version="1.0.0",
-)
 
 
 @app.get("/v3/api-docs", include_in_schema=False)
