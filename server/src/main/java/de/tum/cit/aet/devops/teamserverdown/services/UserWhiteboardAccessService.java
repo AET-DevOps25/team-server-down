@@ -6,6 +6,7 @@ import de.tum.cit.aet.devops.teamserverdown.model.Whiteboard;
 import de.tum.cit.aet.devops.teamserverdown.repository.UserRepository;
 import de.tum.cit.aet.devops.teamserverdown.repository.UserWhiteboardAccessRepository;
 import de.tum.cit.aet.devops.teamserverdown.repository.WhiteboardRepository;
+import jakarta.transaction.Transactional;
 import java.util.List;
 import java.util.Optional;
 import org.slf4j.Logger;
@@ -14,6 +15,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 @Service
+@Transactional
 public class UserWhiteboardAccessService {
   private static final Logger logger = LoggerFactory.getLogger(UserWhiteboardAccessService.class);
 
@@ -45,6 +47,12 @@ public class UserWhiteboardAccessService {
       }
       UserWhiteboardAccess access = new UserWhiteboardAccess(user.get(), whiteboard);
       userWhiteboardAccessRepository.save(access);
+    }
+  }
+
+  public void removeUsersFromWhiteboard(List<Long> userIds, Long whiteboardId) {
+    for (Long userId : userIds) {
+      userWhiteboardAccessRepository.deleteByUserIdAndWhiteboardId(userId, whiteboardId);
     }
   }
 }

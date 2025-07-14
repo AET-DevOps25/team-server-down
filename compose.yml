@@ -184,7 +184,6 @@ services:
       - ./genai:/app
     networks:
       - server
-      - rag
 
 
 networks:

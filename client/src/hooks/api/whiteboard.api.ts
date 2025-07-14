@@ -1,7 +1,7 @@
-import {useMutation, useQuery, useQueryClient} from "@tanstack/react-query";
-import {useRouter} from "next/navigation";
-import {whiteboardApiFactory} from "@/api";
-import {useCallback, useEffect, useRef} from "react";
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
+import { useRouter } from "next/navigation";
+import { whiteboardApiFactory } from "@/api";
+import { useCallback, useEffect, useRef } from "react";
 
 export function useWhiteboards() {
   return useQuery({
@@ -79,6 +79,31 @@ export const useInviteCollaboratorsToWhiteboard = () => {
       return whiteboardApiFactory.inviteCollaborators(
         whiteboardId,
         inviteCollaboratorsRequest,
+      );
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["whiteboard-collaborators"] });
+    },
+  });
+};
+
+export const useRemoveCollaboratorsFromWhiteboard = () => {
+  const queryClient = useQueryClient();
+
+  return useMutation({
+    mutationFn: ({
+      whiteboardId,
+      userIds,
+    }: {
+      whiteboardId: number;
+      userIds: number[];
+    }) => {
+      const removeCollaboratorsRequest = {
+        userIds: userIds,
+      };
+      return whiteboardApiFactory.removeCollaborators(
+        whiteboardId,
+        removeCollaboratorsRequest,
       );
     },
     onSuccess: () => {

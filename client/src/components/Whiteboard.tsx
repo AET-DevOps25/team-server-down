@@ -36,7 +36,6 @@ import {
 } from "@/hooks/api/whiteboard.api";
 import CustomCursor from "@/components/custom-cursor/CustomCursor";
 import { useGetMe } from "@/hooks/api/account.api";
-import { User } from "@/api/main/generated";
 
 const nodeTypes = {
   text: TextNode,
@@ -209,30 +208,31 @@ export default function Whiteboard({ whiteboardId }: WhiteboardProps) {
       });
   }
 
-    useSubscribeToWhiteboardEvents(whiteboardId);
-    const publishEvent = usePublishWhiteboardEvents(whiteboardId);
+  useSubscribeToWhiteboardEvents(whiteboardId);
+  const publishEvent = usePublishWhiteboardEvents(whiteboardId);
 
-    const latestPositionRef = useRef(cursor);
+  const latestPositionRef = useRef(cursor);
 
-    useEffect(() => {
-        latestPositionRef.current = cursor;
-    }, [cursor]);
+  useEffect(() => {
+    latestPositionRef.current = cursor;
+  }, [cursor]);
 
-    useEffect(() => {
-        const interval = setInterval(() => {
-            publishEvent(JSON.stringify({
-                type: "mousePosition",
-                payload: latestPositionRef.current,
-            }));
-        }, 1000);
+  useEffect(() => {
+    const interval = setInterval(() => {
+      publishEvent(
+        JSON.stringify({
+          type: "mousePosition",
+          payload: latestPositionRef.current,
+        }),
+      );
+    }, 1000);
 
-        return () => clearInterval(interval);
-    }, []);
+    return () => clearInterval(interval);
+  }, []);
 
-
-    return (
+  return (
     <div style={{ width: "100vw", height: "100vh" }}>
-      <div className="fixed top-0 right-0 left-0 z-20 mx-4 my-6 ">
+      <div className="fixed top-0 right-0 left-0 z-20 mx-4 my-6">
         <div className="flex flex-row justify-between">
           <MenuBar whiteboardId={whiteboardId} />
           <CollaborationTopbar whiteboardId={whiteboardId} />
@@ -246,6 +246,7 @@ export default function Whiteboard({ whiteboardId }: WhiteboardProps) {
       <ReactFlow
         nodes={nodes}
         edges={edges}
+        defaultViewport={{ x: 0, y: 0, zoom: 0.5 }}
         onNodesChange={onNodesChange}
         onEdgesChange={onEdgesChange}
         onConnect={onConnect}
@@ -259,7 +260,6 @@ export default function Whiteboard({ whiteboardId }: WhiteboardProps) {
           setRfInstance(instance);
         }}
         nodeTypes={nodeTypes}
-        fitView
       >
         <div className="pointer-events-none absolute top-0 left-0 h-full w-full">
           {renderCursors()}

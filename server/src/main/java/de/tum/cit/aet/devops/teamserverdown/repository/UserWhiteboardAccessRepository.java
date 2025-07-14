@@ -5,6 +5,7 @@ import de.tum.cit.aet.devops.teamserverdown.model.UserWhiteboardAccess;
 import de.tum.cit.aet.devops.teamserverdown.model.Whiteboard;
 import java.util.List;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
@@ -16,4 +17,10 @@ public interface UserWhiteboardAccessRepository extends JpaRepository<UserWhiteb
 
   @Query("SELECT uwa.user FROM UserWhiteboardAccess uwa WHERE uwa.whiteboard.id = :whiteboardId")
   List<User> findUsersByWhiteboardId(@Param("whiteboardId") Long whiteboardId);
+
+  @Modifying
+  @Query(
+      "DELETE FROM UserWhiteboardAccess uwa WHERE uwa.user.id = :userId AND uwa.whiteboard.id = :whiteboardId")
+  void deleteByUserIdAndWhiteboardId(
+      @Param("userId") Long userId, @Param("whiteboardId") Long whiteboardId);
 }
