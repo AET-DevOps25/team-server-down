@@ -100,6 +100,11 @@ keycloak:
     - name: realm-export
       mountPath: /opt/bitnami/keycloak/data/import
 
+grafana:
+  rbac:
+    create: true
+    namespaced: true
+
 genai:
   image:
     repository: ghcr.io/aet-devops25/team-server-down/genai
