@@ -18,7 +18,8 @@ jobs:
       repo: ${{ steps.set-vars.outputs.repo }}
       tag: ${{ steps.set-vars.outputs.tag }}
       api_url: ${{ steps.set-vars.outputs.api_url }}
-      genai_url: ${{ steps.set-vars.outputs.genai_url }} 
+      genai_url: ${{ steps.set-vars.outputs.genai_url }}
+      base_url: ${{ steps.set-vars.outputs.base_url }}
       merge_commit: ${{ steps.merge-base-branch.outputs.merge_commit }}
     steps:
       - name: Checkout
@@ -47,6 +48,7 @@ jobs:
           if [[ "$BRANCH" == "main" ]]; then
             echo "tag=latest" >> $GITHUB_OUTPUT
             echo "api_url=https://api.whiteboard.student.k8s.aet.cit.tum.de" >> $GITHUB_OUTPUT
+            echo "base_url=https://whiteboard.student.k8s.aet.cit.tum.de" >> $GITHUB_OUTPUT
             echo "genai_url=https://genai.whiteboard.student.k8s.aet.cit.tum.de" >> $GITHUB_OUTPUT
             echo "metrics_url=https://metrics.whiteboard.student.k8s.aet.cit.tum.de" >> $GITHUB_OUTPUT
 
@@ -55,11 +57,13 @@ jobs:
             echo "api_url=https://staging.api.whiteboard.student.k8s.aet.cit.tum.de" >> $GITHUB_OUTPUT
             echo "genai_url=https://staging.genai.whiteboard.student.k8s.aet.cit.tum.de" >> $GITHUB_OUTPUT
             echo "metrics_url=https://staging.metrics.whiteboard.student.k8s.aet.cit.tum.de" >> $GITHUB_OUTPUT
-
+            echo "base_url=https://staging.whiteboard.student.k8s.aet.cit.tum.de" >> $GITHUB_OUTPUT
           else
             BRANCH_SAFE=${BRANCH//\//-}
             echo "tag=$BRANCH_SAFE" >> $GITHUB_OUTPUT
             echo "api_url=https://$BRANCH_SAFE.api.whiteboard.student.k8s.aet.cit.tum.de" >> $GITHUB_OUTPUT
+            echo "base_url=https://$BRANCH_SAFE.whiteboard.student.k8s.aet.cit.tum.de" >> $GITHUB_OUTPUT
+          
             echo "genai_url=https://$BRANCH_SAFE.genai.whiteboard.student.k8s.aet.cit.tum.de" >> $GITHUB_OUTPUT
             echo "metrics_url=https://$BRANCH_SAFE.metrics.whiteboard.student.k8s.aet.cit.tum.de" >> $GITHUB_OUTPUT
           fi
@@ -101,6 +105,7 @@ jobs:
           build-args: |
             API_URL=${{ needs.setup.outputs.api_url }}
             GENAI_API_URL=${{ needs.setup.outputs.genai_url }}
+            BASE_URL=${{ needs.setup.output.base_url }}
           platforms: linux/amd64
 
   build-server:
