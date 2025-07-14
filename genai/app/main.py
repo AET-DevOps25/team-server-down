@@ -106,7 +106,7 @@ def custom_openapi():
 
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["*"],
+    allow_origins=[CLIENT_URL, SERVER_URL],
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
