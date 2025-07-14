@@ -137,8 +137,7 @@ export function useRestoreWhiteboard({
             zoom: viewportDto.zoom,
           });
         }
-      }, 0)
-
+      }, 0);
     }
   }, [data, isLoading, setNodes, setEdges, setViewport]);
 

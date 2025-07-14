@@ -1,7 +1,7 @@
 import { useGetMe } from "@/hooks/api/account.api";
 import Avatar from "@/components/avatar/Avatar";
 import React, { useState } from "react";
-import InviteDialog from "@/components/invite-dialog/InviteDialog";
+import AccessDialog from "@/components/access-dialog/AccessDialog";
 import { UsersIcon } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { useGetWhiteboardCollaborators } from "@/hooks/api/whiteboard.api";
@@ -47,7 +47,7 @@ const CollaborationTopbar = ({ whiteboardId }: CollaborationTopbarProps) => {
       >
         <UsersIcon /> Share
       </Button>
-      <InviteDialog
+      <AccessDialog
         whiteboardId={whiteboardId}
         isOpen={isInviteDialogOpen}
         setIsOpen={setIsInviteDialogOpen}
