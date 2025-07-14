@@ -189,6 +189,7 @@ jobs:
       server_url: ${{ steps.set-vars.outputs.SERVER_URL }}
       auth_url: ${{ steps.set-vars.outputs.AUTH_URL }}
       genai_url: ${{ steps.set-vars.outputs.GENAI_URL }}
+      grafana_url: ${{ steps.set-vars.outputs.GRAFANA_URL }}
     steps:
       - name: Checkout repository
         uses: actions/checkout@v3
@@ -205,6 +206,7 @@ jobs:
             SERVER_URL=api.whiteboard.student.k8s.aet.cit.tum.de
             AUTH_URL=auth.whiteboard.student.k8s.aet.cit.tum.de
             GENAI_URL=genai.whiteboard.student.k8s.aet.cit.tum.de
+            GRAFANA_URL=grafana.whiteboard.student.k8s.aet.cit.tum.de
             echo "NAMESPACE=production" >> $GITHUB_ENV
             echo "IMAGE_TAG=latest" >> $GITHUB_ENV
             echo "VALUES_FILE=./infrastructure/whiteboard-app/production.values.yaml" >> $GITHUB_ENV
@@ -213,6 +215,7 @@ jobs:
             SERVER_URL=staging.api.whiteboard.student.k8s.aet.cit.tum.de
             AUTH_URL=staging.auth.whiteboard.student.k8s.aet.cit.tum.de
             GENAI_URL=staging.genai.whiteboard.student.k8s.aet.cit.tum.de
+            GRAFANA_URL=staging.grafana.whiteboard.student.k8s.aet.cit.tum.de
             echo "NAMESPACE=staging" >> $GITHUB_ENV
             echo "IMAGE_TAG=develop" >> $GITHUB_ENV
             echo "VALUES_FILE=./infrastructure/whiteboard-app/staging.values.yaml" >> $GITHUB_ENV
@@ -222,6 +225,7 @@ jobs:
             SERVER_URL=$BRANCH_SAFE.api.whiteboard.student.k8s.aet.cit.tum.de
             AUTH_URL=$BRANCH_SAFE.auth.whiteboard.student.k8s.aet.cit.tum.de
             GENAI_URL=$BRANCH_SAFE.genai.whiteboard.student.k8s.aet.cit.tum.de
+            GRAFANA_URL=$BRANCH_SAFE.grafana.whiteboard.student.k8s.aet.cit.tum.de
             echo "NAMESPACE=$BRANCH_SAFE" >> $GITHUB_ENV
             echo "IMAGE_TAG=$BRANCH_SAFE" >> $GITHUB_ENV
             echo "VALUES_FILE=./infrastructure/whiteboard-app/pullrequest.values.yaml" >> $GITHUB_ENV
@@ -232,11 +236,13 @@ jobs:
           echo "AUTH_URL=$AUTH_URL" >> $GITHUB_ENV
           echo "GENAI_URL=$GENAI_URL" >> $GITHUB_ENV
           echo "OPEN_WEB_UI_API_KEY=${{ secrets.OPEN_WEB_UI_API_KEY }}" >> $GITHUB_ENV
+          echo "GRAFANA_URL=$GRAFANA_URL" >> $GITHUB_ENV
           
           echo "CLIENT_URL=$CLIENT_URL" >> $GITHUB_OUTPUT
           echo "SERVER_URL=$SERVER_URL" >> $GITHUB_OUTPUT
           echo "AUTH_URL=$AUTH_URL" >> $GITHUB_OUTPUT
           echo "GENAI_URL=$GENAI_URL" >> $GITHUB_OUTPUT
+          echo "GRAFANA_URL=$GRAFANA_URL" >> $GITHUB_OUTPUT
 
       - name: Set up Kubeconfig
         run: |
@@ -281,6 +287,7 @@ jobs:
             --set auth.url="${{ env.AUTH_URL }}" \
             --set genai.url="${{ env.GENAI_URL }}" \
             --set genai.apiKey="${{ env.OPEN_WEB_UI_API_KEY }}" \
+            --set grafana.url="${{ env.GRAFANA_URL }}" \
 
   comment-pr:
     needs: deploy
@@ -291,6 +298,7 @@ jobs:
       SERVER_URL: ${{ needs.deploy.outputs.server_url }}
       AUTH_URL: ${{ needs.deploy.outputs.auth_url }}
       GENAI_URL: ${{ needs.deploy.outputs.genai_url }}
+      GRAFANA_URL: ${{ needs.deploy.outputs.grafana_url }}
     steps:
       - name: Comment on Pull Request with URLs
         uses: actions/github-script@v6
@@ -302,6 +310,7 @@ jobs:
             const serverUrl = `https://${process.env.SERVER_URL}`;
             const authUrl = `https://${process.env.AUTH_URL}`;
             const genaiUrl = `https://${process.env.GENAI_URL}`;
+            const grafanaUrl = `https://${process.env.GRAFANA_URL}`;
             
             // Check existing comments to avoid duplicates
             const { data: comments } = await github.rest.issues.listComments({
@@ -320,6 +329,7 @@ jobs:
             - **Server:** [${serverUrl}/swagger-ui/index.html](${serverUrl}/swagger-ui/index.html)
             - **Keycloak:** [${authUrl}](${authUrl})
             - **GenAI:** [${genaiUrl}/docs](${genaiUrl}/docs)
+            - **Grafana:** [${grafanaUrl}](${grafanaUrl})
             `;
           
             await github.rest.issues.createComment({

@@ -121,6 +121,8 @@ genai:
     - name: API_URL
       value: 'https://gpu.aet.cit.tum.de/api/chat/completions'
 
+grafana: 
+
 ingress:
   enabled: true
   className: "nginx"
@@ -169,3 +171,11 @@ ingress:
             name: '{{ printf "%s-genai" .Release.Name }}'
             port:
               number: 8000
+    - host: '{{ .Values.grafana.url }}'
+      paths:
+        - path: /
+          pathType: Prefix
+          service:
+            name: '{{ printf "%s-grafana" .Release.Name }}'
+            port:
+              number: 3001
