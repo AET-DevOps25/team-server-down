@@ -36,6 +36,8 @@ import {
 } from "@/hooks/api/whiteboard.api";
 import CustomCursor from "@/components/custom-cursor/CustomCursor";
 import { useGetMe } from "@/hooks/api/account.api";
+import {WhiteboardEvent} from "@/api/realtime/dtos/WhiteboardEvent";
+import {z} from "zod";
 
 const nodeTypes = {
   text: TextNode,
@@ -186,15 +188,6 @@ export default function Whiteboard({ whiteboardId }: WhiteboardProps) {
       });
   };
 
-  useEffect(() => {
-    if (!cursor || !cursor.id) return;
-    if (cursor)
-      setAllCursors((prevCursors) => {
-        const otherCursors = prevCursors.filter((c) => c.id !== cursor.id);
-        return [...otherCursors, cursor];
-      });
-  }, [cursor]);
-
   function renderCursors(): ReactNode[] {
     if (!rfInstance) return [];
 
@@ -219,10 +212,29 @@ export default function Whiteboard({ whiteboardId }: WhiteboardProps) {
   }
 
   // Realtime synchronisation logic
-  useSubscribeToWhiteboardEvents(whiteboardId);
+  const handleWhiteboardEvent = useCallback((event: z.infer<typeof WhiteboardEvent>) => {
+    if (event.payload.id !== user?.id) {
+      const {id, username, position} = event.payload;
+
+      if (id === user?.id) return; // skip current user
+      if (!position) return;
+
+      setAllCursors((prevCursors) => {
+        const otherCursors = prevCursors.filter((c) => c.id !== id);
+        return [...otherCursors, {id, username, position}];
+      });
+    }
+  }, [user?.id])
+
+  useSubscribeToWhiteboardEvents(
+      whiteboardId,
+      user?.id ?? 0,
+      handleWhiteboardEvent
+  );
   const publishEvent = usePublishWhiteboardEvents(whiteboardId);
 
   const latestPositionRef = useRef(cursor);
+  const lastPublishedPositionRef = useRef<typeof cursor | null>(null);
 
   useEffect(() => {
     latestPositionRef.current = cursor;
@@ -230,13 +242,24 @@ export default function Whiteboard({ whiteboardId }: WhiteboardProps) {
 
   useEffect(() => {
     const interval = setInterval(() => {
-      publishEvent(
-        JSON.stringify({
-          type: "mousePosition",
-          payload: latestPositionRef.current,
-        }),
-      );
-    }, 1000);
+      const current = latestPositionRef.current;
+      const last = lastPublishedPositionRef.current;
+
+      const hasChanged =
+          !last ||
+          current?.position?.x !== last.position?.x ||
+          current?.position?.y !== last.position?.y;
+
+      if (hasChanged) {
+        lastPublishedPositionRef.current = current;
+        publishEvent(
+            JSON.stringify({
+              type: "mousePosition",
+              payload: current,
+            }),
+        );
+      }
+    }, 500);
 
     return () => clearInterval(interval);
   }, []);

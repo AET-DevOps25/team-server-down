@@ -18,10 +18,10 @@ import (
 
 func InitializeAPI(cfg config.Config) (*http.Server, error) {
 	rootHandler := handler.NewRootHandler()
-	writer := mq.NewWriter(cfg)
-	publisher := eventbus.NewPublisher(writer)
-	reader := mq.NewReader(cfg)
-	subscriber := eventbus.NewSubscriber(reader)
+	v := mq.NewWriterProvider(cfg)
+	publisher := eventbus.NewPublisher(v)
+	v2 := mq.NewReaderProvider(cfg)
+	subscriber := eventbus.NewSubscriber(v2)
 	whiteboardHandler := handler.NewWhiteboardHandler(publisher, subscriber)
 	server := http.NewServer(rootHandler, whiteboardHandler)
 	return server, nil

@@ -1,9 +1,11 @@
 package handler
 
 import (
+	"context"
 	"github.com/AET-DevOps25/team-server-down/pkg/eventbus"
 	"github.com/gin-gonic/gin"
 	"github.com/gorilla/websocket"
+	"log"
 	"net/http"
 )
 
@@ -28,24 +30,65 @@ var upgrader = websocket.Upgrader{
 }
 
 func (wh *WhiteboardHandler) GetWhiteboardEvents(c *gin.Context) {
-	whiteboardId := c.Param("id")
+	whiteboardId := c.Param("whiteboardId")
+	userId := c.Param("userId")
 
 	conn, err := upgrader.Upgrade(c.Writer, c.Request, nil)
 	if err != nil {
+		log.Printf("WebSocket upgrade failed: %v", err)
 		return
 	}
+	defer conn.Close()
 
-	_ = wh.subscriber.Subscribe(c, func(key, value string) {
-		if key == whiteboardId {
-			err := conn.WriteMessage(websocket.TextMessage, []byte(value))
-			if err != nil {
+	groupId := "whiteboard-" + whiteboardId + "-" + userId
+	ctx, cancel := context.WithCancel(c.Request.Context())
+	defer cancel()
+
+	// Close the connection when client disconnects
+	go func() {
+		for {
+			if _, _, err := conn.NextReader(); err != nil {
+				log.Printf("Client disconnected from whiteboard %s: %v", whiteboardId, err)
+				cancel()
+				return
 			}
 		}
-	})
+	}()
+
+	msgCh := make(chan []byte, 100)
+
+	// Subscribe to whiteboard events
+	go func() {
+		defer close(msgCh)
+		err := wh.subscriber.Subscribe(ctx, groupId, func(key, value string) {
+			if key == whiteboardId {
+				msgCh <- []byte(value)
+			}
+		})
+		if err != nil {
+			cancel()
+		}
+	}()
+
+	// Stream messages to the WebSocket client
+	for {
+		select {
+		case <-ctx.Done():
+			return
+		case msg, ok := <-msgCh:
+			if !ok {
+				return
+			}
+			if err := conn.WriteMessage(websocket.TextMessage, msg); err != nil {
+				cancel()
+				return
+			}
+		}
+	}
 }
 
 func (wh *WhiteboardHandler) PublishWhiteboardEvents(c *gin.Context) {
-	whiteboardId := c.Param("id")
+	whiteboardId := c.Param("whiteboardId")
 
 	conn, err := upgrader.Upgrade(c.Writer, c.Request, nil)
 	if err != nil {

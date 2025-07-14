@@ -9,9 +9,9 @@ type Publisher struct {
 	writer *kafka.Writer
 }
 
-func NewPublisher(w *kafka.Writer) *Publisher {
+func NewPublisher(writerProvider func() *kafka.Writer) *Publisher {
 	return &Publisher{
-		writer: w,
+		writer: writerProvider(),
 	}
 }
 
