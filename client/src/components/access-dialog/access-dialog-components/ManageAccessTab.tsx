@@ -8,37 +8,37 @@ interface ManageAccessTabProps {
   collaborators: UserResponse[];
   onRemoveCollaborator: (email: string) => void;
   onSaveChanges: () => void;
-  originalCollaboratorCount: number;
-    isButtonDisabled: boolean
+  isButtonDisabled: boolean;
 }
 
 export default function ManageAccessTab({
   collaborators,
   onRemoveCollaborator,
   onSaveChanges,
-  originalCollaboratorCount,
-                                            isButtonDisabled
+  isButtonDisabled,
 }: ManageAccessTabProps) {
   return (
     <>
       <div className="flex flex-wrap gap-2">
-        {collaborators.length > 0 ? collaborators.map((collaborator, index) => {
-          const color = generateColorFromString(collaborator.username ?? "");
+        {collaborators.length > 0 ? (
+          collaborators.map((collaborator, index) => {
+            const color = generateColorFromString(collaborator.username ?? "");
 
-          return (
-            <EmailBadge
-              key={index}
-              email={collaborator.email!}
-              onDelete={onRemoveCollaborator}
-              bgColor={color}
-              className={"text-white"}
-            />
-          );
-        }):
-
-
-            <div className="text-gray-500 font-thin italic">You&#39;re the only collaborator</div>
-        }
+            return (
+              <EmailBadge
+                key={index}
+                email={collaborator.email!}
+                onDelete={onRemoveCollaborator}
+                bgColor={color}
+                className={"text-white"}
+              />
+            );
+          })
+        ) : (
+          <div className="font-thin text-gray-500 italic">
+            You&#39;re the only collaborator
+          </div>
+        )}
       </div>
       <div className="flex justify-end">
         <Button

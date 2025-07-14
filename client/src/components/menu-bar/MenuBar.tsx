@@ -93,7 +93,10 @@ const MenuBar: React.FC<MenuBarProps> = ({ whiteboardId }) => {
       onClick={(e) => e.stopPropagation()}
     >
       <div className="flex items-center gap-4">
-        <div className="text-2xl font-bold hover:cursor-pointer" onClick={() => router.push(`/dashboard`)}>
+        <div
+          className="text-2xl font-bold hover:cursor-pointer"
+          onClick={() => router.push(`/dashboard`)}
+        >
           <BrainCircuit />
         </div>
         <div className="mx-2 h-8 w-px bg-gray-300"></div>

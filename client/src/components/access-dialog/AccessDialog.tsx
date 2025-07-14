@@ -143,7 +143,6 @@ const AccessDialog: React.FC<AccessDialogProps> = ({
             collaborators={activeCollaborators}
             onRemoveCollaborator={handleRemoveCollaborator}
             onSaveChanges={handleSaveCollaboratorChanges}
-            originalCollaboratorCount={collaborators?.length ?? 0}
             isButtonDisabled={removedCollaborators.length == 0}
           />
         )}

@@ -131,11 +131,14 @@ export function useRestoreWhiteboard({
 
       setTimeout(() => {
         if (viewportDto && viewportDto.x && viewportDto.y && viewportDto.zoom) {
-          setViewport({
-            x: viewportDto.x,
-            y: viewportDto.y,
-            zoom: viewportDto.zoom,
-          }, { duration: 800 });
+          setViewport(
+            {
+              x: viewportDto.x,
+              y: viewportDto.y,
+              zoom: viewportDto.zoom,
+            },
+            { duration: 800 },
+          );
         }
       }, 0);
     }
