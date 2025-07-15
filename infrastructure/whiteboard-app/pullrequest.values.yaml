@@ -175,6 +175,7 @@ ingress:
             name: '{{ printf "%s-genai" .Release.Name }}'
             port:
               number: 8000
+              
     - host: '{{ .Values.grafana.url }}'
       paths:
         - path: /
