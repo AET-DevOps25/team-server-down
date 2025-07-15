@@ -1,5 +1,5 @@
 "use client";
-import { BrainCircuit } from "lucide-react";
+import { Palette } from "lucide-react";
 import React, { useState, useRef, useEffect } from "react";
 import {
   useGetWhiteboardTitle,
@@ -9,9 +9,13 @@ import { useRouter } from "next/navigation";
 
 interface MenuBarProps {
   whiteboardId: number;
+  isEditable?: boolean;
 }
 
-const MenuBar: React.FC<MenuBarProps> = ({ whiteboardId }) => {
+const MenuBar: React.FC<MenuBarProps> = ({
+  whiteboardId,
+  isEditable = true,
+}) => {
   const { data: whiteboardTitle } = useGetWhiteboardTitle(whiteboardId);
   const [isEditing, setIsEditing] = useState(false);
   const [editedTitle, setEditedTitle] = useState(whiteboardTitle);
@@ -89,18 +93,18 @@ const MenuBar: React.FC<MenuBarProps> = ({ whiteboardId }) => {
   return (
     <div
       ref={menuBarRef}
-      className="w-140 items-center rounded-md border border-gray-200 bg-white px-4 py-2 shadow-md"
+      className="w-auto items-center rounded-md border border-gray-200 bg-white px-4 py-2 shadow-md"
       onClick={(e) => e.stopPropagation()}
     >
-      <div className="flex items-center gap-4">
+      <div className="flex items-center gap-1 font-medium">
         <div
           className="text-2xl font-bold hover:cursor-pointer"
           onClick={() => router.push("/dashboard")}
         >
-          <BrainCircuit />
+          <Palette className="text-gray-800" />
         </div>
         <div className="mx-2 h-8 w-px bg-gray-300"></div>
-        {isEditing ? (
+        {isEditing && isEditable ? (
           <input
             ref={inputRef}
             type="text"
@@ -108,17 +112,22 @@ const MenuBar: React.FC<MenuBarProps> = ({ whiteboardId }) => {
             onChange={(e) => setEditedTitle(e.target.value)}
             onKeyDown={handleKeyDown}
             onClick={handleInputClick}
-            className="rounded border border-blue-400 bg-white px-2 py-1 text-lg font-medium outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-200"
+            className="tex rounded border border-blue-400 bg-white py-1 text-gray-800 outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-200"
             maxLength={50}
             aria-label="Whiteboard title"
           />
         ) : (
           <div
-            className="cursor-pointer rounded px-2 py-1 text-lg font-medium hover:bg-gray-100"
+            className={`flex items-center gap-3 rounded py-1 font-medium ${isEditable ? "hover:bg-gray-100r cursor-pointer" : ""}`}
             onClick={handleRename}
             title="Click to edit whiteboard name"
           >
             {editedTitle}
+            {!isEditable && (
+              <span className="text-xs font-light text-gray-600">
+                (view only)
+              </span>
+            )}
           </div>
         )}
       </div>

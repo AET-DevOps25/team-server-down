@@ -70,7 +70,8 @@ public class WhiteboardController {
       @CurrentUser User user) {
 
     logger.info("Fetching whiteboard with id={} for userId={}", id, user.getId());
-    Optional<Whiteboard> whiteboardOpt = whiteboardRepository.findByIdAndUserId(id, user.getId());
+    Optional<Whiteboard> whiteboardOpt =
+        userWhiteboardAccessService.getUserWhiteboardById(user.getId(), id);
 
     if (whiteboardOpt.isEmpty()) {
       logger.warn(
@@ -89,12 +90,8 @@ public class WhiteboardController {
       description = "Returns a list of whiteboards for the current user.")
   public ResponseEntity<List<WhiteboardResponse>> getUserWhiteboards(@CurrentUser User user) {
     logger.info("Fetching all whiteboards for userId={}", user.getId());
-    List<Whiteboard> ownedWhiteboards = whiteboardRepository.findByUserId(user.getId());
-    List<Whiteboard> collaborativeWhiteboards =
-        userWhiteboardAccessRepository.findWhiteboardsByUserId(user.getId());
 
-    Set<Whiteboard> allAccessible = new HashSet<>(ownedWhiteboards);
-    allAccessible.addAll(collaborativeWhiteboards);
+    Set<Whiteboard> allAccessible = userWhiteboardAccessService.getUserWhiteboards(user.getId());
 
     List<WhiteboardResponse> whiteboardResponseList = new ArrayList<>();
     for (Whiteboard whiteboard : allAccessible) {
@@ -113,7 +110,8 @@ public class WhiteboardController {
       @CurrentUser User user) {
 
     logger.info("Fetching title for whiteboard with id={} for userId={}", id, user.getId());
-    Optional<Whiteboard> whiteboardOpt = whiteboardRepository.findByIdAndUserId(id, user.getId());
+    Optional<Whiteboard> whiteboardOpt =
+        userWhiteboardAccessService.getUserWhiteboardById(user.getId(), id);
 
     if (whiteboardOpt.isPresent()) {
       Whiteboard whiteboard = whiteboardOpt.get();
