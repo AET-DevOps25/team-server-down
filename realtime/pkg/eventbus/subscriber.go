@@ -23,6 +23,6 @@ func (s *Subscriber) Subscribe(ctx context.Context, groupId string, handler func
 		if err != nil {
 			return err
 		}
-		handler(string(msg.Key), string(msg.Value))
+		go handler(string(msg.Key), string(msg.Value))
 	}
 }

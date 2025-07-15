@@ -48,7 +48,6 @@ func (wh *WhiteboardHandler) GetWhiteboardEvents(c *gin.Context) {
 	go func() {
 		for {
 			if _, _, err := conn.NextReader(); err != nil {
-				log.Printf("Client disconnected from whiteboard %s: %v", whiteboardId, err)
 				cancel()
 				return
 			}
@@ -61,11 +60,15 @@ func (wh *WhiteboardHandler) GetWhiteboardEvents(c *gin.Context) {
 	go func() {
 		defer close(msgCh)
 		err := wh.subscriber.Subscribe(ctx, groupId, func(key, value string) {
-			if key == whiteboardId {
-				msgCh <- []byte(value)
+			if key != whiteboardId {
+				return
+			}
+			select {
+			case msgCh <- []byte(value):
+			case <-ctx.Done():
 			}
 		})
-		if err != nil {
+		if err != nil && ctx.Err() == nil {
 			cancel()
 		}
 	}()

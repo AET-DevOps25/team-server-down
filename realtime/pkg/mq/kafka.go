@@ -15,7 +15,7 @@ func NewReaderProvider(cfg config.Config) func(groupId string) *kafka.Reader {
 			StartOffset: kafka.LastOffset,
 			MinBytes:    1,
 			MaxBytes:    10e6,
-			MaxWait:     50 * time.Millisecond,
+			MaxWait:     10 * time.Millisecond,
 		})
 	}
 }
