@@ -231,7 +231,6 @@ export default function Whiteboard({ whiteboardId }: WhiteboardProps) {
 
   useSubscribeToWhiteboardEvents(
     whiteboardId,
-    user?.id ?? 0,
     handleWhiteboardEvent,
   );
   const publishEvent = usePublishWhiteboardEvents(whiteboardId);
@@ -262,7 +261,7 @@ export default function Whiteboard({ whiteboardId }: WhiteboardProps) {
           }),
         );
       }
-    }, 10);
+    }, 40);
 
     return () => clearInterval(interval);
   }, []);

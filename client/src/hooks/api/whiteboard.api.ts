@@ -127,12 +127,11 @@ export const useGetWhiteboardCollaborators = (whiteboardId: number) => {
 
 export const useSubscribeToWhiteboardEvents = (
   whiteboardId: number,
-  userId: number,
   onMessage: (data: z.infer<typeof WhiteboardEvent>) => void,
 ) => {
   useEffect(() => {
     const ws = new WebSocket(
-      `ws://localhost:9090/ws/whiteboard/${whiteboardId}/${userId}/subscribe`,
+      `ws://localhost:9090/ws/whiteboard/${whiteboardId}/subscribe`,
     );
     ws.onopen = () => {
       console.log("connected to subscription channel");
