@@ -6,18 +6,20 @@ import (
 )
 
 type Subscriber struct {
-	reader *kafka.Reader
+	readerProvider func(groupId string) *kafka.Reader
 }
 
-func NewSubscriber(r *kafka.Reader) *Subscriber {
+func NewSubscriber(readerProvider func(groupId string) *kafka.Reader) *Subscriber {
 	return &Subscriber{
-		reader: r,
+		readerProvider: readerProvider,
 	}
 }
 
-func (s *Subscriber) Subscribe(ctx context.Context, handler func(key, value string)) error {
+func (s *Subscriber) Subscribe(ctx context.Context, groupId string, handler func(key, value string)) error {
+	reader := s.readerProvider(groupId)
+	defer reader.Close()
 	for {
-		msg, err := s.reader.ReadMessage(ctx)
+		msg, err := reader.ReadMessage(ctx)
 		if err != nil {
 			return err
 		}

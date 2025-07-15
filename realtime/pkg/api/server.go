@@ -20,8 +20,8 @@ func NewServer(rootHandler *handler.RootHandler, whiteboardHandler *handler.Whit
 	engine.GET("/", rootHandler.GetRoot)
 	engine.GET("/swagger/*any", ginSwagger.WrapHandler(swaggerFiles.Handler))
 
-	engine.GET("/ws/whiteboard/:id/subscribe", whiteboardHandler.GetWhiteboardEvents)
-	engine.GET("/ws/whiteboard/:id/publish", whiteboardHandler.PublishWhiteboardEvents)
+	engine.GET("/ws/whiteboard/:whiteboardId/:userId/subscribe", whiteboardHandler.GetWhiteboardEvents)
+	engine.GET("/ws/whiteboard/:whiteboardId/publish", whiteboardHandler.PublishWhiteboardEvents)
 	return &Server{engine: engine}
 }
 

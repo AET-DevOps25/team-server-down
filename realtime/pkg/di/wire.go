@@ -20,8 +20,8 @@ func InitializeAPI(cfg config.Config) (*http.Server, error) {
 		handler.NewWhiteboardHandler,
 		eventbus.NewSubscriber,
 		eventbus.NewPublisher,
-		mq.NewReader,
-		mq.NewWriter,
+		mq.NewReaderProvider,
+		mq.NewWriterProvider,
 	)
 
 	return &http.Server{}, nil

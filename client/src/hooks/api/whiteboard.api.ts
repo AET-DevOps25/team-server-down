@@ -2,6 +2,8 @@ import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { useRouter } from "next/navigation";
 import { whiteboardApiFactory } from "@/api";
 import { useCallback, useEffect, useRef } from "react";
+import { WhiteboardEvent } from "@/api/realtime/dtos/WhiteboardEvent";
+import {z} from "zod";
 
 export function useWhiteboards() {
   return useQuery({
@@ -123,23 +125,38 @@ export const useGetWhiteboardCollaborators = (whiteboardId: number) => {
   });
 };
 
-export const useSubscribeToWhiteboardEvents = (whiteboardId: number) => {
+export const useSubscribeToWhiteboardEvents = (
+    whiteboardId: number,
+    userId: number,
+    onMessage: (data: z.infer<typeof WhiteboardEvent>) => void
+) => {
   useEffect(() => {
     const ws = new WebSocket(
-      `ws://localhost:9090/ws/whiteboard/${whiteboardId}/subscribe`,
+      `ws://localhost:9090/ws/whiteboard/${whiteboardId}/${userId}/subscribe`,
     );
     ws.onopen = () => {
       console.log("connected to subscription channel");
     };
 
     ws.onmessage = (event) => {
-      console.log(event.data);
+      const parsedJson = JSON.parse(event.data);
+      try {
+        const data = WhiteboardEvent.parse(parsedJson);
+        onMessage(data);
+      } catch (e) {
+        if (e instanceof z.ZodError) {
+          console.error("Zod validation error:", {
+            issues: e.issues,
+            originalPayload: parsedJson,
+          });
+        }
+      }
     };
 
     return () => {
       ws.close();
     };
-  }, []);
+  }, [onMessage]);
 };
 
 export const usePublishWhiteboardEvents = (whiteboardId: number) => {
