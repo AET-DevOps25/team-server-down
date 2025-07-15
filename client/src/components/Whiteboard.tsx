@@ -262,7 +262,7 @@ export default function Whiteboard({ whiteboardId }: WhiteboardProps) {
           }),
         );
       }
-    }, 500);
+    }, 10);
 
     return () => clearInterval(interval);
   }, []);

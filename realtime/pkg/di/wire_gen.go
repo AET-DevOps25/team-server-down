@@ -10,7 +10,6 @@ import (
 	"github.com/AET-DevOps25/team-server-down/pkg/api"
 	"github.com/AET-DevOps25/team-server-down/pkg/api/handler"
 	"github.com/AET-DevOps25/team-server-down/pkg/config"
-	"github.com/AET-DevOps25/team-server-down/pkg/eventbus"
 	"github.com/AET-DevOps25/team-server-down/pkg/mq"
 )
 
@@ -18,11 +17,8 @@ import (
 
 func InitializeAPI(cfg config.Config) (*http.Server, error) {
 	rootHandler := handler.NewRootHandler()
-	v := mq.NewWriterProvider(cfg)
-	publisher := eventbus.NewPublisher(v)
-	v2 := mq.NewReaderProvider(cfg)
-	subscriber := eventbus.NewSubscriber(v2)
-	whiteboardHandler := handler.NewWhiteboardHandler(publisher, subscriber)
+	redisMQ := mq.NewRedisMQ(cfg)
+	whiteboardHandler := handler.NewWhiteboardHandler(redisMQ)
 	server := http.NewServer(rootHandler, whiteboardHandler)
 	return server, nil
 }

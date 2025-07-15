@@ -2,7 +2,7 @@ package handler
 
 import (
 	"context"
-	"github.com/AET-DevOps25/team-server-down/pkg/eventbus"
+	"github.com/AET-DevOps25/team-server-down/pkg/mq"
 	"github.com/gin-gonic/gin"
 	"github.com/gorilla/websocket"
 	"log"
@@ -10,14 +10,12 @@ import (
 )
 
 type WhiteboardHandler struct {
-	publisher  *eventbus.Publisher
-	subscriber *eventbus.Subscriber
+	mq *mq.RedisMQ
 }
 
-func NewWhiteboardHandler(p *eventbus.Publisher, s *eventbus.Subscriber) *WhiteboardHandler {
+func NewWhiteboardHandler(redisMQ *mq.RedisMQ) *WhiteboardHandler {
 	return &WhiteboardHandler{
-		publisher:  p,
-		subscriber: s,
+		redisMQ,
 	}
 }
 
@@ -31,7 +29,6 @@ var upgrader = websocket.Upgrader{
 
 func (wh *WhiteboardHandler) GetWhiteboardEvents(c *gin.Context) {
 	whiteboardId := c.Param("whiteboardId")
-	userId := c.Param("userId")
 
 	conn, err := upgrader.Upgrade(c.Writer, c.Request, nil)
 	if err != nil {
@@ -40,7 +37,6 @@ func (wh *WhiteboardHandler) GetWhiteboardEvents(c *gin.Context) {
 	}
 	defer conn.Close()
 
-	groupId := "whiteboard-" + whiteboardId + "-" + userId
 	ctx, cancel := context.WithCancel(c.Request.Context())
 	defer cancel()
 
@@ -58,14 +54,14 @@ func (wh *WhiteboardHandler) GetWhiteboardEvents(c *gin.Context) {
 
 	// Subscribe to whiteboard events
 	go func() {
-		defer close(msgCh)
-		err := wh.subscriber.Subscribe(ctx, groupId, func(key, value string) {
+		err := wh.mq.Subscribe(whiteboardId, func(key, value string) {
 			if key != whiteboardId {
 				return
 			}
 			select {
 			case msgCh <- []byte(value):
 			case <-ctx.Done():
+				return
 			}
 		})
 		if err != nil && ctx.Err() == nil {
@@ -104,6 +100,9 @@ func (wh *WhiteboardHandler) PublishWhiteboardEvents(c *gin.Context) {
 		if err != nil {
 			break
 		}
-		err = wh.publisher.Publish(whiteboardId, string(message))
+		err = wh.mq.Publish(whiteboardId, string(message))
+		if err != nil {
+			log.Printf("Failed to publish message: %v", err)
+		}
 	}
 }

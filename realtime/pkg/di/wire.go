@@ -6,7 +6,6 @@ package di
 import (
 	"github.com/AET-DevOps25/team-server-down/pkg/api/handler"
 	"github.com/AET-DevOps25/team-server-down/pkg/config"
-	"github.com/AET-DevOps25/team-server-down/pkg/eventbus"
 	"github.com/AET-DevOps25/team-server-down/pkg/mq"
 	"github.com/google/wire"
 )
@@ -18,10 +17,7 @@ func InitializeAPI(cfg config.Config) (*http.Server, error) {
 		http.NewServer,
 		handler.NewRootHandler,
 		handler.NewWhiteboardHandler,
-		eventbus.NewSubscriber,
-		eventbus.NewPublisher,
-		mq.NewReaderProvider,
-		mq.NewWriterProvider,
+		mq.NewRedisMQ,
 	)
 
 	return &http.Server{}, nil
