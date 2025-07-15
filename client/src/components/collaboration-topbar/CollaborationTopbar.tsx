@@ -8,9 +8,13 @@ import { useGetWhiteboardCollaborators } from "@/hooks/api/whiteboard.api";
 
 interface CollaborationTopbarProps {
   whiteboardId: number;
+  isSharable?: boolean;
 }
 
-const CollaborationTopbar = ({ whiteboardId }: CollaborationTopbarProps) => {
+const CollaborationTopbar = ({
+  whiteboardId,
+  isSharable = true,
+}: CollaborationTopbarProps) => {
   const { data: user } = useGetMe();
   const { data: collaboratorsData } =
     useGetWhiteboardCollaborators(whiteboardId);
@@ -42,13 +46,15 @@ const CollaborationTopbar = ({ whiteboardId }: CollaborationTopbarProps) => {
           />
         ))}
       </div>
-      <Button
-        className="flex gap-3"
-        variant="default"
-        onClick={() => setIsInviteDialogOpen(true)}
-      >
-        <UsersIcon /> Share
-      </Button>
+      {isSharable && (
+        <Button
+          className="flex gap-3"
+          variant="default"
+          onClick={() => setIsInviteDialogOpen(true)}
+        >
+          <UsersIcon /> Share
+        </Button>
+      )}
       <AccessDialog
         currentUserId={user?.id}
         whiteboardId={whiteboardId}

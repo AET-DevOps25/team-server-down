@@ -31,6 +31,7 @@ import useInterval from "@/hooks/useInterval";
 import MenuBar from "./menu-bar/MenuBar";
 import CollaborationTopbar from "@/components/collaboration-topbar/CollaborationTopbar";
 import {
+  useAmIOwner,
   usePublishWhiteboardEvents,
   useSubscribeToWhiteboardEvents,
 } from "@/hooks/api/whiteboard.api";
@@ -63,6 +64,8 @@ export default function Whiteboard({ whiteboardId }: WhiteboardProps) {
 
   const { data: user } = useGetMe();
 
+  const { data: amIOwner } = useAmIOwner(whiteboardId, user?.id);
+
   const [dragStart, setDragStart] = useState<{
     cursor: { x: number; y: number };
     node: { x: number; y: number };
@@ -89,7 +92,7 @@ export default function Whiteboard({ whiteboardId }: WhiteboardProps) {
     viewport: getViewport(),
   });
 
-  useInterval(saveWhiteboardState, 1000);
+  useInterval(saveWhiteboardState, 1000, amIOwner);
 
   useRestoreWhiteboard({
     whiteboardId,
@@ -271,16 +274,25 @@ export default function Whiteboard({ whiteboardId }: WhiteboardProps) {
     <div style={{ width: "100vw", height: "100vh" }}>
       <div className="fixed top-0 right-0 left-0 z-20 mx-4 my-6">
         <div className="flex flex-row justify-between">
-          <MenuBar whiteboardId={whiteboardId} />
-          <CollaborationTopbar whiteboardId={whiteboardId} />
+          <MenuBar whiteboardId={whiteboardId} isEditable={amIOwner} />
+          <CollaborationTopbar
+            whiteboardId={whiteboardId}
+            isSharable={amIOwner}
+          />
         </div>
       </div>
 
-      <div className="fixed top-1/2 left-4 z-10 -translate-y-1/2">
+      <div
+        className={`fixed top-1/2 left-4 z-10 -translate-y-1/2 ${!amIOwner ? "visibility: hidden" : ""}`}
+      >
         <Sidebar onAddNode={handleAddNode} />
       </div>
 
       <ReactFlow
+        nodesDraggable={amIOwner}
+        nodesConnectable={amIOwner}
+        nodesFocusable={amIOwner}
+        elementsSelectable={amIOwner}
         nodes={nodes}
         edges={edges}
         defaultViewport={{ x: 0, y: 0, zoom: 0.5 }}
