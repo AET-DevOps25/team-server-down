@@ -9,13 +9,14 @@ import (
 func NewReaderProvider(cfg config.Config) func(groupId string) *kafka.Reader {
 	return func(groupId string) *kafka.Reader {
 		return kafka.NewReader(kafka.ReaderConfig{
-			Brokers:     []string{cfg.KAFKA_HOST + ":" + cfg.KAFKA_PORT},
-			Topic:       cfg.KAFKA_TOPIC,
-			GroupID:     groupId,
-			StartOffset: kafka.LastOffset,
-			MinBytes:    1,
-			MaxBytes:    10e6,
-			MaxWait:     10 * time.Millisecond,
+			Brokers:        []string{cfg.KAFKA_HOST + ":" + cfg.KAFKA_PORT},
+			Topic:          cfg.KAFKA_TOPIC,
+			GroupID:        groupId,
+			StartOffset:    kafka.LastOffset,
+			CommitInterval: 0,
+			MinBytes:       1,
+			MaxBytes:       10e6,
+			MaxWait:        10 * time.Millisecond,
 		})
 	}
 }
