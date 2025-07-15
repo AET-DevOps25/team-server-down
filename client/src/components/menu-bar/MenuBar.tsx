@@ -5,6 +5,7 @@ import {
   useGetWhiteboardTitle,
   useUpdateWhiteboardTitle,
 } from "@/hooks/api/whiteboard.api";
+import { useRouter } from "next/navigation";
 
 interface MenuBarProps {
   whiteboardId: number;
@@ -16,6 +17,7 @@ const MenuBar: React.FC<MenuBarProps> = ({ whiteboardId }) => {
   const [editedTitle, setEditedTitle] = useState(whiteboardTitle);
   const inputRef = useRef<HTMLInputElement>(null);
   const menuBarRef = useRef<HTMLDivElement>(null);
+  const router = useRouter();
 
   const updateTitle = useUpdateWhiteboardTitle(whiteboardId);
 
@@ -91,7 +93,10 @@ const MenuBar: React.FC<MenuBarProps> = ({ whiteboardId }) => {
       onClick={(e) => e.stopPropagation()}
     >
       <div className="flex items-center gap-4">
-        <div className="text-2xl font-bold">
+        <div
+          className="text-2xl font-bold hover:cursor-pointer"
+          onClick={() => router.push("/dashboard")}
+        >
           <BrainCircuit />
         </div>
         <div className="mx-2 h-8 w-px bg-gray-300"></div>

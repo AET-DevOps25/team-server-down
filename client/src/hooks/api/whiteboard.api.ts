@@ -3,7 +3,7 @@ import { useRouter } from "next/navigation";
 import { whiteboardApiFactory } from "@/api";
 import { useCallback, useEffect, useRef } from "react";
 import { WhiteboardEvent } from "@/api/realtime/dtos/WhiteboardEvent";
-import {z} from "zod";
+import { z } from "zod";
 
 export function useWhiteboards() {
   return useQuery({
@@ -89,6 +89,31 @@ export const useInviteCollaboratorsToWhiteboard = () => {
   });
 };
 
+export const useRemoveCollaboratorsFromWhiteboard = () => {
+  const queryClient = useQueryClient();
+
+  return useMutation({
+    mutationFn: ({
+      whiteboardId,
+      userIds,
+    }: {
+      whiteboardId: number;
+      userIds: number[];
+    }) => {
+      const removeCollaboratorsRequest = {
+        userIds: userIds,
+      };
+      return whiteboardApiFactory.removeCollaborators(
+        whiteboardId,
+        removeCollaboratorsRequest,
+      );
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["whiteboard-collaborators"] });
+    },
+  });
+};
+
 export const useGetWhiteboardCollaborators = (whiteboardId: number) => {
   return useQuery({
     queryKey: ["whiteboard-collaborators"],
@@ -101,9 +126,9 @@ export const useGetWhiteboardCollaborators = (whiteboardId: number) => {
 };
 
 export const useSubscribeToWhiteboardEvents = (
-    whiteboardId: number,
-    userId: number,
-    onMessage: (data: z.infer<typeof WhiteboardEvent>) => void
+  whiteboardId: number,
+  userId: number,
+  onMessage: (data: z.infer<typeof WhiteboardEvent>) => void,
 ) => {
   useEffect(() => {
     const ws = new WebSocket(

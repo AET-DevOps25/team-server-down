@@ -36,8 +36,8 @@ import {
 } from "@/hooks/api/whiteboard.api";
 import CustomCursor from "@/components/custom-cursor/CustomCursor";
 import { useGetMe } from "@/hooks/api/account.api";
-import {WhiteboardEvent} from "@/api/realtime/dtos/WhiteboardEvent";
-import {z} from "zod";
+import { WhiteboardEvent } from "@/api/realtime/dtos/WhiteboardEvent";
+import { z } from "zod";
 
 const nodeTypes = {
   text: TextNode,
@@ -212,24 +212,27 @@ export default function Whiteboard({ whiteboardId }: WhiteboardProps) {
   }
 
   // Realtime synchronisation logic
-  const handleWhiteboardEvent = useCallback((event: z.infer<typeof WhiteboardEvent>) => {
-    if (event.payload.id !== user?.id) {
-      const {id, username, position} = event.payload;
+  const handleWhiteboardEvent = useCallback(
+    (event: z.infer<typeof WhiteboardEvent>) => {
+      if (event.payload.id !== user?.id) {
+        const { id, username, position } = event.payload;
 
-      if (id === user?.id) return; // skip current user
-      if (!position) return;
+        if (id === user?.id) return; // skip current user
+        if (!position) return;
 
-      setAllCursors((prevCursors) => {
-        const otherCursors = prevCursors.filter((c) => c.id !== id);
-        return [...otherCursors, {id, username, position}];
-      });
-    }
-  }, [user?.id])
+        setAllCursors((prevCursors) => {
+          const otherCursors = prevCursors.filter((c) => c.id !== id);
+          return [...otherCursors, { id, username, position }];
+        });
+      }
+    },
+    [user?.id],
+  );
 
   useSubscribeToWhiteboardEvents(
-      whiteboardId,
-      user?.id ?? 0,
-      handleWhiteboardEvent
+    whiteboardId,
+    user?.id ?? 0,
+    handleWhiteboardEvent,
   );
   const publishEvent = usePublishWhiteboardEvents(whiteboardId);
 
@@ -246,17 +249,17 @@ export default function Whiteboard({ whiteboardId }: WhiteboardProps) {
       const last = lastPublishedPositionRef.current;
 
       const hasChanged =
-          !last ||
-          current?.position?.x !== last.position?.x ||
-          current?.position?.y !== last.position?.y;
+        !last ||
+        current?.position?.x !== last.position?.x ||
+        current?.position?.y !== last.position?.y;
 
       if (hasChanged) {
         lastPublishedPositionRef.current = current;
         publishEvent(
-            JSON.stringify({
-              type: "mousePosition",
-              payload: current,
-            }),
+          JSON.stringify({
+            type: "mousePosition",
+            payload: current,
+          }),
         );
       }
     }, 500);
@@ -280,6 +283,7 @@ export default function Whiteboard({ whiteboardId }: WhiteboardProps) {
       <ReactFlow
         nodes={nodes}
         edges={edges}
+        defaultViewport={{ x: 0, y: 0, zoom: 0.5 }}
         onNodesChange={onNodesChange}
         onEdgesChange={onEdgesChange}
         onConnect={onConnect}
@@ -293,7 +297,6 @@ export default function Whiteboard({ whiteboardId }: WhiteboardProps) {
           setRfInstance(instance);
         }}
         nodeTypes={nodeTypes}
-        fitView
       >
         <div className="pointer-events-none absolute top-0 left-0 h-full w-full">
           {renderCursors()}

@@ -205,6 +205,54 @@ public class WhiteboardController {
     return ResponseEntity.noContent().build();
   }
 
+  @DeleteMapping("/{id}/invitations")
+  @Operation(summary = "Remove collaborators from the whiteboard")
+  public ResponseEntity<Void> removeCollaborators(
+      @Parameter(description = "ID of the whiteboard", required = true) @PathVariable Long id,
+      @Valid @RequestBody RemoveCollaboratorsRequest removeCollaboratorsRequest,
+      @CurrentUser User user) {
+
+    logger.info(
+        "[Remove Invitations] Request received - WhiteboardId={}, RequestingUserId={}, CollaboratorsToRemove={}",
+        id,
+        user.getId(),
+        removeCollaboratorsRequest.getUserIds());
+
+    Optional<Whiteboard> whiteboardOpt = whiteboardRepository.findByIdAndUserId(id, user.getId());
+
+    if (whiteboardOpt.isEmpty()) {
+      logger.warn(
+          "[Remove Invitations] Access denied - Whiteboard not found or unauthorized access: WhiteboardId={}, UserId={}",
+          id,
+          user.getId());
+      return ResponseEntity.status(403).build();
+    }
+
+    List<Long> userIds = removeCollaboratorsRequest.getUserIds();
+    logger.info(
+        "[Remove Invitations] Processing removal of {} collaborators from whiteboard {}",
+        userIds.size(),
+        id);
+
+    try {
+      this.userWhiteboardAccessService.removeUsersFromWhiteboard(
+          userIds, whiteboardOpt.get().getId());
+      logger.info(
+          "[Remove Invitations] Successfully removed {} collaborators from whiteboard {}",
+          userIds.size(),
+          id);
+    } catch (Exception e) {
+      logger.error(
+          "[Remove Invitations] Error removing collaborators from whiteboard {} - Error: {}",
+          id,
+          e.getMessage(),
+          e);
+      throw e;
+    }
+
+    return ResponseEntity.noContent().build();
+  }
+
   @PostMapping("/{whiteboardId}/save")
   public ResponseEntity<Void> saveWhiteboardState(
       @PathVariable Long whiteboardId,
