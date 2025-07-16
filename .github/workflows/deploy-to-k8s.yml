@@ -329,7 +329,7 @@ jobs:
             --set auth.url="${{ env.AUTH_URL }}" \
             --set genai.url="${{ env.GENAI_URL }}" \
             --set genai.apiKey="${{ env.OPEN_WEB_UI_API_KEY }}" \
-            --set auth.url="${{ env.AUTH_URL }}"
+            --set auth.url="${{ env.AUTH_URL }}" \
             --set realtime.url=${{ env.REALTIME_URL }}"
 
   comment-pr:
