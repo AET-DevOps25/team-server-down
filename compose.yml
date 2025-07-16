@@ -165,8 +165,6 @@ services:
       CLIENT_URL: ${CLIENT_URL:-http://localhost:3000}
       GENAI_URL: ${GENAI_URL:-http://localhost:8000}
       API_URL: ${API_URL:-https://gpu.aet.cit.tum.de/api/chat/completions}
-    depends_on:
-      - weaviate
     volumes:
       - ./genai:/app
     networks:
