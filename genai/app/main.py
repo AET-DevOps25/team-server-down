@@ -20,13 +20,15 @@ load_dotenv()
 router = APIRouter()
 
 # Environment configuration
-CHAIR_API_KEY = os.getenv("CHAIR_API_KEY")
-API_URL = "https://gpu.aet.cit.tum.de/api/chat/completions"
-
+OPEN_WEB_UI_API_KEY = os.getenv("OPEN_WEB_UI_API_KEY")
+API_URL = os.getenv("API_URL")
+SERVER_URL = os.getenv("SERVER_URL")
+CLIENT_URL = os.getenv("CLIENT_URL")
+GENAI_URL = os.getenv("GENAI_URL")
 
 class OpenWebUILLM(LLM):
     api_url: str = API_URL
-    api_key: str = CHAIR_API_KEY
+    api_key: str = OPEN_WEB_UI_API_KEY
     model_name: str = "llama3.3:latest"
 
     @property
@@ -41,7 +43,7 @@ class OpenWebUILLM(LLM):
         **kwargs: Any,
     ) -> str:
         if not self.api_key:
-            raise ValueError("CHAIR_API_KEY environment variable is required")
+            raise ValueError("API_KEY environment variable is required")
 
         headers = {
             "Authorization": f"Bearer {self.api_key}",
@@ -97,14 +99,14 @@ def custom_openapi():
             title=app.title,
             version=app.version,
             routes=app.routes,
-            servers=[{"url": "http://localhost:8000"}],
+            servers=[{"url": GENAI_URL}],
         )
     )
 
 
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["http://localhost:3000", "http://localhost:9091"],
+    allow_origins=[CLIENT_URL, SERVER_URL],
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
