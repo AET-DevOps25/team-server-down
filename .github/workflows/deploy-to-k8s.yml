@@ -57,7 +57,7 @@ jobs:
             echo "api_url=https://staging.api.whiteboard.student.k8s.aet.cit.tum.de" >> $GITHUB_OUTPUT
             echo "base_url=https://staging.whiteboard.student.k8s.aet.cit.tum.de" >> $GITHUB_OUTPUT
             echo "genai_url=https://staging.genai.whiteboard.student.k8s.aet.cit.tum.de" >> $GITHUB_OUTPUT
-            echo "realtime_url="https://staging.realtime.whiteboard.student.k8s.aet.cit.tum.de" >> $GITHUB_OUTPUT
+            echo "realtime_url=https://staging.realtime.whiteboard.student.k8s.aet.cit.tum.de" >> $GITHUB_OUTPUT
           else
             BRANCH_SAFE=${BRANCH//\//-}
             echo "tag=$BRANCH_SAFE" >> $GITHUB_OUTPUT
