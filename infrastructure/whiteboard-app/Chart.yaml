@@ -10,3 +10,6 @@ dependencies:
   - name: keycloak
     version: 21.0.1
     repository: "https://charts.bitnami.com/bitnami"
+  - name: redis
+    version: 21.2.12
+    repository: "https://charts.bitnami.com/bitnami"

@@ -148,7 +148,7 @@ export const useSubscribeToWhiteboardEvents = (
 ) => {
   useEffect(() => {
     const ws = new WebSocket(
-      `ws://localhost:9090/ws/whiteboard/${whiteboardId}/subscribe`,
+      `${process.env.NEXT_PUBLIC_REALTIME_URL}/ws/whiteboard/${whiteboardId}/subscribe`,
     );
     ws.onopen = () => {
       console.log("connected to subscription channel");
@@ -180,7 +180,7 @@ export const usePublishWhiteboardEvents = (whiteboardId: number) => {
 
   useEffect(() => {
     const ws = new WebSocket(
-      `ws://localhost:9090/ws/whiteboard/${whiteboardId}/publish`,
+      `${process.env.NEXT_PUBLIC_REALTIME_URL}/ws/whiteboard/${whiteboardId}/publish`,
     );
     wsRef.current = ws;
 
