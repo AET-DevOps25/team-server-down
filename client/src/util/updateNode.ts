@@ -1,5 +1,8 @@
 import { Node } from "@xyflow/react";
-import { defaultShapeNodeProperties, NodeProperties } from "@/types/NodeProperties";
+import {
+  defaultShapeNodeProperties,
+  NodeProperties,
+} from "@/types/NodeProperties";
 
 type UpdateNodeFn = (
   id: string,

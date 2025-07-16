@@ -232,10 +232,7 @@ export default function Whiteboard({ whiteboardId }: WhiteboardProps) {
     [user?.id],
   );
 
-  useSubscribeToWhiteboardEvents(
-    whiteboardId,
-    handleWhiteboardEvent,
-  );
+  useSubscribeToWhiteboardEvents(whiteboardId, handleWhiteboardEvent);
   const publishEvent = usePublishWhiteboardEvents(whiteboardId);
 
   const latestPositionRef = useRef(cursor);
