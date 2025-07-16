@@ -1,0 +1,12 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: {{ .Release.Name }}-realtime
+spec:
+  selector:
+    app: whiteboard-realtime-selector
+  ports:
+    - port: 9090
+      targetPort: 9090
+      protocol: TCP
+  type: {{ .Values.realtime.service.type }}
