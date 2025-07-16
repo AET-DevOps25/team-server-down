@@ -63,7 +63,7 @@ realtime:
     targetPort: 9090
   env:
     - name: REDIS_HOST
-      value: '{{ printf "%s-redis" .Release.Name }}'
+      value: '{{ printf "%s-redis-master" .Release.Name }}'
     - name: REDIS_PORT
       value: "6379"
   replicaCount: 1
