@@ -151,6 +151,7 @@ ingress:
       - '{{ .Values.server.url }}'
       - '{{ .Values.auth.url }}'
       - '{{ .Values.genai.url }}'
+      - '{{ .Values.realtime.url }}'
     secretName: '{{ .Values.namespace }}-whiteboard-devops25-tls'
   rules:
     - host: '{{ .Values.client.url }}'
@@ -185,3 +186,11 @@ ingress:
             name: '{{ printf "%s-genai" .Release.Name }}'
             port:
               number: 8000
+    - host: '{{ .Values.realtime.url }}'
+      paths:
+        - path: /
+          pathType: Prefix
+          service:
+            name: '{{ printf "%s-realtime" .Release.Name }}'
+            port:
+              number: 9090
