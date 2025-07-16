@@ -277,13 +277,13 @@ jobs:
           echo "AUTH_URL=$AUTH_URL" >> $GITHUB_ENV
           echo "GENAI_URL=$GENAI_URL" >> $GITHUB_ENV
           echo "OPEN_WEB_UI_API_KEY=${{ secrets.OPEN_WEB_UI_API_KEY }}" >> $GITHUB_ENV
-          echo "REALTIME_URL=$REALTIME_URL" ?? $GITHUB_ENV
+          echo "REALTIME_URL=$REALTIME_URL" >> $GITHUB_ENV
           
           echo "CLIENT_URL=$CLIENT_URL" >> $GITHUB_OUTPUT
           echo "SERVER_URL=$SERVER_URL" >> $GITHUB_OUTPUT
           echo "AUTH_URL=$AUTH_URL" >> $GITHUB_OUTPUT
           echo "GENAI_URL=$GENAI_URL" >> $GITHUB_OUTPUT
-          echo "REALTIME_URL=$REALTIME_URL" ?? $GITHUB_OUTPUT
+          echo "REALTIME_URL=$REALTIME_URL" >> $GITHUB_OUTPUT
 
       - name: Set up Kubeconfig
         run: |
