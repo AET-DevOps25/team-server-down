@@ -1,5 +1,5 @@
 import { Node } from "@xyflow/react";
-import { NodeProperties } from "@/types/NodeProperties";
+import { defaultShapeNodeProperties, NodeProperties } from "@/types/NodeProperties";
 
 type UpdateNodeFn = (
   id: string,
@@ -19,7 +19,7 @@ export const updateNode: UpdateNodeFn = (id, updater) => (nodes) => {
           ...(updater.label !== undefined && { label: updater.label }),
           ...(updater.nodeProperties && {
             nodeProperties: {
-              ...(node.data.nodeProperties || {}),
+              ...(node.data.nodeProperties || defaultShapeNodeProperties),
               ...updater.nodeProperties,
             },
           }),

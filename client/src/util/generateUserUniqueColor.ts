@@ -1,5 +1,4 @@
-// edit: deterministic way to calculate color for user
-function getHashOfString(str: string): number {
+export function getHashOfString(str: string): number {
   let hash = 0;
   for (let i = 0; i < str.length; i++) {
     hash = str.charCodeAt(i) + ((hash << 5) - hash);
@@ -7,7 +6,7 @@ function getHashOfString(str: string): number {
   return Math.abs(hash);
 }
 
-function normalizeHash(hash: number, min: number, max: number): number {
+export function normalizeHash(hash: number, min: number, max: number): number {
   return Math.floor((hash % (max - min)) + min);
 }
 
