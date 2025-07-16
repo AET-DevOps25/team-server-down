@@ -85,6 +85,10 @@ postgresql:
       - name: db-init
         mountPath: /docker-entrypoint-initdb.d
 
+redis:
+  auth:
+    enabled: false
+
 keycloak:
   ingress:
     enabled: false
