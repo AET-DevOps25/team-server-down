@@ -99,7 +99,7 @@ keycloak:
   extraVolumeMounts:
     - name: realm-export
       mountPath: /opt/bitnami/keycloak/data/import
-      
+
   grafana:
     rbac:
       create: true
@@ -142,6 +142,8 @@ ingress:
       - "staging.api.whiteboard.student.k8s.aet.cit.tum.de"
       - "staging.auth.whiteboard.student.k8s.aet.cit.tum.de"
       - "staging.genai.whiteboard.student.k8s.aet.cit.tum.de"
+      - "staging.grafana.whiteboard.student.k8s.aet.cit.tum.de"
+      - "staging.prometheus.whiteboard.student.k8s.aet.cit.tum
     secretName: "staging-whiteboard-devops25-tls"
   rules:
     - host: "staging.whiteboard.student.k8s.aet.cit.tum.de"
@@ -176,3 +178,19 @@ ingress:
             name: '{{ printf "%s-genai" .Release.Name }}'
             port:
               number: 8000
+    - host: "staging.grafana.whiteboard.student.k8s.aet.cit.tum.de"
+      paths:  
+        - path: /
+          pathType: Prefix
+          service:
+            name: '{{ printf "%s-grafana" .Release.Name }}'
+            port:
+              number: 3000
+    - host: "staging.prometheus.whiteboard.student.k8s.aet.cit.tum.de"
+      paths:  
+        - path: /
+          pathType: Prefix
+          service:
+            name: '{{ printf "%s-prometheus" .Release.Name }}'
+            port:
+              number: 9090

@@ -207,6 +207,7 @@ jobs:
             AUTH_URL=auth.whiteboard.student.k8s.aet.cit.tum.de
             GENAI_URL=genai.whiteboard.student.k8s.aet.cit.tum.de
             GRAFANA_URL=grafana.whiteboard.student.k8s.aet.cit.tum.de
+            PROMETHEUS_URL=prometheus.whiteboard.student.k8s.aet.cit.tum.de
             echo "NAMESPACE=production" >> $GITHUB_ENV
             echo "IMAGE_TAG=latest" >> $GITHUB_ENV
             echo "VALUES_FILE=./infrastructure/whiteboard-app/production.values.yaml" >> $GITHUB_ENV
@@ -216,6 +217,7 @@ jobs:
             AUTH_URL=staging.auth.whiteboard.student.k8s.aet.cit.tum.de
             GENAI_URL=staging.genai.whiteboard.student.k8s.aet.cit.tum.de
             GRAFANA_URL=staging.grafana.whiteboard.student.k8s.aet.cit.tum.de
+            PROMETHEUS_URL=staging.prometheus.whiteboard.student.k8s.aet.cit.tum.de
             echo "NAMESPACE=staging" >> $GITHUB_ENV
             echo "IMAGE_TAG=develop" >> $GITHUB_ENV
             echo "VALUES_FILE=./infrastructure/whiteboard-app/staging.values.yaml" >> $GITHUB_ENV
@@ -226,6 +228,7 @@ jobs:
             AUTH_URL=$BRANCH_SAFE.auth.whiteboard.student.k8s.aet.cit.tum.de
             GENAI_URL=$BRANCH_SAFE.genai.whiteboard.student.k8s.aet.cit.tum.de
             GRAFANA_URL=$BRANCH_SAFE.grafana.whiteboard.student.k8s.aet.cit.tum.de
+            PROMETHEUS_URL=$BRANCH_SAFE.prometheus.whiteboard.student.k8s.aet.cit.tum.de
             echo "NAMESPACE=$BRANCH_SAFE" >> $GITHUB_ENV
             echo "IMAGE_TAG=$BRANCH_SAFE" >> $GITHUB_ENV
             echo "VALUES_FILE=./infrastructure/whiteboard-app/pullrequest.values.yaml" >> $GITHUB_ENV
@@ -237,12 +240,14 @@ jobs:
           echo "GENAI_URL=$GENAI_URL" >> $GITHUB_ENV
           echo "OPEN_WEB_UI_API_KEY=${{ secrets.OPEN_WEB_UI_API_KEY }}" >> $GITHUB_ENV
           echo "GRAFANA_URL=$GRAFANA_URL" >> $GITHUB_ENV
+          echo "PROMETHEUS_URL=$PROMETHEUS_URL" >> $GITHUB_ENV
           
           echo "CLIENT_URL=$CLIENT_URL" >> $GITHUB_OUTPUT
           echo "SERVER_URL=$SERVER_URL" >> $GITHUB_OUTPUT
           echo "AUTH_URL=$AUTH_URL" >> $GITHUB_OUTPUT
           echo "GENAI_URL=$GENAI_URL" >> $GITHUB_OUTPUT
           echo "GRAFANA_URL=$GRAFANA_URL" >> $GITHUB_OUTPUT
+          echo "PROMETHEUS_URL=$PROMETHEUS_URL" >> $GITHUB_OUTPUT
 
       - name: Set up Kubeconfig
         run: |
@@ -288,6 +293,7 @@ jobs:
             --set genai.url="${{ env.GENAI_URL }}" \
             --set genai.apiKey="${{ env.OPEN_WEB_UI_API_KEY }}" \
             --set grafana.url="${{ env.GRAFANA_URL }}" \
+            --set prometheus.url="${{ env.PROMETHEUS_URL }}" \
 
   comment-pr:
     needs: deploy
@@ -299,6 +305,7 @@ jobs:
       AUTH_URL: ${{ needs.deploy.outputs.auth_url }}
       GENAI_URL: ${{ needs.deploy.outputs.genai_url }}
       GRAFANA_URL: ${{ needs.deploy.outputs.grafana_url }}
+      PROMETHEUS_URL: ${{ needs.deploy.outputs.prometheus_url }}
     steps:
       - name: Comment on Pull Request with URLs
         uses: actions/github-script@v6
@@ -311,6 +318,7 @@ jobs:
             const authUrl = `https://${process.env.AUTH_URL}`;
             const genaiUrl = `https://${process.env.GENAI_URL}`;
             const grafanaUrl = `https://${process.env.GRAFANA_URL}`;
+            const prometheusUrl = `https://${process.env.PROMETHEUS_URL}`;
             
             // Check existing comments to avoid duplicates
             const { data: comments } = await github.rest.issues.listComments({
@@ -330,6 +338,7 @@ jobs:
             - **Keycloak:** [${authUrl}](${authUrl})
             - **GenAI:** [${genaiUrl}/docs](${genaiUrl}/docs)
             - **Grafana:** [${grafanaUrl}](${grafanaUrl})
+            - **Prometheus:** [${prometheusUrl}](${prometheusUrl})
             `;
           
             await github.rest.issues.createComment({
