@@ -11,17 +11,12 @@ import (
 	"github.com/google/wire"
 )
 
-var RedisProviderSet = wire.NewSet(
-	mq.NewRedisMQ,
-	wire.Bind(new(mq.MQ), new(*mq.RedisMQ)),
-)
-
 func InitializeAPI(cfg config.Config) (*http.Server, error) {
 	wire.Build(
 		http.NewServer,
 		handler.NewRootHandler,
 		handler.NewWhiteboardHandler,
-		RedisProviderSet,
+		mq.NewRedisMQ,
 	)
 
 	return &http.Server{}, nil

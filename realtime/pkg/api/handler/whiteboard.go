@@ -10,10 +10,10 @@ import (
 )
 
 type WhiteboardHandler struct {
-	mq mq.MQ
+	mq *mq.RedisMQ
 }
 
-func NewWhiteboardHandler(redisMQ mq.MQ) *WhiteboardHandler {
+func NewWhiteboardHandler(redisMQ *mq.RedisMQ) *WhiteboardHandler {
 	return &WhiteboardHandler{
 		redisMQ,
 	}
