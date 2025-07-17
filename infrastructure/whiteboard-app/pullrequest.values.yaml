@@ -107,7 +107,8 @@ grafana:
 
 prometheus:
   rbac:
-    create: false
+    create: true
+    namespaced: true
 
 genai:
   image:

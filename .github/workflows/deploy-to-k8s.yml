@@ -190,6 +190,7 @@ jobs:
       auth_url: ${{ steps.set-vars.outputs.AUTH_URL }}
       genai_url: ${{ steps.set-vars.outputs.GENAI_URL }}
       grafana_url: ${{ steps.set-vars.outputs.GRAFANA_URL }}
+      prometheus_url: ${{ steps.set-vars.outputs.PROMETHEUS_URL }}
     steps:
       - name: Checkout repository
         uses: actions/checkout@v3

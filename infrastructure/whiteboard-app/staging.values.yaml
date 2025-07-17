@@ -107,7 +107,8 @@ keycloak:
 
   prometheus:
     rbac:
-      create: false
+      create: true
+      namespaced: true
   
 
   genai:

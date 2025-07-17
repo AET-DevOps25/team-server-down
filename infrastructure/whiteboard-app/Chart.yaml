@@ -15,4 +15,4 @@ dependencies:
     repository: "https://grafana.github.io/helm-charts"
   - name: prometheus
     version: 2.1.15
-    repository:  "https://charts.bitnami.com/bitnami"
+    repository:  "https://prometheus-community.github.io/helm-charts"
