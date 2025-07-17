@@ -125,9 +125,7 @@ export default function Whiteboard({ whiteboardId }: WhiteboardProps) {
     const prev = prevCursorRef.current;
     if (!prev || prev.x !== position.x || prev.y !== position.y) {
       prevCursorRef.current = position;
-      setCursor((prev) =>
-          prev ? { ...prev, position } : prev
-      );
+      setCursor((prev) => (prev ? { ...prev, position } : prev));
     }
   };
 
@@ -199,108 +197,112 @@ export default function Whiteboard({ whiteboardId }: WhiteboardProps) {
     const viewport = rfInstance.getViewport();
 
     return allCursors
-        .filter((cursor) => cursor.position)
-        .map((cursor) => {
-          const pos = cursor.position!;
-          const position = {
-            x: pos.x * viewport.zoom + viewport.x,
-            y: pos.y * viewport.zoom + viewport.y,
-          };
+      .filter((cursor) => cursor.position)
+      .map((cursor) => {
+        const pos = cursor.position!;
+        const position = {
+          x: pos.x * viewport.zoom + viewport.x,
+          y: pos.y * viewport.zoom + viewport.y,
+        };
 
-          return (
-              <CustomCursor
-                  key={cursor.id}
-                  username={cursor.username}
-                  position={position}
-                  visible
-              />
-          );
-        });
+        return (
+          <CustomCursor
+            key={cursor.id}
+            username={cursor.username}
+            position={position}
+            visible
+          />
+        );
+      });
   }, [allCursors, rfInstance]);
 
   // Realtime synchronisation logic
   const handleWhiteboardEvent = useCallback(
-      (event: z.infer<typeof WhiteboardEvent>) => {
-        if (event.type === "mousePosition") {
-          const { id, username, position } = event.payload;
+    (event: z.infer<typeof WhiteboardEvent>) => {
+      if (event.type === "mousePosition") {
+        const { id, username, position } = event.payload;
 
-          if (id === user?.id) return; // skip current user
-          if (!position) return;
+        if (id === user?.id) return; // skip current user
+        if (!position) return;
 
-          setAllCursors((prevCursors) => {
-            const otherCursors = prevCursors.filter((c) => c.id !== id);
-            return [...otherCursors, { id, username, position }];
-          });
-        }
+        setAllCursors((prevCursors) => {
+          const otherCursors = prevCursors.filter((c) => c.id !== id);
+          return [...otherCursors, { id, username, position }];
+        });
+      }
 
-        if (isOwner) { return }
+      if (isOwner) {
+        return;
+      }
 
-        if (event.type === "nodePosition") {
-          const incomingNodes = event.payload;
+      if (event.type === "nodePosition") {
+        const incomingNodes = event.payload;
 
-          setNodes((prevNodes) => {
-            const incomingMap = new Map(incomingNodes.map((n) => [n.id, n]));
+        setNodes((prevNodes) => {
+          const incomingMap = new Map(incomingNodes.map((n) => [n.id, n]));
 
-            const updatedNodes = incomingNodes.map((node) => {
-              const incoming = incomingMap.get(node.id);
-              if (!incoming) return node;
+          const updatedNodes = incomingNodes.map((node) => {
+            const incoming = incomingMap.get(node.id);
+            if (!incoming) return node;
 
-              return {
-                id: incoming.id,
-                type: incoming.type,
-                position: incoming.position,
-                width: incoming.width,
-                height: incoming.height,
-                measured: incoming.measured,
-                selected: incoming.selected,
-                dragging: incoming.dragging,
-                data: {
-                  shapeType: incoming.data.shapeType,
-                  label: incoming.data.label,
-                  nodeProperties: incoming.data.nodeProperties,
-                  ...(incoming.type === "shapeNode" && {
-                    Shape: shapeRegistry({ shapeType: incoming.data.shapeType ?? "" }),
+            return {
+              id: incoming.id,
+              type: incoming.type,
+              position: incoming.position,
+              width: incoming.width,
+              height: incoming.height,
+              measured: incoming.measured,
+              selected: incoming.selected,
+              dragging: incoming.dragging,
+              data: {
+                shapeType: incoming.data.shapeType,
+                label: incoming.data.label,
+                nodeProperties: incoming.data.nodeProperties,
+                ...(incoming.type === "shapeNode" && {
+                  Shape: shapeRegistry({
+                    shapeType: incoming.data.shapeType ?? "",
                   }),
-                },
-              };
-            });
-
-            const newNodes = incomingNodes.filter(
-                (incoming) => !prevNodes.some((n) => n.id === incoming.id)
-            );
-
-            return [...updatedNodes, ...newNodes];
+                }),
+              },
+            };
           });
-        }
 
-        if (event.type === "edgePosition") {
-          const incomingEdges = event.payload;
+          const newNodes = incomingNodes.filter(
+            (incoming) => !prevNodes.some((n) => n.id === incoming.id),
+          );
 
-          setEdges((prevEdges) => {
-            const incomingMap = new Map(incomingEdges.map((e) => [e.id, e]));
+          return [...updatedNodes, ...newNodes];
+        });
+      }
 
-            const updatedEdges = incomingEdges.map((edge) => {
-              const incoming = incomingMap.get(edge.id);
-              if (!incoming) return edge;
+      if (event.type === "edgePosition") {
+        const incomingEdges = event.payload;
 
-              return {
-                id: incoming.id,
-                source: incoming.source,
-                sourceHandle: incoming.sourceHandle,
-                target: incoming.target,
-                targetHandle: incoming.targetHandle,
-              }
-            })
+        setEdges((prevEdges) => {
+          const incomingMap = new Map(incomingEdges.map((e) => [e.id, e]));
 
-            const newEdges = incomingEdges.filter(
-                (incoming) => !prevEdges.some((e) => e.id === incoming.id)
-            );
+          const updatedEdges = incomingEdges.map((edge) => {
+            const incoming = incomingMap.get(edge.id);
+            if (!incoming) return edge;
 
-            return [...updatedEdges, ...newEdges]
+            return {
+              id: incoming.id,
+              source: incoming.source,
+              sourceHandle: incoming.sourceHandle,
+              target: incoming.target,
+              targetHandle: incoming.targetHandle,
+            };
           });
-        }
-      },
-      [user?.id],
+
+          const newEdges = incomingEdges.filter(
+            (incoming) => !prevEdges.some((e) => e.id === incoming.id),
+          );
+
+          return [...updatedEdges, ...newEdges];
+        });
+      }
+    },
+    [user?.id],
   );
 
   useSubscribeToWhiteboardEvents(whiteboardId, handleWhiteboardEvent);
@@ -344,7 +346,7 @@ export default function Whiteboard({ whiteboardId }: WhiteboardProps) {
 
   useEffect(() => {
     latestNodesPositionRef.current = nodes;
-  }, [nodes])
+  }, [nodes]);
 
   useEffect(() => {
     if (!isOwner) return;
@@ -353,18 +355,19 @@ export default function Whiteboard({ whiteboardId }: WhiteboardProps) {
       const current = latestNodesPositionRef.current;
       const last = lastNodesPublishedPositionRef.current;
 
-      const hasChanged = !last || JSON.stringify(current) !== JSON.stringify(last);
+      const hasChanged =
+        !last || JSON.stringify(current) !== JSON.stringify(last);
 
       if (hasChanged) {
         lastNodesPublishedPositionRef.current = current;
         publishEvent(
-           JSON.stringify({
-             type: "nodePosition",
-             payload: nodes,
-           })
-        )
+          JSON.stringify({
+            type: "nodePosition",
+            payload: nodes,
+          }),
+        );
       }
-    }, 50)
+    }, 50);
 
     return () => clearInterval(interval);
   });
@@ -375,20 +378,17 @@ export default function Whiteboard({ whiteboardId }: WhiteboardProps) {
 
   useEffect(() => {
     latestEdgesPositionRef.current = edges;
-  }, [edges])
+  }, [edges]);
 
   const haveEdgesChanged = (a: Edge[], b: Edge[]) => {
     if (a.length !== b.length) return true;
 
-    const byId = new Map(b.map(edge => [edge.id, edge]));
+    const byId = new Map(b.map((edge) => [edge.id, edge]));
 
-    return a.some(edge => {
+    return a.some((edge) => {
       const prev = byId.get(edge.id);
       if (!prev) return true;
-      return (
-          edge.source !== prev.source ||
-          edge.target !== prev.target
-      );
+      return edge.source !== prev.source || edge.target !== prev.target;
     });
   };
 
@@ -403,16 +403,16 @@ export default function Whiteboard({ whiteboardId }: WhiteboardProps) {
       if (hasChanged) {
         lastEdgesPublishedPositionRef.current = current;
         publishEvent(
-            JSON.stringify({
-              type: "edgePosition",
-              payload: edges,
-            })
-        )
+          JSON.stringify({
+            type: "edgePosition",
+            payload: edges,
+          }),
+        );
       }
-    }, 50)
+    }, 50);
 
     return () => clearInterval(interval);
-  })
+  });
 
   return (
     <div style={{ width: "100vw", height: "100vh" }}>
@@ -426,11 +426,9 @@ export default function Whiteboard({ whiteboardId }: WhiteboardProps) {
         </div>
       </div>
       {isOwner && (
-          <div
-              className="fixed top-1/2 left-4 z-10 -translate-y-1/2"
-          >
-            <Sidebar onAddNode={handleAddNode} />
-          </div>
+        <div className="fixed top-1/2 left-4 z-10 -translate-y-1/2">
+          <Sidebar onAddNode={handleAddNode} />
+        </div>
       )}
       <ReactFlow
         nodesDraggable={isOwner}

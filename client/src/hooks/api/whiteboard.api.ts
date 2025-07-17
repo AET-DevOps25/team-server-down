@@ -154,7 +154,7 @@ export const useSubscribeToWhiteboardEvents = (
 
     const connect = () => {
       const ws = new WebSocket(
-          `${process.env.NEXT_PUBLIC_REALTIME_URL}/ws/whiteboard/${whiteboardId}/subscribe`,
+        `${process.env.NEXT_PUBLIC_REALTIME_URL}/ws/whiteboard/${whiteboardId}/subscribe`,
       );
       wsRef.current = ws;
 
