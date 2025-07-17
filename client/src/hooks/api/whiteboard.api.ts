@@ -146,33 +146,58 @@ export const useSubscribeToWhiteboardEvents = (
   whiteboardId: number,
   onMessage: (data: z.infer<typeof WhiteboardEvent>) => void,
 ) => {
+  const retryTimeout = useRef<NodeJS.Timeout | null>(null);
+  const wsRef = useRef<WebSocket | null>(null);
+
   useEffect(() => {
-    const ws = new WebSocket(
-      `${process.env.NEXT_PUBLIC_REALTIME_URL}/ws/whiteboard/${whiteboardId}/subscribe`,
-    );
-    ws.onopen = () => {
-      console.log("connected to subscription channel");
+    let shouldReconnect = true;
+
+    const connect = () => {
+      const ws = new WebSocket(
+          `${process.env.NEXT_PUBLIC_REALTIME_URL}/ws/whiteboard/${whiteboardId}/subscribe`,
+      );
+      wsRef.current = ws;
+
+      ws.onopen = () => {
+        console.log("connected to subscription channel");
+      };
+
+      ws.onmessage = (event) => {
+        const parsedJson = JSON.parse(event.data);
+        try {
+          const data = WhiteboardEvent.parse(parsedJson);
+          onMessage(data);
+        } catch (e) {
+          if (e instanceof z.ZodError) {
+            console.error("Zod validation error:", {
+              issues: e.issues,
+              originalPayload: parsedJson,
+            });
+          }
+        }
+      };
+
+      ws.onclose = () => {
+        console.warn("WebSocket closed. Attempting to reconnect...");
+        if (shouldReconnect) {
+          retryTimeout.current = setTimeout(connect, 2000);
+        }
+      };
+
+      ws.onerror = (err) => {
+        console.error("WebSocket error:", err);
+        ws.close();
+      };
     };
 
-    ws.onmessage = (event) => {
-      const parsedJson = JSON.parse(event.data);
-      try {
-        const data = WhiteboardEvent.parse(parsedJson);
-        onMessage(data);
-      } catch (e) {
-        if (e instanceof z.ZodError) {
-          console.error("Zod validation error:", {
-            issues: e.issues,
-            originalPayload: parsedJson,
-          });
-        }
-      }
-    };
+    connect();
 
     return () => {
-      ws.close();
+      shouldReconnect = false;
+      retryTimeout.current && clearTimeout(retryTimeout.current);
+      wsRef.current?.close();
     };
-  }, [onMessage]);
+  }, [whiteboardId, onMessage]);
 };
 
 export const usePublishWhiteboardEvents = (whiteboardId: number) => {
