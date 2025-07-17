@@ -8,11 +8,14 @@ import FilterBar from "@/components/filters/Filterbar";
 import { useSortedWhiteboards } from "@/hooks/useSortedWhiteboards";
 import { Clock, Home } from "lucide-react";
 import UserDropdown from "@/components/user-dropdown/UserDropdown";
+import { useFilteredWhiteboards } from "@/hooks/useFilteredWhiteboards";
 
 const Dashboard = () => {
   const { data: whiteboards = [] } = useWhiteboards();
+  const { filteredWhiteboards, filterBy, setFilterBy } =
+    useFilteredWhiteboards(whiteboards);
   const { sortedWhiteboards, sortBy, setSortBy } =
-    useSortedWhiteboards(whiteboards);
+    useSortedWhiteboards(filteredWhiteboards);
   const [activeSection, setActiveSection] = useState<"home" | "recent">("home");
 
   const recentWhiteboards = React.useMemo(() => {
@@ -90,7 +93,12 @@ const Dashboard = () => {
               {activeSection === "home" ? "Your Boards" : "Recent Boards"}
             </h2>
             {activeSection === "home" && (
-              <FilterBar sortBy={sortBy} onSortChange={setSortBy} />
+              <FilterBar
+                sortBy={sortBy}
+                onSortChange={setSortBy}
+                filterBy={filterBy}
+                onFilterChange={setFilterBy}
+              />
             )}
           </div>
 
