@@ -347,13 +347,15 @@ export default function Whiteboard({ whiteboardId }: WhiteboardProps) {
   }, [nodes])
 
   useEffect(() => {
+    if (!isOwner) return;
+
     const interval = setInterval(() => {
       const current = latestNodesPositionRef.current;
       const last = lastNodesPublishedPositionRef.current;
 
       const hasChanged = !last || JSON.stringify(current) !== JSON.stringify(last);
 
-      if (hasChanged && isOwner) {
+      if (hasChanged) {
         lastNodesPublishedPositionRef.current = current;
         publishEvent(
            JSON.stringify({
@@ -375,14 +377,30 @@ export default function Whiteboard({ whiteboardId }: WhiteboardProps) {
     latestEdgesPositionRef.current = edges;
   }, [edges])
 
+  const haveEdgesChanged = (a: Edge[], b: Edge[]) => {
+    if (a.length !== b.length) return true;
+
+    const byId = new Map(b.map(edge => [edge.id, edge]));
+
+    return a.some(edge => {
+      const prev = byId.get(edge.id);
+      if (!prev) return true;
+      return (
+          edge.source !== prev.source ||
+          edge.target !== prev.target
+      );
+    });
+  };
+
   useEffect(() => {
+    if (!isOwner) return;
+
     const interval = setInterval(() => {
       const current = latestEdgesPositionRef.current;
       const last = lastEdgesPublishedPositionRef.current;
 
-      const hasChanged = !last || JSON.stringify(current) !== JSON.stringify(last);
-
-      if (hasChanged && isOwner) {
+      const hasChanged = !last || haveEdgesChanged(current, last);
+      if (hasChanged) {
         lastEdgesPublishedPositionRef.current = current;
         publishEvent(
             JSON.stringify({
