@@ -75,3 +75,12 @@ line-ending = "auto"
 # This only has an effect when the `docstring-code-format` setting is
 # enabled.
 #docstring-code-line-length = "dynamic"
+
+[tool.pytest.ini_options]
+asyncio_mode = "auto"
+testpaths = ["app"]
+python_files = ["test_*.py", "*_test.py", "test.py"]
+addopts = "-v"
+markers = [
+    "asyncio: mark test as an async test",
+]

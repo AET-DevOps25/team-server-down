@@ -161,7 +161,7 @@ const { status, data } = await apiInstance.getAllByWhiteboardId(
 [[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to Model list]](../README.md#documentation-for-models) [[Back to README]](../README.md)
 
 # **patchNode**
-> Node patchNode(nodeUpdateDTO)
+> Node patchNode(updateNodeRequest)
 
 
 ### Example
@@ -170,18 +170,18 @@ const { status, data } = await apiInstance.getAllByWhiteboardId(
 import {
     NodeControllerApi,
     Configuration,
-    NodeUpdateDTO
+    UpdateNodeRequest
 } from './api';
 
 const configuration = new Configuration();
 const apiInstance = new NodeControllerApi(configuration);
 
 let id: string; // (default to undefined)
-let nodeUpdateDTO: NodeUpdateDTO; //
+let updateNodeRequest: UpdateNodeRequest; //
 
 const { status, data } = await apiInstance.patchNode(
     id,
-    nodeUpdateDTO
+    updateNodeRequest
 );
 ```
 
@@ -189,7 +189,7 @@ const { status, data } = await apiInstance.patchNode(
 
 |Name | Type | Description  | Notes|
 |------------- | ------------- | ------------- | -------------|
-| **nodeUpdateDTO** | **NodeUpdateDTO**|  | |
+| **updateNodeRequest** | **UpdateNodeRequest**|  | |
 | **id** | [**string**] |  | defaults to undefined|
 
 

@@ -1,24 +1,21 @@
 package handler
 
 import (
-	"fmt"
-	"github.com/AET-DevOps25/team-server-down/pkg/eventbus"
+	"context"
+	"github.com/AET-DevOps25/team-server-down/pkg/mq"
 	"github.com/gin-gonic/gin"
 	"github.com/gorilla/websocket"
+	"log"
 	"net/http"
-	"strconv"
-	"time"
 )
 
 type WhiteboardHandler struct {
-	publisher  *eventbus.Publisher
-	subscriber *eventbus.Subscriber
+	mq *mq.RedisMQ
 }
 
-func NewWhiteboardHandler(p *eventbus.Publisher, s *eventbus.Subscriber) *WhiteboardHandler {
+func NewWhiteboardHandler(redisMQ *mq.RedisMQ) *WhiteboardHandler {
 	return &WhiteboardHandler{
-		publisher:  p,
-		subscriber: s,
+		redisMQ,
 	}
 }
 
@@ -31,24 +28,66 @@ var upgrader = websocket.Upgrader{
 }
 
 func (wh *WhiteboardHandler) GetWhiteboardEvents(c *gin.Context) {
-	whiteboardId := c.Param("id")
+	whiteboardId := c.Param("whiteboardId")
 
 	conn, err := upgrader.Upgrade(c.Writer, c.Request, nil)
 	if err != nil {
+		log.Printf("WebSocket upgrade failed: %v", err)
 		return
 	}
 	defer conn.Close()
 
-	i := 0
+	ctx, cancel := context.WithCancel(c.Request.Context())
+	defer cancel()
+
+	// Close the connection when client disconnects
+	go func() {
+		for {
+			if _, _, err := conn.NextReader(); err != nil {
+				cancel()
+				return
+			}
+		}
+	}()
+
+	msgCh := make(chan []byte, 100)
+
+	// Subscribe to whiteboard events
+	go func() {
+		err := wh.mq.Subscribe(whiteboardId, func(key, value string) {
+			if key != whiteboardId {
+				return
+			}
+			select {
+			case msgCh <- []byte(value):
+			case <-ctx.Done():
+				return
+			}
+		})
+		if err != nil && ctx.Err() == nil {
+			cancel()
+		}
+	}()
+
+	// Stream messages to the WebSocket client
 	for {
-		i++
-		conn.WriteMessage(websocket.TextMessage, []byte("New msg for whiteboard "+whiteboardId+" (#"+strconv.Itoa(i)+")"))
-		time.Sleep(time.Second)
+		select {
+		case <-ctx.Done():
+			return
+		case msg, ok := <-msgCh:
+			if !ok {
+				return
+			}
+			if err := conn.WriteMessage(websocket.TextMessage, msg); err != nil {
+				cancel()
+				return
+			}
+		}
 	}
 }
 
 func (wh *WhiteboardHandler) PublishWhiteboardEvents(c *gin.Context) {
-	whiteboardId := c.Param("id")
+	whiteboardId := c.Param("whiteboardId")
 
 	conn, err := upgrader.Upgrade(c.Writer, c.Request, nil)
 	if err != nil {
@@ -57,10 +96,13 @@ func (wh *WhiteboardHandler) PublishWhiteboardEvents(c *gin.Context) {
 	defer conn.Close()
 
 	for {
-		messageType, message, err := conn.ReadMessage()
+		_, message, err := conn.ReadMessage()
 		if err != nil {
 			break
 		}
-		fmt.Printf("messageType: %d, whiteboard: %s, message: %s\n", messageType, whiteboardId, message)
+		err = wh.mq.Publish(whiteboardId, string(message))
+		if err != nil {
+			log.Printf("Failed to publish message: %v", err)
+		}
 	}
 }

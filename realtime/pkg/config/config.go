@@ -6,13 +6,12 @@ import (
 )
 
 type Config struct {
-	KAFKA_HOST  string `mapstructure:"KAFKA_HOST"`
-	KAFKA_PORT  string `mapstructure:"KAFKA_PORT"`
-	KAFKA_TOPIC string `mapstructure:"KAFKA_TOPIC"`
+	REDIS_HOST string `mapstructure:"REDIS_HOST"`
+	REDIS_PORT string `mapstructure:"REDIS_PORT"`
 }
 
 var envs = []string{
-	"KAFKA_HOST", "KAFKA_PORT", "KAFKA_TOPIC",
+	"REDIS_HOST", "REDIS_PORT",
 }
 
 func LoadConfig() (Config, error) {

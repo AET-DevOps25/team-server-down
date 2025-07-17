@@ -6,14 +6,18 @@ import de.tum.cit.aet.devops.teamserverdown.model.Whiteboard;
 import de.tum.cit.aet.devops.teamserverdown.repository.UserRepository;
 import de.tum.cit.aet.devops.teamserverdown.repository.UserWhiteboardAccessRepository;
 import de.tum.cit.aet.devops.teamserverdown.repository.WhiteboardRepository;
+import jakarta.transaction.Transactional;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Optional;
+import java.util.Set;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 @Service
+@Transactional
 public class UserWhiteboardAccessService {
   private static final Logger logger = LoggerFactory.getLogger(UserWhiteboardAccessService.class);
 
@@ -46,5 +50,30 @@ public class UserWhiteboardAccessService {
       UserWhiteboardAccess access = new UserWhiteboardAccess(user.get(), whiteboard);
       userWhiteboardAccessRepository.save(access);
     }
+  }
+
+  public void removeUsersFromWhiteboard(List<Long> userIds, Long whiteboardId) {
+    for (Long userId : userIds) {
+      userWhiteboardAccessRepository.deleteByUserIdAndWhiteboardId(userId, whiteboardId);
+    }
+  }
+
+  public Set<Whiteboard> getUserWhiteboards(Long userId) {
+    List<Whiteboard> ownedWhiteboards = whiteboardRepository.findByUserId(userId);
+    List<Whiteboard> collaborativeWhiteboards =
+        userWhiteboardAccessRepository.findWhiteboardsByUserId(userId);
+
+    Set<Whiteboard> allAccessible = new HashSet<>(ownedWhiteboards);
+    allAccessible.addAll(collaborativeWhiteboards);
+    return allAccessible;
+  }
+
+  public Optional<Whiteboard> getUserWhiteboardById(Long userId, Long whiteboardId) {
+    Optional<Whiteboard> whiteboardOpt =
+        whiteboardRepository.findByIdAndUserId(whiteboardId, userId);
+    if (whiteboardOpt.isEmpty()) {
+      whiteboardOpt = userWhiteboardAccessRepository.findUserWhiteboardById(userId, whiteboardId);
+    }
+    return whiteboardOpt;
   }
 }

@@ -1,16 +1,20 @@
 import { useGetMe } from "@/hooks/api/account.api";
 import Avatar from "@/components/avatar/Avatar";
 import React, { useState } from "react";
-import InviteDialog from "@/components/invite-dialog/InviteDialog";
+import AccessDialog from "@/components/access-dialog/AccessDialog";
 import { UsersIcon } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { useGetWhiteboardCollaborators } from "@/hooks/api/whiteboard.api";
 
 interface CollaborationTopbarProps {
   whiteboardId: number;
+  isSharable?: boolean;
 }
 
-const CollaborationTopbar = ({ whiteboardId }: CollaborationTopbarProps) => {
+const CollaborationTopbar = ({
+  whiteboardId,
+  isSharable = true,
+}: CollaborationTopbarProps) => {
   const { data: user } = useGetMe();
   const { data: collaboratorsData } =
     useGetWhiteboardCollaborators(whiteboardId);
@@ -25,6 +29,7 @@ const CollaborationTopbar = ({ whiteboardId }: CollaborationTopbarProps) => {
     <div className="flex gap-8">
       <div className="flex gap-2">
         <Avatar
+          username={user?.username ?? ""}
           firstname={user?.firstName ?? ""}
           lastname={user?.lastName ?? ""}
           className="h-8 w-8"
@@ -33,6 +38,7 @@ const CollaborationTopbar = ({ whiteboardId }: CollaborationTopbarProps) => {
         {collaboratorsWithoutSelf?.map((collaborator, i) => (
           <Avatar
             key={i}
+            username={collaborator?.username ?? ""}
             firstname={collaborator?.firstName ?? ""}
             lastname={collaborator?.lastName ?? ""}
             className="h-8 w-8"
@@ -40,14 +46,17 @@ const CollaborationTopbar = ({ whiteboardId }: CollaborationTopbarProps) => {
           />
         ))}
       </div>
-      <Button
-        className="flex gap-3"
-        variant="default"
-        onClick={() => setIsInviteDialogOpen(true)}
-      >
-        <UsersIcon /> Share
-      </Button>
-      <InviteDialog
+      {isSharable && (
+        <Button
+          className="flex gap-3"
+          variant="default"
+          onClick={() => setIsInviteDialogOpen(true)}
+        >
+          <UsersIcon /> Share
+        </Button>
+      )}
+      <AccessDialog
+        currentUserId={user?.id}
         whiteboardId={whiteboardId}
         isOpen={isInviteDialogOpen}
         setIsOpen={setIsInviteDialogOpen}

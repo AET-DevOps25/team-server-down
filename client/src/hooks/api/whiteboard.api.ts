@@ -2,6 +2,8 @@ import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { useRouter } from "next/navigation";
 import { whiteboardApiFactory } from "@/api";
 import { useCallback, useEffect, useRef } from "react";
+import { WhiteboardEvent } from "@/api/realtime/dtos/WhiteboardEvent";
+import { z } from "zod";
 
 export function useWhiteboards() {
   return useQuery({
@@ -10,6 +12,23 @@ export function useWhiteboards() {
       const { data } = await whiteboardApiFactory.getUserWhiteboards();
       return data;
     },
+  });
+}
+
+export function useAmIOwner(whiteboardId: number, userId?: number) {
+  return useQuery({
+    queryKey: ["whiteboard", whiteboardId, userId],
+    queryFn: async () => {
+      try {
+        const { data } =
+          await whiteboardApiFactory.getWhiteboardById(whiteboardId);
+        return data.user?.id === userId;
+      } catch {
+        return false;
+      }
+    },
+    retry: false,
+    enabled: !!userId,
   });
 }
 
@@ -87,6 +106,31 @@ export const useInviteCollaboratorsToWhiteboard = () => {
   });
 };
 
+export const useRemoveCollaboratorsFromWhiteboard = () => {
+  const queryClient = useQueryClient();
+
+  return useMutation({
+    mutationFn: ({
+      whiteboardId,
+      userIds,
+    }: {
+      whiteboardId: number;
+      userIds: number[];
+    }) => {
+      const removeCollaboratorsRequest = {
+        userIds: userIds,
+      };
+      return whiteboardApiFactory.removeCollaborators(
+        whiteboardId,
+        removeCollaboratorsRequest,
+      );
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["whiteboard-collaborators"] });
+    },
+  });
+};
+
 export const useGetWhiteboardCollaborators = (whiteboardId: number) => {
   return useQuery({
     queryKey: ["whiteboard-collaborators"],
@@ -98,23 +142,37 @@ export const useGetWhiteboardCollaborators = (whiteboardId: number) => {
   });
 };
 
-export const useSubscribeToWhiteboardEvents = (whiteboardId: number) => {
+export const useSubscribeToWhiteboardEvents = (
+  whiteboardId: number,
+  onMessage: (data: z.infer<typeof WhiteboardEvent>) => void,
+) => {
   useEffect(() => {
     const ws = new WebSocket(
-      `ws://localhost:9090/ws/whiteboard/${whiteboardId}/subscribe`,
+      `${process.env.NEXT_PUBLIC_REALTIME_URL}/ws/whiteboard/${whiteboardId}/subscribe`,
     );
     ws.onopen = () => {
       console.log("connected to subscription channel");
     };
 
     ws.onmessage = (event) => {
-      console.log(event.data);
+      const parsedJson = JSON.parse(event.data);
+      try {
+        const data = WhiteboardEvent.parse(parsedJson);
+        onMessage(data);
+      } catch (e) {
+        if (e instanceof z.ZodError) {
+          console.error("Zod validation error:", {
+            issues: e.issues,
+            originalPayload: parsedJson,
+          });
+        }
+      }
     };
 
     return () => {
       ws.close();
     };
-  }, []);
+  }, [onMessage]);
 };
 
 export const usePublishWhiteboardEvents = (whiteboardId: number) => {
@@ -122,7 +180,7 @@ export const usePublishWhiteboardEvents = (whiteboardId: number) => {
 
   useEffect(() => {
     const ws = new WebSocket(
-      `ws://localhost:9090/ws/whiteboard/${whiteboardId}/publish`,
+      `${process.env.NEXT_PUBLIC_REALTIME_URL}/ws/whiteboard/${whiteboardId}/publish`,
     );
     wsRef.current = ws;
 

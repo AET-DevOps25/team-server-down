@@ -100,6 +100,28 @@ keycloak:
     - name: realm-export
       mountPath: /opt/bitnami/keycloak/data/import
 
+genai:
+  image:
+    repository: ghcr.io/aet-devops25/team-server-down/genai   
+    tag: latest
+    pullPolicy: Always  
+  service:
+    type: ClusterIP 
+    port: 8000
+    targetPort: 8000
+  replicaCount: 1
+  env:
+    - name: OPEN_WEB_UI_API_KEY
+      value: '{{ .Values.genai.apiKey }}'
+    - name: API_URL
+      value: https://gpu.aet.cit.tum.de/api/chat/completions
+    - name: SERVER_URL
+      value: https://api.whiteboard.student.k8s.aet.cit.tum.de
+    - name: CLIENT_URL
+      value: https://whiteboard.student.k8s.aet.cit.tum.de
+    - name: GENAI_URL
+      value: https://genai.whiteboard.student.k8s.aet.cit.tum
+
 ingress:
   enabled: true
   className: "nginx"
@@ -113,6 +135,7 @@ ingress:
       - "whiteboard.student.k8s.aet.cit.tum.de"
       - "api.whiteboard.student.k8s.aet.cit.tum.de"
       - "auth.whiteboard.student.k8s.aet.cit.tum.de"
+      - "genai.whiteboard.student.k8s.aet.cit.tum.de"
     secretName: "whiteboard-devops25-tls"
   rules:
     - host: "whiteboard.student.k8s.aet.cit.tum.de"
@@ -139,3 +162,11 @@ ingress:
             name: '{{ printf "%s-keycloak" .Release.Name }}'
             port:
               number: 80
+    - host: "genai.whiteboard.student.k8s.aet.cit.tum.de"
+      paths:  
+        - path: /
+          pathType: Prefix
+          service:
+            name: '{{ printf "%s-genai" .Release.Name }}'
+            port:
+              number: 8000

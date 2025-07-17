@@ -70,7 +70,8 @@ public class WhiteboardController {
       @CurrentUser User user) {
 
     logger.info("Fetching whiteboard with id={} for userId={}", id, user.getId());
-    Optional<Whiteboard> whiteboardOpt = whiteboardRepository.findByIdAndUserId(id, user.getId());
+    Optional<Whiteboard> whiteboardOpt =
+        userWhiteboardAccessService.getUserWhiteboardById(user.getId(), id);
 
     if (whiteboardOpt.isEmpty()) {
       logger.warn(
@@ -89,12 +90,8 @@ public class WhiteboardController {
       description = "Returns a list of whiteboards for the current user.")
   public ResponseEntity<List<WhiteboardResponse>> getUserWhiteboards(@CurrentUser User user) {
     logger.info("Fetching all whiteboards for userId={}", user.getId());
-    List<Whiteboard> ownedWhiteboards = whiteboardRepository.findByUserId(user.getId());
-    List<Whiteboard> collaborativeWhiteboards =
-        userWhiteboardAccessRepository.findWhiteboardsByUserId(user.getId());
 
-    Set<Whiteboard> allAccessible = new HashSet<>(ownedWhiteboards);
-    allAccessible.addAll(collaborativeWhiteboards);
+    Set<Whiteboard> allAccessible = userWhiteboardAccessService.getUserWhiteboards(user.getId());
 
     List<WhiteboardResponse> whiteboardResponseList = new ArrayList<>();
     for (Whiteboard whiteboard : allAccessible) {
@@ -113,7 +110,8 @@ public class WhiteboardController {
       @CurrentUser User user) {
 
     logger.info("Fetching title for whiteboard with id={} for userId={}", id, user.getId());
-    Optional<Whiteboard> whiteboardOpt = whiteboardRepository.findByIdAndUserId(id, user.getId());
+    Optional<Whiteboard> whiteboardOpt =
+        userWhiteboardAccessService.getUserWhiteboardById(user.getId(), id);
 
     if (whiteboardOpt.isPresent()) {
       Whiteboard whiteboard = whiteboardOpt.get();
@@ -201,6 +199,54 @@ public class WhiteboardController {
 
     List<String> emails = inviteCollaboratorsRequest.getEmails();
     this.userWhiteboardAccessService.inviteUsersToWhiteboard(emails, whiteboardOpt.get().getId());
+
+    return ResponseEntity.noContent().build();
+  }
+
+  @DeleteMapping("/{id}/invitations")
+  @Operation(summary = "Remove collaborators from the whiteboard")
+  public ResponseEntity<Void> removeCollaborators(
+      @Parameter(description = "ID of the whiteboard", required = true) @PathVariable Long id,
+      @Valid @RequestBody RemoveCollaboratorsRequest removeCollaboratorsRequest,
+      @CurrentUser User user) {
+
+    logger.info(
+        "[Remove Invitations] Request received - WhiteboardId={}, RequestingUserId={}, CollaboratorsToRemove={}",
+        id,
+        user.getId(),
+        removeCollaboratorsRequest.getUserIds());
+
+    Optional<Whiteboard> whiteboardOpt = whiteboardRepository.findByIdAndUserId(id, user.getId());
+
+    if (whiteboardOpt.isEmpty()) {
+      logger.warn(
+          "[Remove Invitations] Access denied - Whiteboard not found or unauthorized access: WhiteboardId={}, UserId={}",
+          id,
+          user.getId());
+      return ResponseEntity.status(403).build();
+    }
+
+    List<Long> userIds = removeCollaboratorsRequest.getUserIds();
+    logger.info(
+        "[Remove Invitations] Processing removal of {} collaborators from whiteboard {}",
+        userIds.size(),
+        id);
+
+    try {
+      this.userWhiteboardAccessService.removeUsersFromWhiteboard(
+          userIds, whiteboardOpt.get().getId());
+      logger.info(
+          "[Remove Invitations] Successfully removed {} collaborators from whiteboard {}",
+          userIds.size(),
+          id);
+    } catch (Exception e) {
+      logger.error(
+          "[Remove Invitations] Error removing collaborators from whiteboard {} - Error: {}",
+          id,
+          e.getMessage(),
+          e);
+      throw e;
+    }
 
     return ResponseEntity.noContent().build();
   }

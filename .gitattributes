@@ -1,2 +1,3 @@
 client/src/api/main/generated/** linguist-generated=true
 client/src/api/genai/generated/** linguist-generated=true
+client/src/api/realtime/generated/** linguist-generated=true

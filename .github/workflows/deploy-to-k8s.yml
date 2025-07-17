@@ -18,8 +18,9 @@ jobs:
       repo: ${{ steps.set-vars.outputs.repo }}
       tag: ${{ steps.set-vars.outputs.tag }}
       api_url: ${{ steps.set-vars.outputs.api_url }}
-      genai_url: ${{ steps.set-vars.outputs.genai_url }}
       base_url: ${{ steps.set-vars.outputs.base_url }}
+      genai_url: ${{ steps.set-vars.outputs.genai_url }}
+      realtime_url: ${{ steps.set-vars.outputs.realtime_url }}
       merge_commit: ${{ steps.merge-base-branch.outputs.merge_commit }}
     steps:
       - name: Checkout
@@ -50,18 +51,20 @@ jobs:
             echo "api_url=https://api.whiteboard.student.k8s.aet.cit.tum.de" >> $GITHUB_OUTPUT
             echo "base_url=https://whiteboard.student.k8s.aet.cit.tum.de" >> $GITHUB_OUTPUT
             echo "genai_url=https://genai.whiteboard.student.k8s.aet.cit.tum.de" >> $GITHUB_OUTPUT
+            echo "realtime_url=https://realtime.whiteboard.student.k8s.aet.cit.tum.de" >> $GITHUB_OUTPUT
           elif [[ "$BRANCH" == "develop" ]]; then
             echo "tag=develop" >> $GITHUB_OUTPUT
             echo "api_url=https://staging.api.whiteboard.student.k8s.aet.cit.tum.de" >> $GITHUB_OUTPUT
-            echo "genai_url=https://staging.genai.whiteboard.student.k8s.aet.cit.tum.de" >> $GITHUB_OUTPUT
             echo "base_url=https://staging.whiteboard.student.k8s.aet.cit.tum.de" >> $GITHUB_OUTPUT
+            echo "genai_url=https://staging.genai.whiteboard.student.k8s.aet.cit.tum.de" >> $GITHUB_OUTPUT
+            echo "realtime_url=https://staging.realtime.whiteboard.student.k8s.aet.cit.tum.de" >> $GITHUB_OUTPUT
           else
             BRANCH_SAFE=${BRANCH//\//-}
             echo "tag=$BRANCH_SAFE" >> $GITHUB_OUTPUT
             echo "api_url=https://$BRANCH_SAFE.api.whiteboard.student.k8s.aet.cit.tum.de" >> $GITHUB_OUTPUT
             echo "base_url=https://$BRANCH_SAFE.whiteboard.student.k8s.aet.cit.tum.de" >> $GITHUB_OUTPUT
-          
             echo "genai_url=https://$BRANCH_SAFE.genai.whiteboard.student.k8s.aet.cit.tum.de" >> $GITHUB_OUTPUT
+            echo "realtime_url=wss://$BRANCH_SAFE.realtime.whiteboard.student.k8s.aet.cit.tum.de" >> $GITHUB_OUTPUT
           fi
 
   build-client:
@@ -101,7 +104,44 @@ jobs:
           build-args: |
             API_URL=${{ needs.setup.outputs.api_url }}
             GENAI_API_URL=${{ needs.setup.outputs.genai_url }}
+            REALTIME_API_URL=${{ needs.setup.outputs.realtime_url }}
             BASE_URL=${{ needs.setup.output.base_url }}
+          platforms: linux/amd64
+
+  build-realtime:
+    needs: setup
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+        with:
+          fetch-depth: 0
+          ref: ${{ needs.setup.outputs.merge_commit || github.sha }}
+
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v2
+
+      - name: Log in to GHCR
+        uses: docker/login-action@v2
+        with:
+          registry: ghcr.io
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Cache Docker layers
+        uses: actions/cache@v3
+        with:
+          path: /tmp/.buildx-cache-realtime
+          key: ${{ runner.os }}-realtime-${{ github.sha }}
+          restore-keys: |
+            ${{ runner.os }}-realtime-
+
+      - name: Build and push realtime image
+        uses: docker/build-push-action@v3
+        with:
+          context: ./realtime
+          file: ./realtime/Dockerfile
+          push: true
+          tags: ghcr.io/${{ needs.setup.outputs.repo }}/realtime:${{ needs.setup.outputs.tag }}
           platforms: linux/amd64
 
   build-server:
@@ -138,18 +178,58 @@ jobs:
           file: ./server/Dockerfile
           push: true
           tags: ghcr.io/${{ needs.setup.outputs.repo }}/server:${{ needs.setup.outputs.tag }}
+          platforms: linux/amd64
+
+  build-genai:
+    needs: setup
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+        with:
+          fetch-depth: 0
+          ref: ${{ needs.setup.outputs.merge_commit || github.sha }}
+
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v2
+
+      - name: Log in to GHCR
+        uses: docker/login-action@v2
+        with:
+          registry: ghcr.io
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Cache Docker layers
+        uses: actions/cache@v3
+        with:
+          path: /tmp/.buildx-cache-genai
+          key: ${{ runner.os }}-genai-${{ github.sha }}
+          restore-keys: |
+            ${{ runner.os }}-genai-
+
+      - name: Build and push genai image
+        uses: docker/build-push-action@v3
+        with:
+          context: ./genai
+          file: ./genai/Dockerfile
+          push: true
+          tags: ghcr.io/${{ needs.setup.outputs.repo }}/genai:${{ needs.setup.outputs.tag }}
           build-args: API_URL=${{ needs.setup.outputs.api_url }}
           platforms: linux/amd64
+
 
   deploy:
     needs:
       - build-client
       - build-server
+      - build-genai
     runs-on: ubuntu-latest
     outputs:
       client_url: ${{ steps.set-vars.outputs.CLIENT_URL }}
       server_url: ${{ steps.set-vars.outputs.SERVER_URL }}
       auth_url: ${{ steps.set-vars.outputs.AUTH_URL }}
+      genai_url: ${{ steps.set-vars.outputs.GENAI_URL }}
+      realtime_url: ${{ steps.set-vars.outputs.REALTIME_URL }}
     steps:
       - name: Checkout repository
         uses: actions/checkout@v3
@@ -165,6 +245,8 @@ jobs:
             CLIENT_URL=whiteboard.student.k8s.aet.cit.tum.de
             SERVER_URL=api.whiteboard.student.k8s.aet.cit.tum.de
             AUTH_URL=auth.whiteboard.student.k8s.aet.cit.tum.de
+            GENAI_URL=genai.whiteboard.student.k8s.aet.cit.tum.de
+            REALTIME_URL=realtime.whiteboard.student.k8s.aet.cit.tum.de
             echo "NAMESPACE=production" >> $GITHUB_ENV
             echo "IMAGE_TAG=latest" >> $GITHUB_ENV
             echo "VALUES_FILE=./infrastructure/whiteboard-app/production.values.yaml" >> $GITHUB_ENV
@@ -172,6 +254,8 @@ jobs:
             CLIENT_URL=staging.whiteboard.student.k8s.aet.cit.tum.de
             SERVER_URL=staging.api.whiteboard.student.k8s.aet.cit.tum.de
             AUTH_URL=staging.auth.whiteboard.student.k8s.aet.cit.tum.de
+            GENAI_URL=staging.genai.whiteboard.student.k8s.aet.cit.tum.de
+            REALTIME_URL=staging.realtime.whiteboard.student.k8s.aet.cit.tum.de
             echo "NAMESPACE=staging" >> $GITHUB_ENV
             echo "IMAGE_TAG=develop" >> $GITHUB_ENV
             echo "VALUES_FILE=./infrastructure/whiteboard-app/staging.values.yaml" >> $GITHUB_ENV
@@ -180,6 +264,8 @@ jobs:
             CLIENT_URL=$BRANCH_SAFE.whiteboard.student.k8s.aet.cit.tum.de
             SERVER_URL=$BRANCH_SAFE.api.whiteboard.student.k8s.aet.cit.tum.de
             AUTH_URL=$BRANCH_SAFE.auth.whiteboard.student.k8s.aet.cit.tum.de
+            GENAI_URL=$BRANCH_SAFE.genai.whiteboard.student.k8s.aet.cit.tum.de
+            REALTIME_URL=$BRANCH_SAFE.realtime.whiteboard.student.k8s.aet.cit.tum.de
             echo "NAMESPACE=$BRANCH_SAFE" >> $GITHUB_ENV
             echo "IMAGE_TAG=$BRANCH_SAFE" >> $GITHUB_ENV
             echo "VALUES_FILE=./infrastructure/whiteboard-app/pullrequest.values.yaml" >> $GITHUB_ENV
@@ -188,10 +274,15 @@ jobs:
           echo "CLIENT_URL=$CLIENT_URL" >> $GITHUB_ENV
           echo "SERVER_URL=$SERVER_URL" >> $GITHUB_ENV
           echo "AUTH_URL=$AUTH_URL" >> $GITHUB_ENV
+          echo "GENAI_URL=$GENAI_URL" >> $GITHUB_ENV
+          echo "OPEN_WEB_UI_API_KEY=${{ secrets.OPEN_WEB_UI_API_KEY }}" >> $GITHUB_ENV
+          echo "REALTIME_URL=$REALTIME_URL" ?? $GITHUB_ENV
           
           echo "CLIENT_URL=$CLIENT_URL" >> $GITHUB_OUTPUT
           echo "SERVER_URL=$SERVER_URL" >> $GITHUB_OUTPUT
           echo "AUTH_URL=$AUTH_URL" >> $GITHUB_OUTPUT
+          echo "GENAI_URL=$GENAI_URL" >> $GITHUB_OUTPUT
+          echo "REALTIME_URL=$REALTIME_URL" ?? $GITHUB_OUTPUT
 
       - name: Set up Kubeconfig
         run: |
@@ -230,9 +321,15 @@ jobs:
             --set namespace="${{ env.NAMESPACE }}" \
             --set server.image.tag="${{ env.IMAGE_TAG }}" \
             --set client.image.tag="${{ env.IMAGE_TAG }}" \
+            --set genai.image.tag="${{ env.IMAGE_TAG }}" \
+            --set realtime.image.tag="${{ env.IMAGE_TAG }}"
             --set client.url="${{ env.CLIENT_URL }}" \
             --set server.url="${{ env.SERVER_URL }}" \
+            --set auth.url="${{ env.AUTH_URL }}" \
+            --set genai.url="${{ env.GENAI_URL }}" \
+            --set genai.apiKey="${{ env.OPEN_WEB_UI_API_KEY }}" \
             --set auth.url="${{ env.AUTH_URL }}"
+            --set realtime.url=${{ env.REALTIME_URL }}"
 
   comment-pr:
     needs: deploy
@@ -242,6 +339,8 @@ jobs:
       CLIENT_URL: ${{ needs.deploy.outputs.client_url }}
       SERVER_URL: ${{ needs.deploy.outputs.server_url }}
       AUTH_URL: ${{ needs.deploy.outputs.auth_url }}
+      GENAI_URL: ${{ needs.deploy.outputs.genai_url }}
+      REALTIME_URL: ${{ needs.deploy.outputs.realtime_url }}
     steps:
       - name: Comment on Pull Request with URLs
         uses: actions/github-script@v6
@@ -252,6 +351,8 @@ jobs:
             const clientUrl = `https://${process.env.CLIENT_URL}`;
             const serverUrl = `https://${process.env.SERVER_URL}`;
             const authUrl = `https://${process.env.AUTH_URL}`;
+            const genaiUrl = `https://${process.env.GENAI_URL}`;
+            const realtimeUrl = `https://${process.env.REALTIME_URL}`
             
             // Check existing comments to avoid duplicates
             const { data: comments } = await github.rest.issues.listComments({
@@ -268,6 +369,8 @@ jobs:
             ### Deployment URLs
             - **Client:** [${clientUrl}](${clientUrl})
             - **Server:** [${serverUrl}/swagger-ui/index.html](${serverUrl}/swagger-ui/index.html)
+            - **Realtime:** [${realtimeUrl}/swagger/index.html](${realtimeUrl}/swagger/index.html)
+            - **GenAI:** [${genaiUrl}/docs](${genaiUrl}/docs)
             - **Keycloak:** [${authUrl}](${authUrl})
             `;
           
