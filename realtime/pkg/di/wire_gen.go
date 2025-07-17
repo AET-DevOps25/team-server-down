@@ -11,6 +11,7 @@ import (
 	"github.com/AET-DevOps25/team-server-down/pkg/api/handler"
 	"github.com/AET-DevOps25/team-server-down/pkg/config"
 	"github.com/AET-DevOps25/team-server-down/pkg/mq"
+	"github.com/google/wire"
 )
 
 // Injectors from wire.go:
@@ -22,3 +23,17 @@ func InitializeAPI(cfg config.Config) (*http.Server, error) {
 	server := http.NewServer(rootHandler, whiteboardHandler)
 	return server, nil
 }
+
+// Injectors from wire_mock.go:
+
+func InitializeTestAPI(cfg config.Config) (*http.Server, error) {
+	rootHandler := handler.NewRootHandler()
+	mqMQ := mq.NewMockMQ()
+	whiteboardHandler := handler.NewWhiteboardHandler(mqMQ)
+	server := http.NewServer(rootHandler, whiteboardHandler)
+	return server, nil
+}
+
+// wire.go:
+
+var ProviderSet = wire.NewSet(mq.NewRedisMQ, wire.Bind(new(mq.MQ), new(*mq.RedisMQ)))
