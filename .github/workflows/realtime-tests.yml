@@ -15,4 +15,4 @@ jobs:
 
       - name: Start containers
         run: |
-          docker compose run --rm --entrypoint="make test" realtime
+          docker compose run --rm --entrypoint="go test ./..." realtime
