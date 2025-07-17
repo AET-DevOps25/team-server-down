@@ -105,6 +105,11 @@ grafana:
     create: true
     namespaced: true
 
+prometheus:
+  rbac:
+    create: true
+    namespaced: true
+
 genai:
   image:
     repository: ghcr.io/aet-devops25/team-server-down/genai

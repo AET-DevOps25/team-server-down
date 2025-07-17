@@ -103,6 +103,10 @@ grafana:
   rbac:
     create: true
     namespaced: true
+prometheus:
+  rbac:
+    create: true
+    namespaced: true
 
 genai:
   image:
