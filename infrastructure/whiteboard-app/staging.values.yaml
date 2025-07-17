@@ -99,6 +99,11 @@ keycloak:
   extraVolumeMounts:
     - name: realm-export
       mountPath: /opt/bitnami/keycloak/data/import
+      
+  grafana:
+    rbac:
+      create: true
+      namespaced: true
 
   genai:
     image:
