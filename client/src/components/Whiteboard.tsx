@@ -1,11 +1,11 @@
 "use client";
 import React, {
   MouseEventHandler,
-  ReactNode,
   useCallback,
   useEffect,
   useState,
   useRef,
+  useMemo,
 } from "react";
 import {
   ReactFlow,
@@ -112,6 +112,8 @@ export default function Whiteboard({ whiteboardId }: WhiteboardProps) {
   );
 
   // custom cursor logic
+  const prevCursorRef = useRef<{ x: number; y: number } | null>(null);
+
   const onMouseMove: MouseEventHandler = (event) => {
     if (!rfInstance) return;
 
@@ -120,14 +122,13 @@ export default function Whiteboard({ whiteboardId }: WhiteboardProps) {
       y: event.clientY,
     });
 
-    setCursor((prev) => {
-      if (!prev) return prev;
-
-      return {
-        ...prev,
-        position,
-      };
-    });
+    const prev = prevCursorRef.current;
+    if (!prev || prev.x !== position.x || prev.y !== position.y) {
+      prevCursorRef.current = position;
+      setCursor((prev) =>
+          prev ? { ...prev, position } : prev
+      );
+    }
   };
 
   const onMove = () => {
@@ -192,28 +193,30 @@ export default function Whiteboard({ whiteboardId }: WhiteboardProps) {
       });
   };
 
-  function renderCursors(): ReactNode[] {
+  const renderedCursors = useMemo(() => {
     if (!rfInstance) return [];
 
     const viewport = rfInstance.getViewport();
 
     return allCursors
-      .filter((cursor) => cursor.position)
-      .map((cursor) => {
-        const position = {
-          x: cursor.position!.x * viewport.zoom + viewport.x,
-          y: cursor.position!.y * viewport.zoom + viewport.y,
-        };
-        return (
-          <CustomCursor
-            key={cursor.id}
-            username={cursor.username}
-            position={position}
-            visible={true}
-          />
-        );
-      });
-  }
+        .filter((cursor) => cursor.position)
+        .map((cursor) => {
+          const pos = cursor.position!;
+          const position = {
+            x: pos.x * viewport.zoom + viewport.x,
+            y: pos.y * viewport.zoom + viewport.y,
+          };
+
+          return (
+              <CustomCursor
+                  key={cursor.id}
+                  username={cursor.username}
+                  position={position}
+                  visible
+              />
+          );
+        });
+  }, [allCursors, rfInstance]);
 
   // Realtime synchronisation logic
   const handleWhiteboardEvent = useCallback(
@@ -388,7 +391,7 @@ export default function Whiteboard({ whiteboardId }: WhiteboardProps) {
             })
         )
       }
-    }, 40)
+    }, 50)
 
     return () => clearInterval(interval);
   })
@@ -404,13 +407,13 @@ export default function Whiteboard({ whiteboardId }: WhiteboardProps) {
           />
         </div>
       </div>
-
-      <div
-        className={`fixed top-1/2 left-4 z-10 -translate-y-1/2 ${!isOwner ? "visibility: hidden" : ""}`}
-      >
-        <Sidebar onAddNode={handleAddNode} />
-      </div>
-
+      {isOwner && (
+          <div
+              className="fixed top-1/2 left-4 z-10 -translate-y-1/2"
+          >
+            <Sidebar onAddNode={handleAddNode} />
+          </div>
+      )}
       <ReactFlow
         nodesDraggable={isOwner}
         nodesConnectable={isOwner}
@@ -434,7 +437,7 @@ export default function Whiteboard({ whiteboardId }: WhiteboardProps) {
         nodeTypes={nodeTypes}
       >
         <div className="pointer-events-none absolute top-0 left-0 h-full w-full">
-          {renderCursors()}
+          {renderedCursors}
         </div>
         <Controls position="bottom-right" />
         <Background variant={BackgroundVariant.Dots} gap={16} size={1} />

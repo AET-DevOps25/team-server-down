@@ -1,5 +1,6 @@
 "use client";
-import { memo, useCallback, useRef } from "react";
+
+import {memo, useCallback, useEffect, useRef, useState} from "react";
 import {
   Handle,
   NodeProps,
@@ -15,6 +16,8 @@ import {
   NodeProperties,
 } from "@/types/NodeProperties";
 import { updateNode } from "@/util/updateNode";
+import { motion } from "framer-motion";
+
 export interface ShapeNodeParams extends NodeProps {
   id: string;
   data: {
@@ -30,6 +33,11 @@ const ShapeNode = ({ id, data, selected }: ShapeNodeParams) => {
   const { Shape, nodeProperties, label } = data;
   const { setNodes } = useReactFlow();
   const inputRef = useRef<HTMLInputElement>(null);
+
+  const [animated, setAnimated] = useState(false);
+  useEffect(() => {
+    setAnimated(true);
+  }, []);
 
   const onUpdateNode = (updater: {
     label?: string;
@@ -52,8 +60,13 @@ const ShapeNode = ({ id, data, selected }: ShapeNodeParams) => {
   );
 
   return (
-    <div
+    <motion.div
       className="shape-node-wrapper"
+      layout={animated}
+      transition={{
+        duration: 0.2,
+      }}
+      key={id.concat(animated.toString())}
       onClick={handleClick}
       data-nodeid={id}
       style={{
@@ -174,7 +187,7 @@ const ShapeNode = ({ id, data, selected }: ShapeNodeParams) => {
         position={Position.Right}
         style={handleStyle}
       />
-    </div>
+    </motion.div>
   );
 };
 
