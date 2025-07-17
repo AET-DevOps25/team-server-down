@@ -39,6 +39,7 @@ import CustomCursor from "@/components/custom-cursor/CustomCursor";
 import { useGetMe } from "@/hooks/api/account.api";
 import { WhiteboardEvent } from "@/api/realtime/dtos/WhiteboardEvent";
 import { z } from "zod";
+import shapeRegistry from "@/util/shapeRegistry";
 
 const nodeTypes = {
   text: TextNode,
@@ -64,7 +65,7 @@ export default function Whiteboard({ whiteboardId }: WhiteboardProps) {
 
   const { data: user } = useGetMe();
 
-  const { data: amIOwner } = useAmIOwner(whiteboardId, user?.id);
+  const { data: isOwner } = useAmIOwner(whiteboardId, user?.id);
 
   const [dragStart, setDragStart] = useState<{
     cursor: { x: number; y: number };
@@ -92,7 +93,7 @@ export default function Whiteboard({ whiteboardId }: WhiteboardProps) {
     viewport: getViewport(),
   });
 
-  useInterval(saveWhiteboardState, 1000, amIOwner);
+  useInterval(saveWhiteboardState, 1000, isOwner);
 
   useRestoreWhiteboard({
     whiteboardId,
@@ -216,36 +217,104 @@ export default function Whiteboard({ whiteboardId }: WhiteboardProps) {
 
   // Realtime synchronisation logic
   const handleWhiteboardEvent = useCallback(
-    (event: z.infer<typeof WhiteboardEvent>) => {
-      if (event.payload.id !== user?.id) {
-        const { id, username, position } = event.payload;
+      (event: z.infer<typeof WhiteboardEvent>) => {
+        if (event.type === "mousePosition") {
+          const { id, username, position } = event.payload;
 
-        if (id === user?.id) return; // skip current user
-        if (!position) return;
+          if (id === user?.id) return; // skip current user
+          if (!position) return;
 
-        setAllCursors((prevCursors) => {
-          const otherCursors = prevCursors.filter((c) => c.id !== id);
-          return [...otherCursors, { id, username, position }];
-        });
-      }
-    },
-    [user?.id],
+          setAllCursors((prevCursors) => {
+            const otherCursors = prevCursors.filter((c) => c.id !== id);
+            return [...otherCursors, { id, username, position }];
+          });
+        }
+
+        if (isOwner) { return }
+
+        if (event.type === "nodePosition") {
+          const incomingNodes = event.payload;
+
+          setNodes((prevNodes) => {
+            const incomingMap = new Map(incomingNodes.map((n) => [n.id, n]));
+
+            const updatedNodes = incomingNodes.map((node) => {
+              const incoming = incomingMap.get(node.id);
+              if (!incoming) return node;
+
+              return {
+                id: incoming.id,
+                type: incoming.type,
+                position: incoming.position,
+                width: incoming.width,
+                height: incoming.height,
+                measured: incoming.measured,
+                selected: incoming.selected,
+                dragging: incoming.dragging,
+                data: {
+                  shapeType: incoming.data.shapeType,
+                  label: incoming.data.label,
+                  nodeProperties: incoming.data.nodeProperties,
+                  ...(incoming.type === "shapeNode" && {
+                    Shape: shapeRegistry({ shapeType: incoming.data.shapeType ?? "" }),
+                  }),
+                },
+              };
+            });
+
+            const newNodes = incomingNodes.filter(
+                (incoming) => !prevNodes.some((n) => n.id === incoming.id)
+            );
+
+            return [...updatedNodes, ...newNodes];
+          });
+        }
+
+        if (event.type === "edgePosition") {
+          const incomingEdges = event.payload;
+
+          setEdges((prevEdges) => {
+            const incomingMap = new Map(incomingEdges.map((e) => [e.id, e]));
+
+            const updatedEdges = incomingEdges.map((edge) => {
+              const incoming = incomingMap.get(edge.id);
+              if (!incoming) return edge;
+
+              return {
+                id: incoming.id,
+                source: incoming.source,
+                sourceHandle: incoming.sourceHandle,
+                target: incoming.target,
+                targetHandle: incoming.targetHandle,
+              }
+            })
+
+            const newEdges = incomingEdges.filter(
+                (incoming) => !prevEdges.some((e) => e.id === incoming.id)
+            );
+
+            return [...updatedEdges, ...newEdges]
+          });
+        }
+      },
+      [user?.id],
   );
 
   useSubscribeToWhiteboardEvents(whiteboardId, handleWhiteboardEvent);
   const publishEvent = usePublishWhiteboardEvents(whiteboardId);
 
-  const latestPositionRef = useRef(cursor);
-  const lastPublishedPositionRef = useRef<typeof cursor | null>(null);
+  // Publish cursor events
+  const latestCursorPositionRef = useRef(cursor);
+  const lastCursorPublishedPositionRef = useRef<typeof cursor | null>(null);
 
   useEffect(() => {
-    latestPositionRef.current = cursor;
+    latestCursorPositionRef.current = cursor;
   }, [cursor]);
 
   useEffect(() => {
     const interval = setInterval(() => {
-      const current = latestPositionRef.current;
-      const last = lastPublishedPositionRef.current;
+      const current = latestCursorPositionRef.current;
+      const last = lastCursorPublishedPositionRef.current;
 
       const hasChanged =
         !last ||
@@ -253,7 +322,7 @@ export default function Whiteboard({ whiteboardId }: WhiteboardProps) {
         current?.position?.y !== last.position?.y;
 
       if (hasChanged) {
-        lastPublishedPositionRef.current = current;
+        lastCursorPublishedPositionRef.current = current;
         publishEvent(
           JSON.stringify({
             type: "mousePosition",
@@ -261,34 +330,92 @@ export default function Whiteboard({ whiteboardId }: WhiteboardProps) {
           }),
         );
       }
-    }, 40);
+    }, 50);
 
     return () => clearInterval(interval);
   }, []);
+
+  // Publish node events
+  const latestNodesPositionRef = useRef<Node[]>(nodes);
+  const lastNodesPublishedPositionRef = useRef<Node[] | null>(null);
+
+  useEffect(() => {
+    latestNodesPositionRef.current = nodes;
+  }, [nodes])
+
+  useEffect(() => {
+    const interval = setInterval(() => {
+      const current = latestNodesPositionRef.current;
+      const last = lastNodesPublishedPositionRef.current;
+
+      const hasChanged = !last || JSON.stringify(current) !== JSON.stringify(last);
+
+      if (hasChanged && isOwner) {
+        lastNodesPublishedPositionRef.current = current;
+        publishEvent(
+           JSON.stringify({
+             type: "nodePosition",
+             payload: nodes,
+           })
+        )
+      }
+    }, 50)
+
+    return () => clearInterval(interval);
+  });
+
+  // Publish edge events
+  const latestEdgesPositionRef = useRef<Edge[]>(edges);
+  const lastEdgesPublishedPositionRef = useRef<Edge[] | null>(null);
+
+  useEffect(() => {
+    latestEdgesPositionRef.current = edges;
+  }, [edges])
+
+  useEffect(() => {
+    const interval = setInterval(() => {
+      const current = latestEdgesPositionRef.current;
+      const last = lastEdgesPublishedPositionRef.current;
+
+      const hasChanged = !last || JSON.stringify(current) !== JSON.stringify(last);
+
+      if (hasChanged && isOwner) {
+        lastEdgesPublishedPositionRef.current = current;
+        publishEvent(
+            JSON.stringify({
+              type: "edgePosition",
+              payload: edges,
+            })
+        )
+      }
+    }, 40)
+
+    return () => clearInterval(interval);
+  })
 
   return (
     <div style={{ width: "100vw", height: "100vh" }}>
       <div className="fixed top-0 right-0 left-0 z-20 mx-4 my-6">
         <div className="flex flex-row justify-between">
-          <MenuBar whiteboardId={whiteboardId} isEditable={amIOwner} />
+          <MenuBar whiteboardId={whiteboardId} isEditable={isOwner} />
           <CollaborationTopbar
             whiteboardId={whiteboardId}
-            isSharable={amIOwner}
+            isSharable={isOwner}
           />
         </div>
       </div>
 
       <div
-        className={`fixed top-1/2 left-4 z-10 -translate-y-1/2 ${!amIOwner ? "visibility: hidden" : ""}`}
+        className={`fixed top-1/2 left-4 z-10 -translate-y-1/2 ${!isOwner ? "visibility: hidden" : ""}`}
       >
         <Sidebar onAddNode={handleAddNode} />
       </div>
 
       <ReactFlow
-        nodesDraggable={amIOwner}
-        nodesConnectable={amIOwner}
-        nodesFocusable={amIOwner}
-        elementsSelectable={amIOwner}
+        nodesDraggable={isOwner}
+        nodesConnectable={isOwner}
+        nodesFocusable={isOwner}
+        elementsSelectable={isOwner}
         nodes={nodes}
         edges={edges}
         defaultViewport={{ x: 0, y: 0, zoom: 0.5 }}
