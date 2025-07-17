@@ -239,7 +239,6 @@ export default function Whiteboard({ whiteboardId }: WhiteboardProps) {
   const publishEvent = usePublishWhiteboardEvents(whiteboardId);
 
   const latestPositionRef = useRef(cursor);
-  const lastPublishedPositionRef = useRef<typeof cursor | null>(null);
 
   useEffect(() => {
     latestPositionRef.current = cursor;
