@@ -194,7 +194,9 @@ export const useSubscribeToWhiteboardEvents = (
 
     return () => {
       shouldReconnect = false;
-      retryTimeout.current && clearTimeout(retryTimeout.current);
+      if (retryTimeout.current) {
+        clearTimeout(retryTimeout.current);
+      }
       wsRef.current?.close();
     };
   }, [whiteboardId, onMessage]);
