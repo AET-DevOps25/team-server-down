@@ -22,7 +22,7 @@ const NodeProperties = z.object({
 
 const Node = z.object({
     id: z.string(),
-    type: z.literal("shapeNode"),
+    type: z.string(),
     position: Position,
     measured: z.object({
         width: z.number(),

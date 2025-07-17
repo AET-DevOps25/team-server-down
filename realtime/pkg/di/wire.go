@@ -11,7 +11,7 @@ import (
 	"github.com/google/wire"
 )
 
-var ProviderSet = wire.NewSet(
+var RedisProviderSet = wire.NewSet(
 	mq.NewRedisMQ,
 	wire.Bind(new(mq.MQ), new(*mq.RedisMQ)),
 )
@@ -21,7 +21,7 @@ func InitializeAPI(cfg config.Config) (*http.Server, error) {
 		http.NewServer,
 		handler.NewRootHandler,
 		handler.NewWhiteboardHandler,
-		ProviderSet,
+		RedisProviderSet,
 	)
 
 	return &http.Server{}, nil

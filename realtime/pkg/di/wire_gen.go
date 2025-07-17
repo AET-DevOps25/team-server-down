@@ -36,4 +36,4 @@ func InitializeTestAPI(cfg config.Config) (*http.Server, error) {
 
 // wire.go:
 
-var ProviderSet = wire.NewSet(mq.NewRedisMQ, wire.Bind(new(mq.MQ), new(*mq.RedisMQ)))
+var RedisProviderSet = wire.NewSet(mq.NewRedisMQ, wire.Bind(new(mq.MQ), new(*mq.RedisMQ)))
