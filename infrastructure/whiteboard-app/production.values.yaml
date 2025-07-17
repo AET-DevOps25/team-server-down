@@ -103,6 +103,7 @@ grafana:
   rbac:
     create: true
     namespaced: true
+
 prometheus:
   rbac:
     create: true
@@ -144,6 +145,8 @@ ingress:
       - "api.whiteboard.student.k8s.aet.cit.tum.de"
       - "auth.whiteboard.student.k8s.aet.cit.tum.de"
       - "genai.whiteboard.student.k8s.aet.cit.tum.de"
+      - "grafana.whiteboard.student.k8s.aet.cit.tum.de"
+      - "prometheus.whiteboard.student.k8s.aet.cit.tum.de"
 
     secretName: "whiteboard-devops25-tls"
   rules:
