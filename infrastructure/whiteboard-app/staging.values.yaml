@@ -116,27 +116,27 @@ keycloak:
     - name: realm-export
       mountPath: /opt/bitnami/keycloak/data/import
 
-  genai:
-    image:
-      repository: ghcr.io/aet-devops25/team-server-down/genai
-      tag: develop
-      pullPolicy: Always
-    service:
-      type: ClusterIP
-      port: 8000
-      targetPort: 8000
-    replicaCount: 1
-    env:
-      - name: OPEN_WEB_UI_API_KEY
-        value: '{{ .Values.genai.apiKey }}'
-      - name: API_URL
-        value: https://gpu.aet.cit.tum.de/api/chat/completions
-      - name: SERVER_URL
-        value: https://staging.api.whiteboard.student.k8s.aet.cit.tum.de
-      - name: CLIENT_URL
-        value: https://staging.whiteboard.student.k8s.aet.cit.tum
-      - name: GENAI_URL
-        value: https://staging.genai.whiteboard.student.k8s.aet.cit
+genai:
+  image:
+    repository: ghcr.io/aet-devops25/team-server-down/genai
+    tag: develop
+    pullPolicy: Always
+  service:
+    type: ClusterIP
+    port: 8000
+    targetPort: 8000
+  replicaCount: 1
+  env:
+    - name: OPEN_WEB_UI_API_KEY
+      value: '{{ .Values.genai.apiKey }}'
+    - name: API_URL
+      value: https://gpu.aet.cit.tum.de/api/chat/completions
+    - name: SERVER_URL
+      value: https://staging.api.whiteboard.student.k8s.aet.cit.tum.de
+    - name: CLIENT_URL
+      value: https://staging.whiteboard.student.k8s.aet.cit.tum
+    - name: GENAI_URL
+      value: https://staging.genai.whiteboard.student.k8s.aet.cit
 
 
 ingress:
