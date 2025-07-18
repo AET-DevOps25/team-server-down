@@ -159,7 +159,7 @@ ingress:
         - path: /
           pathType: Prefix
           service:
-            name: client-service
+            name: '{{ printf "%s-client" .Release.Name }}'
             port:
               number: 3000
     - host: "api.whiteboard.student.k8s.aet.cit.tum.de"
@@ -167,7 +167,7 @@ ingress:
         - path: /
           pathType: Prefix
           service:
-            name: server-service
+            name: '{{ printf "%s-server" .Release.Name }}'
             port:
               number: 8080
     - host: "auth.whiteboard.student.k8s.aet.cit.tum.de"
