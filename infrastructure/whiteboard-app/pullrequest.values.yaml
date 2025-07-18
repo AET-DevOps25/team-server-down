@@ -142,8 +142,9 @@ genai:
       value: 'https://gpu.aet.cit.tum.de/api/chat/completions'
 
 grafana:
-  ingress:
-    enabled: false
+  rbac:
+    create: true
+    namespaced: true
 
 ingress:
   enabled: true
