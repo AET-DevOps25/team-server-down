@@ -145,6 +145,8 @@ grafana:
   rbac:
     create: true
     namespaced: true
+  adminUser: admin
+  adminPassword: admin
 
 ingress:
   enabled: true
