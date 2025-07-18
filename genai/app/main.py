@@ -106,7 +106,7 @@ def custom_openapi():
 
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=[CLIENT_URL, SERVER_URL],
+    allow_origins=[CLIENT_URL, SERVER_URL, "http://localhost:3000", "http://localhost:8000"],
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
