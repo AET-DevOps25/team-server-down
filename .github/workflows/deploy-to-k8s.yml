@@ -231,6 +231,7 @@ jobs:
       auth_url: ${{ steps.set-vars.outputs.AUTH_URL }}
       genai_url: ${{ steps.set-vars.outputs.GENAI_URL }}
       realtime_url: ${{ steps.set-vars.outputs.REALTIME_URL }}
+      metrics_url: ${{ steps.set-vars.outputs.METRICS_URL }}
     steps:
       - name: Checkout repository
         uses: actions/checkout@v3
@@ -248,6 +249,7 @@ jobs:
             AUTH_URL=auth.whiteboard.student.k8s.aet.cit.tum.de
             GENAI_URL=genai.whiteboard.student.k8s.aet.cit.tum.de
             REALTIME_URL=realtime.whiteboard.student.k8s.aet.cit.tum.de
+            METRICS_URL=metrics.whiteboard.student.k8s.aet.cit.tum.de
             echo "NAMESPACE=production" >> $GITHUB_ENV
             echo "IMAGE_TAG=latest" >> $GITHUB_ENV
             echo "VALUES_FILE=./infrastructure/whiteboard-app/production.values.yaml" >> $GITHUB_ENV
@@ -257,6 +259,7 @@ jobs:
             AUTH_URL=staging.auth.whiteboard.student.k8s.aet.cit.tum.de
             GENAI_URL=staging.genai.whiteboard.student.k8s.aet.cit.tum.de
             REALTIME_URL=staging.realtime.whiteboard.student.k8s.aet.cit.tum.de
+            METRICS_URL=staging.metrics.whiteboard.student.k8s.aet.cit.tum.de
             echo "NAMESPACE=staging" >> $GITHUB_ENV
             echo "IMAGE_TAG=develop" >> $GITHUB_ENV
             echo "VALUES_FILE=./infrastructure/whiteboard-app/staging.values.yaml" >> $GITHUB_ENV
@@ -267,6 +270,7 @@ jobs:
             AUTH_URL=$BRANCH_SAFE.auth.whiteboard.student.k8s.aet.cit.tum.de
             GENAI_URL=$BRANCH_SAFE.genai.whiteboard.student.k8s.aet.cit.tum.de
             REALTIME_URL=$BRANCH_SAFE.realtime.whiteboard.student.k8s.aet.cit.tum.de
+            METRICS_URL=$BRANCH_SAFE.metrics.whiteboard.student.k8s.aet.cit.tum.de
             echo "NAMESPACE=$BRANCH_SAFE" >> $GITHUB_ENV
             echo "IMAGE_TAG=$BRANCH_SAFE" >> $GITHUB_ENV
             echo "VALUES_FILE=./infrastructure/whiteboard-app/pullrequest.values.yaml" >> $GITHUB_ENV
@@ -278,12 +282,14 @@ jobs:
           echo "GENAI_URL=$GENAI_URL" >> $GITHUB_ENV
           echo "OPEN_WEB_UI_API_KEY=${{ secrets.OPEN_WEB_UI_API_KEY }}" >> $GITHUB_ENV
           echo "REALTIME_URL=$REALTIME_URL" >> $GITHUB_ENV
+          echo "METRICS_URL=$METRICS_URL" >> $GITHUB_ENV
           
           echo "CLIENT_URL=$CLIENT_URL" >> $GITHUB_OUTPUT
           echo "SERVER_URL=$SERVER_URL" >> $GITHUB_OUTPUT
           echo "AUTH_URL=$AUTH_URL" >> $GITHUB_OUTPUT
           echo "GENAI_URL=$GENAI_URL" >> $GITHUB_OUTPUT
           echo "REALTIME_URL=$REALTIME_URL" >> $GITHUB_OUTPUT
+          echo "METRICS_URL=$METRICS_URL" >> $GITHUB_OUTPUT
 
       - name: Set up Kubeconfig
         run: |
@@ -329,7 +335,8 @@ jobs:
             --set auth.url="${{ env.AUTH_URL }}" \
             --set genai.url="${{ env.GENAI_URL }}" \
             --set genai.apiKey="${{ env.OPEN_WEB_UI_API_KEY }}" \
-            --set realtime.url="${{ env.REALTIME_URL }}"
+            --set realtime.url="${{ env.REALTIME_URL }}" \
+            --set metrics.url="${{ env.METRICS_URL }}"
 
   comment-pr:
     needs: deploy
@@ -353,6 +360,7 @@ jobs:
             const authUrl = `https://${process.env.AUTH_URL}`;
             const genaiUrl = `https://${process.env.GENAI_URL}`;
             const realtimeUrl = `https://${process.env.REALTIME_URL}`
+            const metricsUrl = `https://${process.env.METRICS_URL}`
             
             // Check existing comments to avoid duplicates
             const { data: comments } = await github.rest.issues.listComments({
@@ -372,6 +380,7 @@ jobs:
             - **Realtime:** [${realtimeUrl}/swagger/index.html](${realtimeUrl}/swagger/index.html)
             - **GenAI:** [${genaiUrl}/docs](${genaiUrl}/docs)
             - **Keycloak:** [${authUrl}](${authUrl})
+            - **Grafana:** [${metricsUrl}](${metricsUrl})
             `;
           
             await github.rest.issues.createComment({
