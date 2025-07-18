@@ -9,7 +9,7 @@ dependencies:
   repository: https://charts.bitnami.com/bitnami
   version: 21.2.12
 - name: grafana
-  repository: https://charts.bitnami.com/bitnami
-  version: 12.1.0
-digest: sha256:0898d27dfd8c238d302d9b7a2c73fe10f1ec535fa64eb0a0f381177f618a2884
-generated: "2025-07-18T23:17:23.325077+02:00"
+  repository: https://grafana.github.io/helm-charts
+  version: 9.2.10
+digest: sha256:e13218277dad8ab612e07e3fa6d46fd2887adb4f9d26e1f2ed0729ab9c0f0be9
+generated: "2025-07-18T23:50:19.490169+02:00"
