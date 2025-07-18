@@ -9,6 +9,8 @@ spec:
       app: whiteboard-realtime-selector
   template:
     metadata:
+      annotations:
+        deploy-timestamp: "{{ now }}"
       labels:
         app: whiteboard-realtime-selector
     spec:
