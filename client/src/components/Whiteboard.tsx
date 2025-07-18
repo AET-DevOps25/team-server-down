@@ -236,6 +236,8 @@ export default function Whiteboard({ whiteboardId }: WhiteboardProps) {
       }
 
       if (event.type === "nodePosition") {
+        console.log(isOwner)
+        console.log("HERE")
         const incomingNodes = event.payload;
 
         setNodes((prevNodes) => {
@@ -302,7 +304,7 @@ export default function Whiteboard({ whiteboardId }: WhiteboardProps) {
         });
       }
     },
-    [user?.id],
+    [user?.id, isOwner],
   );
 
   useSubscribeToWhiteboardEvents(whiteboardId, handleWhiteboardEvent);
