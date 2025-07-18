@@ -348,6 +348,7 @@ jobs:
       AUTH_URL: ${{ needs.deploy.outputs.auth_url }}
       GENAI_URL: ${{ needs.deploy.outputs.genai_url }}
       REALTIME_URL: ${{ needs.deploy.outputs.realtime_url }}
+      METRICS_URL: ${{ needs.deploy.outputs.metrics_url }}
     steps:
       - name: Comment on Pull Request with URLs
         uses: actions/github-script@v6
