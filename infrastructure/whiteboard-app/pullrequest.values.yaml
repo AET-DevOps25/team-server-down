@@ -153,6 +153,8 @@ prometheus:
     create: false
   kube-state-metrics:
     enabled: false
+  prometheus-node-exporter:
+    enabled: false
 
 ingress:
   enabled: true
