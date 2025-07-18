@@ -138,7 +138,6 @@ genai:
     - name: GENAI_URL
       value: https://staging.genai.whiteboard.student.k8s.aet.cit
 
-
 ingress:
   enabled: true
   className: "nginx"
@@ -152,6 +151,7 @@ ingress:
       - "staging.whiteboard.student.k8s.aet.cit.tum.de"
       - "staging.api.whiteboard.student.k8s.aet.cit.tum.de"
       - "staging.auth.whiteboard.student.k8s.aet.cit.tum.de"
+      - "staging.realtime.whiteboard.student.k8s.cit.tum.de"
       - "staging.genai.whiteboard.student.k8s.aet.cit.tum.de"
     secretName: "staging-whiteboard-devops25-tls"
   rules:
