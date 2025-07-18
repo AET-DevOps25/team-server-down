@@ -1,8 +1,10 @@
 package de.tum.cit.aet.devops.teamserverdown.controller;
 
+import de.tum.cit.aet.devops.teamserverdown.controller.dtos.UserResponse;
 import de.tum.cit.aet.devops.teamserverdown.model.User;
 import de.tum.cit.aet.devops.teamserverdown.security.CurrentUser;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -10,7 +12,8 @@ import org.springframework.web.bind.annotation.RestController;
 @Tag(name = "Account", description = "User Accounts")
 public class AccountController {
   @GetMapping("/me")
-  public User getCurrentUser(@CurrentUser User user) {
-    return user;
+  public ResponseEntity<UserResponse> getCurrentUser(@CurrentUser User user) {
+    UserResponse response = UserResponse.fromEntity(user);
+    return ResponseEntity.ok(response);
   }
 }

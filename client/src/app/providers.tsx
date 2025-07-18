@@ -5,7 +5,16 @@ import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { SessionProvider } from "next-auth/react";
 
 export default function Providers({ children }: PropsWithChildren) {
-  const [queryClient] = React.useState(() => new QueryClient());
+  const [queryClient] = React.useState(
+    () =>
+      new QueryClient({
+        defaultOptions: {
+          queries: {
+            staleTime: Infinity,
+          },
+        },
+      }),
+  );
 
   return (
     <SessionProvider refetchInterval={4 * 60}>

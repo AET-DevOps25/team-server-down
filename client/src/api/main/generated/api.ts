@@ -85,6 +85,19 @@ export interface Edge {
 /**
  *
  * @export
+ * @interface InviteCollaboratorsRequest
+ */
+export interface InviteCollaboratorsRequest {
+  /**
+   *
+   * @type {Array<string>}
+   * @memberof InviteCollaboratorsRequest
+   */
+  emails?: Array<string>;
+}
+/**
+ *
+ * @export
  * @interface Node
  */
 export interface Node {
@@ -212,115 +225,153 @@ export interface Node {
 /**
  *
  * @export
- * @interface NodeUpdateDTO
+ * @interface RemoveCollaboratorsRequest
  */
-export interface NodeUpdateDTO {
+export interface RemoveCollaboratorsRequest {
+  /**
+   *
+   * @type {Array<number>}
+   * @memberof RemoveCollaboratorsRequest
+   */
+  userIds?: Array<number>;
+}
+/**
+ *
+ * @export
+ * @interface SaveWhiteboardStateRequest
+ */
+export interface SaveWhiteboardStateRequest {
+  /**
+   *
+   * @type {Array<Node>}
+   * @memberof SaveWhiteboardStateRequest
+   */
+  nodes?: Array<Node>;
+  /**
+   *
+   * @type {Array<Edge>}
+   * @memberof SaveWhiteboardStateRequest
+   */
+  edges?: Array<Edge>;
+  /**
+   *
+   * @type {ViewportResponse}
+   * @memberof SaveWhiteboardStateRequest
+   */
+  viewportResponse?: ViewportResponse;
+}
+/**
+ *
+ * @export
+ * @interface UpdateNodeRequest
+ */
+export interface UpdateNodeRequest {
   /**
    *
    * @type {string}
-   * @memberof NodeUpdateDTO
+   * @memberof UpdateNodeRequest
    */
   type?: string;
   /**
    *
    * @type {number}
-   * @memberof NodeUpdateDTO
+   * @memberof UpdateNodeRequest
    */
   positionX?: number;
   /**
    *
    * @type {number}
-   * @memberof NodeUpdateDTO
+   * @memberof UpdateNodeRequest
    */
   positionY?: number;
   /**
    *
    * @type {string}
-   * @memberof NodeUpdateDTO
+   * @memberof UpdateNodeRequest
    */
   label?: string;
   /**
    *
    * @type {number}
-   * @memberof NodeUpdateDTO
+   * @memberof UpdateNodeRequest
    */
   width?: number;
   /**
    *
    * @type {number}
-   * @memberof NodeUpdateDTO
+   * @memberof UpdateNodeRequest
    */
   height?: number;
   /**
    *
    * @type {string}
-   * @memberof NodeUpdateDTO
+   * @memberof UpdateNodeRequest
    */
   color?: string;
   /**
    *
    * @type {string}
-   * @memberof NodeUpdateDTO
+   * @memberof UpdateNodeRequest
    */
   borderColor?: string;
   /**
    *
    * @type {number}
-   * @memberof NodeUpdateDTO
+   * @memberof UpdateNodeRequest
    */
   borderWidth?: number;
   /**
    *
    * @type {number}
-   * @memberof NodeUpdateDTO
+   * @memberof UpdateNodeRequest
    */
   borderOpacity?: number;
   /**
    *
    * @type {number}
-   * @memberof NodeUpdateDTO
+   * @memberof UpdateNodeRequest
    */
   opacity?: number;
   /**
    *
    * @type {string}
-   * @memberof NodeUpdateDTO
+   * @memberof UpdateNodeRequest
    */
   textColor?: string;
   /**
    *
    * @type {number}
-   * @memberof NodeUpdateDTO
+   * @memberof UpdateNodeRequest
    */
   fontSize?: number;
   /**
    *
    * @type {string}
-   * @memberof NodeUpdateDTO
+   * @memberof UpdateNodeRequest
    */
   fontFamily?: string;
   /**
    *
    * @type {boolean}
-   * @memberof NodeUpdateDTO
+   * @memberof UpdateNodeRequest
    */
   isBold?: boolean;
   /**
    *
    * @type {boolean}
-   * @memberof NodeUpdateDTO
+   * @memberof UpdateNodeRequest
    */
   isItalic?: boolean;
   /**
    *
    * @type {boolean}
-   * @memberof NodeUpdateDTO
+   * @memberof UpdateNodeRequest
    */
   isStrikethrough?: boolean;
   /**
    *
    * @type {boolean}
-   * @memberof NodeUpdateDTO
+   * @memberof UpdateNodeRequest
    */
   isUnderline?: boolean;
 }
@@ -364,6 +415,43 @@ export interface User {
 /**
  *
  * @export
+ * @interface UserResponse
+ */
+export interface UserResponse {
+  /**
+   *
+   * @type {number}
+   * @memberof UserResponse
+   */
+  id?: number;
+  /**
+   *
+   * @type {string}
+   * @memberof UserResponse
+   */
+  firstName?: string;
+  /**
+   *
+   * @type {string}
+   * @memberof UserResponse
+   */
+  lastName?: string;
+  /**
+   *
+   * @type {string}
+   * @memberof UserResponse
+   */
+  username?: string;
+  /**
+   *
+   * @type {string}
+   * @memberof UserResponse
+   */
+  email?: string;
+}
+/**
+ *
+ * @export
  * @interface Viewport
  */
 export interface Viewport {
@@ -401,120 +489,64 @@ export interface Viewport {
 /**
  *
  * @export
- * @interface ViewportCreateRequest
+ * @interface ViewportResponse
  */
-export interface ViewportCreateRequest {
+export interface ViewportResponse {
   /**
    *
    * @type {number}
-   * @memberof ViewportCreateRequest
+   * @memberof ViewportResponse
    */
   x?: number;
   /**
    *
    * @type {number}
-   * @memberof ViewportCreateRequest
+   * @memberof ViewportResponse
    */
   y?: number;
   /**
    *
    * @type {number}
-   * @memberof ViewportCreateRequest
-   */
-  zoom?: number;
-  /**
-   *
-   * @type {number}
-   * @memberof ViewportCreateRequest
-   */
-  whiteboardId?: number;
-}
-/**
- *
- * @export
- * @interface ViewportDto
- */
-export interface ViewportDto {
-  /**
-   *
-   * @type {number}
-   * @memberof ViewportDto
-   */
-  x?: number;
-  /**
-   *
-   * @type {number}
-   * @memberof ViewportDto
-   */
-  y?: number;
-  /**
-   *
-   * @type {number}
-   * @memberof ViewportDto
+   * @memberof ViewportResponse
    */
   zoom?: number;
 }
 /**
  *
  * @export
- * @interface Whiteboard
+ * @interface WhiteboardResponse
  */
-export interface Whiteboard {
+export interface WhiteboardResponse {
   /**
    *
    * @type {number}
-   * @memberof Whiteboard
+   * @memberof WhiteboardResponse
    */
   id?: number;
   /**
    *
    * @type {string}
-   * @memberof Whiteboard
+   * @memberof WhiteboardResponse
    */
   title?: string;
   /**
    *
+   * @type {User}
+   * @memberof WhiteboardResponse
+   */
+  user?: User;
+  /**
+   *
    * @type {string}
-   * @memberof Whiteboard
+   * @memberof WhiteboardResponse
    */
   createdAt?: string;
   /**
    *
    * @type {string}
-   * @memberof Whiteboard
+   * @memberof WhiteboardResponse
    */
   lastUpdatedAt?: string;
-  /**
-   *
-   * @type {number}
-   * @memberof Whiteboard
-   */
-  userId?: number;
-}
-/**
- *
- * @export
- * @interface WhiteboardStateDto
- */
-export interface WhiteboardStateDto {
-  /**
-   *
-   * @type {Array<Node>}
-   * @memberof WhiteboardStateDto
-   */
-  nodes?: Array<Node>;
-  /**
-   *
-   * @type {Array<Edge>}
-   * @memberof WhiteboardStateDto
-   */
-  edges?: Array<Edge>;
-  /**
-   *
-   * @type {ViewportDto}
-   * @memberof WhiteboardStateDto
-   */
-  viewportDto?: ViewportDto;
 }
 
 /**
@@ -590,7 +622,7 @@ export const AccountApiFp = function (configuration?: Configuration) {
     async getCurrentUser(
       options?: RawAxiosRequestConfig,
     ): Promise<
-      (axios?: AxiosInstance, basePath?: string) => AxiosPromise<User>
+      (axios?: AxiosInstance, basePath?: string) => AxiosPromise<UserResponse>
     > {
       const localVarAxiosArgs =
         await localVarAxiosParamCreator.getCurrentUser(options);
@@ -626,7 +658,9 @@ export const AccountApiFactory = function (
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      */
-    getCurrentUser(options?: RawAxiosRequestConfig): AxiosPromise<User> {
+    getCurrentUser(
+      options?: RawAxiosRequestConfig,
+    ): AxiosPromise<UserResponse> {
       return localVarFp
         .getCurrentUser(options)
         .then((request) => request(axios, basePath));
@@ -1210,19 +1244,19 @@ export const NodeControllerApiAxiosParamCreator = function (
     /**
      *
      * @param {string} id
-     * @param {NodeUpdateDTO} nodeUpdateDTO
+     * @param {UpdateNodeRequest} updateNodeRequest
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      */
     patchNode: async (
       id: string,
-      nodeUpdateDTO: NodeUpdateDTO,
+      updateNodeRequest: UpdateNodeRequest,
       options: RawAxiosRequestConfig = {},
     ): Promise<RequestArgs> => {
       // verify required parameter 'id' is not null or undefined
       assertParamExists("patchNode", "id", id);
-      // verify required parameter 'nodeUpdateDTO' is not null or undefined
-      assertParamExists("patchNode", "nodeUpdateDTO", nodeUpdateDTO);
+      // verify required parameter 'updateNodeRequest' is not null or undefined
+      assertParamExists("patchNode", "updateNodeRequest", updateNodeRequest);
       const localVarPath = `/nodes/nodes/{id}`.replace(
         `{${"id"}}`,
         encodeURIComponent(String(id)),
@@ -1262,7 +1296,7 @@ export const NodeControllerApiAxiosParamCreator = function (
         ...options.headers,
       };
       localVarRequestOptions.data = serializeDataIfNeeded(
-        nodeUpdateDTO,
+        updateNodeRequest,
         localVarRequestOptions,
         configuration,
       );
@@ -1374,20 +1408,20 @@ export const NodeControllerApiFp = function (configuration?: Configuration) {
     /**
      *
      * @param {string} id
-     * @param {NodeUpdateDTO} nodeUpdateDTO
+     * @param {UpdateNodeRequest} updateNodeRequest
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      */
     async patchNode(
       id: string,
-      nodeUpdateDTO: NodeUpdateDTO,
+      updateNodeRequest: UpdateNodeRequest,
       options?: RawAxiosRequestConfig,
     ): Promise<
       (axios?: AxiosInstance, basePath?: string) => AxiosPromise<Node>
     > {
       const localVarAxiosArgs = await localVarAxiosParamCreator.patchNode(
         id,
-        nodeUpdateDTO,
+        updateNodeRequest,
         options,
       );
       const localVarOperationServerIndex = configuration?.serverIndex ?? 0;
@@ -1462,17 +1496,17 @@ export const NodeControllerApiFactory = function (
     /**
      *
      * @param {string} id
-     * @param {NodeUpdateDTO} nodeUpdateDTO
+     * @param {UpdateNodeRequest} updateNodeRequest
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      */
     patchNode(
       id: string,
-      nodeUpdateDTO: NodeUpdateDTO,
+      updateNodeRequest: UpdateNodeRequest,
       options?: RawAxiosRequestConfig,
     ): AxiosPromise<Node> {
       return localVarFp
-        .patchNode(id, nodeUpdateDTO, options)
+        .patchNode(id, updateNodeRequest, options)
         .then((request) => request(axios, basePath));
     },
   };
@@ -1530,18 +1564,18 @@ export class NodeControllerApi extends BaseAPI {
   /**
    *
    * @param {string} id
-   * @param {NodeUpdateDTO} nodeUpdateDTO
+   * @param {UpdateNodeRequest} updateNodeRequest
    * @param {*} [options] Override http request option.
    * @throws {RequiredError}
    * @memberof NodeControllerApi
    */
   public patchNode(
     id: string,
-    nodeUpdateDTO: NodeUpdateDTO,
+    updateNodeRequest: UpdateNodeRequest,
     options?: RawAxiosRequestConfig,
   ) {
     return NodeControllerApiFp(this.configuration)
-      .patchNode(id, nodeUpdateDTO, options)
+      .patchNode(id, updateNodeRequest, options)
       .then((request) => request(this.axios, this.basePath));
   }
 }
@@ -1692,68 +1726,6 @@ export const ViewportControllerApiAxiosParamCreator = function (
   return {
     /**
      *
-     * @param {ViewportCreateRequest} viewportCreateRequest
-     * @param {*} [options] Override http request option.
-     * @throws {RequiredError}
-     */
-    createViewport: async (
-      viewportCreateRequest: ViewportCreateRequest,
-      options: RawAxiosRequestConfig = {},
-    ): Promise<RequestArgs> => {
-      // verify required parameter 'viewportCreateRequest' is not null or undefined
-      assertParamExists(
-        "createViewport",
-        "viewportCreateRequest",
-        viewportCreateRequest,
-      );
-      const localVarPath = `/api/viewports`;
-      // use dummy base URL string because the URL constructor only accepts absolute URLs.
-      const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
-      let baseOptions;
-      if (configuration) {
-        baseOptions = configuration.baseOptions;
-      }
-
-      const localVarRequestOptions = {
-        method: "POST",
-        ...baseOptions,
-        ...options,
-      };
-      const localVarHeaderParameter = {} as any;
-      const localVarQueryParameter = {} as any;
-
-      // authentication keycloak required
-      // oauth required
-      await setOAuthToObject(
-        localVarHeaderParameter,
-        "keycloak",
-        [],
-        configuration,
-      );
-
-      localVarHeaderParameter["Content-Type"] = "application/json";
-
-      setSearchParams(localVarUrlObj, localVarQueryParameter);
-      let headersFromBaseOptions =
-        baseOptions && baseOptions.headers ? baseOptions.headers : {};
-      localVarRequestOptions.headers = {
-        ...localVarHeaderParameter,
-        ...headersFromBaseOptions,
-        ...options.headers,
-      };
-      localVarRequestOptions.data = serializeDataIfNeeded(
-        viewportCreateRequest,
-        localVarRequestOptions,
-        configuration,
-      );
-
-      return {
-        url: toPathString(localVarUrlObj),
-        options: localVarRequestOptions,
-      };
-    },
-    /**
-     *
      * @param {number} id
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
@@ -1864,75 +1836,6 @@ export const ViewportControllerApiAxiosParamCreator = function (
         options: localVarRequestOptions,
       };
     },
-    /**
-     *
-     * @param {number} whiteboardId
-     * @param {Viewport} viewport
-     * @param {*} [options] Override http request option.
-     * @throws {RequiredError}
-     */
-    updateViewportByWhiteboardId: async (
-      whiteboardId: number,
-      viewport: Viewport,
-      options: RawAxiosRequestConfig = {},
-    ): Promise<RequestArgs> => {
-      // verify required parameter 'whiteboardId' is not null or undefined
-      assertParamExists(
-        "updateViewportByWhiteboardId",
-        "whiteboardId",
-        whiteboardId,
-      );
-      // verify required parameter 'viewport' is not null or undefined
-      assertParamExists("updateViewportByWhiteboardId", "viewport", viewport);
-      const localVarPath = `/api/viewports/whiteboard/{whiteboardId}`.replace(
-        `{${"whiteboardId"}}`,
-        encodeURIComponent(String(whiteboardId)),
-      );
-      // use dummy base URL string because the URL constructor only accepts absolute URLs.
-      const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
-      let baseOptions;
-      if (configuration) {
-        baseOptions = configuration.baseOptions;
-      }
-
-      const localVarRequestOptions = {
-        method: "PUT",
-        ...baseOptions,
-        ...options,
-      };
-      const localVarHeaderParameter = {} as any;
-      const localVarQueryParameter = {} as any;
-
-      // authentication keycloak required
-      // oauth required
-      await setOAuthToObject(
-        localVarHeaderParameter,
-        "keycloak",
-        [],
-        configuration,
-      );
-
-      localVarHeaderParameter["Content-Type"] = "application/json";
-
-      setSearchParams(localVarUrlObj, localVarQueryParameter);
-      let headersFromBaseOptions =
-        baseOptions && baseOptions.headers ? baseOptions.headers : {};
-      localVarRequestOptions.headers = {
-        ...localVarHeaderParameter,
-        ...headersFromBaseOptions,
-        ...options.headers,
-      };
-      localVarRequestOptions.data = serializeDataIfNeeded(
-        viewport,
-        localVarRequestOptions,
-        configuration,
-      );
-
-      return {
-        url: toPathString(localVarUrlObj),
-        options: localVarRequestOptions,
-      };
-    },
   };
 };
 
@@ -1946,35 +1849,6 @@ export const ViewportControllerApiFp = function (
   const localVarAxiosParamCreator =
     ViewportControllerApiAxiosParamCreator(configuration);
   return {
-    /**
-     *
-     * @param {ViewportCreateRequest} viewportCreateRequest
-     * @param {*} [options] Override http request option.
-     * @throws {RequiredError}
-     */
-    async createViewport(
-      viewportCreateRequest: ViewportCreateRequest,
-      options?: RawAxiosRequestConfig,
-    ): Promise<
-      (axios?: AxiosInstance, basePath?: string) => AxiosPromise<Viewport>
-    > {
-      const localVarAxiosArgs = await localVarAxiosParamCreator.createViewport(
-        viewportCreateRequest,
-        options,
-      );
-      const localVarOperationServerIndex = configuration?.serverIndex ?? 0;
-      const localVarOperationServerBasePath =
-        operationServerMap["ViewportControllerApi.createViewport"]?.[
-          localVarOperationServerIndex
-        ]?.url;
-      return (axios, basePath) =>
-        createRequestFunction(
-          localVarAxiosArgs,
-          globalAxios,
-          BASE_PATH,
-          configuration,
-        )(axios, localVarOperationServerBasePath || basePath);
-    },
     /**
      *
      * @param {number} id
@@ -2034,39 +1908,6 @@ export const ViewportControllerApiFp = function (
           configuration,
         )(axios, localVarOperationServerBasePath || basePath);
     },
-    /**
-     *
-     * @param {number} whiteboardId
-     * @param {Viewport} viewport
-     * @param {*} [options] Override http request option.
-     * @throws {RequiredError}
-     */
-    async updateViewportByWhiteboardId(
-      whiteboardId: number,
-      viewport: Viewport,
-      options?: RawAxiosRequestConfig,
-    ): Promise<
-      (axios?: AxiosInstance, basePath?: string) => AxiosPromise<Viewport>
-    > {
-      const localVarAxiosArgs =
-        await localVarAxiosParamCreator.updateViewportByWhiteboardId(
-          whiteboardId,
-          viewport,
-          options,
-        );
-      const localVarOperationServerIndex = configuration?.serverIndex ?? 0;
-      const localVarOperationServerBasePath =
-        operationServerMap[
-          "ViewportControllerApi.updateViewportByWhiteboardId"
-        ]?.[localVarOperationServerIndex]?.url;
-      return (axios, basePath) =>
-        createRequestFunction(
-          localVarAxiosArgs,
-          globalAxios,
-          BASE_PATH,
-          configuration,
-        )(axios, localVarOperationServerBasePath || basePath);
-    },
   };
 };
 
@@ -2081,20 +1922,6 @@ export const ViewportControllerApiFactory = function (
 ) {
   const localVarFp = ViewportControllerApiFp(configuration);
   return {
-    /**
-     *
-     * @param {ViewportCreateRequest} viewportCreateRequest
-     * @param {*} [options] Override http request option.
-     * @throws {RequiredError}
-     */
-    createViewport(
-      viewportCreateRequest: ViewportCreateRequest,
-      options?: RawAxiosRequestConfig,
-    ): AxiosPromise<Viewport> {
-      return localVarFp
-        .createViewport(viewportCreateRequest, options)
-        .then((request) => request(axios, basePath));
-    },
     /**
      *
      * @param {number} id
@@ -2123,22 +1950,6 @@ export const ViewportControllerApiFactory = function (
         .getViewportByWhiteboardId(whiteboardId, options)
         .then((request) => request(axios, basePath));
     },
-    /**
-     *
-     * @param {number} whiteboardId
-     * @param {Viewport} viewport
-     * @param {*} [options] Override http request option.
-     * @throws {RequiredError}
-     */
-    updateViewportByWhiteboardId(
-      whiteboardId: number,
-      viewport: Viewport,
-      options?: RawAxiosRequestConfig,
-    ): AxiosPromise<Viewport> {
-      return localVarFp
-        .updateViewportByWhiteboardId(whiteboardId, viewport, options)
-        .then((request) => request(axios, basePath));
-    },
   };
 };
 
@@ -2149,22 +1960,6 @@ export const ViewportControllerApiFactory = function (
  * @extends {BaseAPI}
  */
 export class ViewportControllerApi extends BaseAPI {
-  /**
-   *
-   * @param {ViewportCreateRequest} viewportCreateRequest
-   * @param {*} [options] Override http request option.
-   * @throws {RequiredError}
-   * @memberof ViewportControllerApi
-   */
-  public createViewport(
-    viewportCreateRequest: ViewportCreateRequest,
-    options?: RawAxiosRequestConfig,
-  ) {
-    return ViewportControllerApiFp(this.configuration)
-      .createViewport(viewportCreateRequest, options)
-      .then((request) => request(this.axios, this.basePath));
-  }
-
   /**
    *
    * @param {number} id
@@ -2191,24 +1986,6 @@ export class ViewportControllerApi extends BaseAPI {
   ) {
     return ViewportControllerApiFp(this.configuration)
       .getViewportByWhiteboardId(whiteboardId, options)
-      .then((request) => request(this.axios, this.basePath));
-  }
-
-  /**
-   *
-   * @param {number} whiteboardId
-   * @param {Viewport} viewport
-   * @param {*} [options] Override http request option.
-   * @throws {RequiredError}
-   * @memberof ViewportControllerApi
-   */
-  public updateViewportByWhiteboardId(
-    whiteboardId: number,
-    viewport: Viewport,
-    options?: RawAxiosRequestConfig,
-  ) {
-    return ViewportControllerApiFp(this.configuration)
-      .updateViewportByWhiteboardId(whiteboardId, viewport, options)
       .then((request) => request(this.axios, this.basePath));
   }
 }
@@ -2302,6 +2079,60 @@ export const WhiteboardApiAxiosParamCreator = function (
 
       const localVarRequestOptions = {
         method: "DELETE",
+        ...baseOptions,
+        ...options,
+      };
+      const localVarHeaderParameter = {} as any;
+      const localVarQueryParameter = {} as any;
+
+      // authentication keycloak required
+      // oauth required
+      await setOAuthToObject(
+        localVarHeaderParameter,
+        "keycloak",
+        [],
+        configuration,
+      );
+
+      setSearchParams(localVarUrlObj, localVarQueryParameter);
+      let headersFromBaseOptions =
+        baseOptions && baseOptions.headers ? baseOptions.headers : {};
+      localVarRequestOptions.headers = {
+        ...localVarHeaderParameter,
+        ...headersFromBaseOptions,
+        ...options.headers,
+      };
+
+      return {
+        url: toPathString(localVarUrlObj),
+        options: localVarRequestOptions,
+      };
+    },
+    /**
+     *
+     * @param {number} id ID of the whiteboard
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     */
+    getCollaborators: async (
+      id: number,
+      options: RawAxiosRequestConfig = {},
+    ): Promise<RequestArgs> => {
+      // verify required parameter 'id' is not null or undefined
+      assertParamExists("getCollaborators", "id", id);
+      const localVarPath = `/whiteboards/{id}/collaborators`.replace(
+        `{${"id"}}`,
+        encodeURIComponent(String(id)),
+      );
+      // use dummy base URL string because the URL constructor only accepts absolute URLs.
+      const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
+      let baseOptions;
+      if (configuration) {
+        baseOptions = configuration.baseOptions;
+      }
+
+      const localVarRequestOptions = {
+        method: "GET",
         ...baseOptions,
         ...options,
       };
@@ -2490,23 +2321,163 @@ export const WhiteboardApiAxiosParamCreator = function (
     },
     /**
      *
+     * @summary Invite users to collaborate on the whiteboard
+     * @param {number} id ID of the whiteboard
+     * @param {InviteCollaboratorsRequest} inviteCollaboratorsRequest
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     */
+    inviteCollaborators: async (
+      id: number,
+      inviteCollaboratorsRequest: InviteCollaboratorsRequest,
+      options: RawAxiosRequestConfig = {},
+    ): Promise<RequestArgs> => {
+      // verify required parameter 'id' is not null or undefined
+      assertParamExists("inviteCollaborators", "id", id);
+      // verify required parameter 'inviteCollaboratorsRequest' is not null or undefined
+      assertParamExists(
+        "inviteCollaborators",
+        "inviteCollaboratorsRequest",
+        inviteCollaboratorsRequest,
+      );
+      const localVarPath = `/whiteboards/{id}/invitations`.replace(
+        `{${"id"}}`,
+        encodeURIComponent(String(id)),
+      );
+      // use dummy base URL string because the URL constructor only accepts absolute URLs.
+      const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
+      let baseOptions;
+      if (configuration) {
+        baseOptions = configuration.baseOptions;
+      }
+
+      const localVarRequestOptions = {
+        method: "POST",
+        ...baseOptions,
+        ...options,
+      };
+      const localVarHeaderParameter = {} as any;
+      const localVarQueryParameter = {} as any;
+
+      // authentication keycloak required
+      // oauth required
+      await setOAuthToObject(
+        localVarHeaderParameter,
+        "keycloak",
+        [],
+        configuration,
+      );
+
+      localVarHeaderParameter["Content-Type"] = "application/json";
+
+      setSearchParams(localVarUrlObj, localVarQueryParameter);
+      let headersFromBaseOptions =
+        baseOptions && baseOptions.headers ? baseOptions.headers : {};
+      localVarRequestOptions.headers = {
+        ...localVarHeaderParameter,
+        ...headersFromBaseOptions,
+        ...options.headers,
+      };
+      localVarRequestOptions.data = serializeDataIfNeeded(
+        inviteCollaboratorsRequest,
+        localVarRequestOptions,
+        configuration,
+      );
+
+      return {
+        url: toPathString(localVarUrlObj),
+        options: localVarRequestOptions,
+      };
+    },
+    /**
+     *
+     * @summary Remove collaborators from the whiteboard
+     * @param {number} id ID of the whiteboard
+     * @param {RemoveCollaboratorsRequest} removeCollaboratorsRequest
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     */
+    removeCollaborators: async (
+      id: number,
+      removeCollaboratorsRequest: RemoveCollaboratorsRequest,
+      options: RawAxiosRequestConfig = {},
+    ): Promise<RequestArgs> => {
+      // verify required parameter 'id' is not null or undefined
+      assertParamExists("removeCollaborators", "id", id);
+      // verify required parameter 'removeCollaboratorsRequest' is not null or undefined
+      assertParamExists(
+        "removeCollaborators",
+        "removeCollaboratorsRequest",
+        removeCollaboratorsRequest,
+      );
+      const localVarPath = `/whiteboards/{id}/invitations`.replace(
+        `{${"id"}}`,
+        encodeURIComponent(String(id)),
+      );
+      // use dummy base URL string because the URL constructor only accepts absolute URLs.
+      const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
+      let baseOptions;
+      if (configuration) {
+        baseOptions = configuration.baseOptions;
+      }
+
+      const localVarRequestOptions = {
+        method: "DELETE",
+        ...baseOptions,
+        ...options,
+      };
+      const localVarHeaderParameter = {} as any;
+      const localVarQueryParameter = {} as any;
+
+      // authentication keycloak required
+      // oauth required
+      await setOAuthToObject(
+        localVarHeaderParameter,
+        "keycloak",
+        [],
+        configuration,
+      );
+
+      localVarHeaderParameter["Content-Type"] = "application/json";
+
+      setSearchParams(localVarUrlObj, localVarQueryParameter);
+      let headersFromBaseOptions =
+        baseOptions && baseOptions.headers ? baseOptions.headers : {};
+      localVarRequestOptions.headers = {
+        ...localVarHeaderParameter,
+        ...headersFromBaseOptions,
+        ...options.headers,
+      };
+      localVarRequestOptions.data = serializeDataIfNeeded(
+        removeCollaboratorsRequest,
+        localVarRequestOptions,
+        configuration,
+      );
+
+      return {
+        url: toPathString(localVarUrlObj),
+        options: localVarRequestOptions,
+      };
+    },
+    /**
+     *
      * @param {number} whiteboardId
-     * @param {WhiteboardStateDto} whiteboardStateDto
+     * @param {SaveWhiteboardStateRequest} saveWhiteboardStateRequest
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      */
     saveWhiteboardState: async (
       whiteboardId: number,
-      whiteboardStateDto: WhiteboardStateDto,
+      saveWhiteboardStateRequest: SaveWhiteboardStateRequest,
       options: RawAxiosRequestConfig = {},
     ): Promise<RequestArgs> => {
       // verify required parameter 'whiteboardId' is not null or undefined
       assertParamExists("saveWhiteboardState", "whiteboardId", whiteboardId);
-      // verify required parameter 'whiteboardStateDto' is not null or undefined
+      // verify required parameter 'saveWhiteboardStateRequest' is not null or undefined
       assertParamExists(
         "saveWhiteboardState",
-        "whiteboardStateDto",
-        whiteboardStateDto,
+        "saveWhiteboardStateRequest",
+        saveWhiteboardStateRequest,
       );
       const localVarPath = `/whiteboards/{whiteboardId}/save`.replace(
         `{${"whiteboardId"}}`,
@@ -2547,7 +2518,7 @@ export const WhiteboardApiAxiosParamCreator = function (
         ...options.headers,
       };
       localVarRequestOptions.data = serializeDataIfNeeded(
-        whiteboardStateDto,
+        saveWhiteboardStateRequest,
         localVarRequestOptions,
         configuration,
       );
@@ -2642,7 +2613,10 @@ export const WhiteboardApiFp = function (configuration?: Configuration) {
       title: string,
       options?: RawAxiosRequestConfig,
     ): Promise<
-      (axios?: AxiosInstance, basePath?: string) => AxiosPromise<Whiteboard>
+      (
+        axios?: AxiosInstance,
+        basePath?: string,
+      ) => AxiosPromise<WhiteboardResponse>
     > {
       const localVarAxiosArgs =
         await localVarAxiosParamCreator.createWhiteboard(title, options);
@@ -2687,6 +2661,36 @@ export const WhiteboardApiFp = function (configuration?: Configuration) {
         )(axios, localVarOperationServerBasePath || basePath);
     },
     /**
+     *
+     * @param {number} id ID of the whiteboard
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     */
+    async getCollaborators(
+      id: number,
+      options?: RawAxiosRequestConfig,
+    ): Promise<
+      (
+        axios?: AxiosInstance,
+        basePath?: string,
+      ) => AxiosPromise<Array<UserResponse>>
+    > {
+      const localVarAxiosArgs =
+        await localVarAxiosParamCreator.getCollaborators(id, options);
+      const localVarOperationServerIndex = configuration?.serverIndex ?? 0;
+      const localVarOperationServerBasePath =
+        operationServerMap["WhiteboardApi.getCollaborators"]?.[
+          localVarOperationServerIndex
+        ]?.url;
+      return (axios, basePath) =>
+        createRequestFunction(
+          localVarAxiosArgs,
+          globalAxios,
+          BASE_PATH,
+          configuration,
+        )(axios, localVarOperationServerBasePath || basePath);
+    },
+    /**
      * Returns a list of whiteboards for the current user.
      * @summary Get whiteboards by user ID
      * @param {*} [options] Override http request option.
@@ -2698,7 +2702,7 @@ export const WhiteboardApiFp = function (configuration?: Configuration) {
       (
         axios?: AxiosInstance,
         basePath?: string,
-      ) => AxiosPromise<Array<Whiteboard>>
+      ) => AxiosPromise<Array<WhiteboardResponse>>
     > {
       const localVarAxiosArgs =
         await localVarAxiosParamCreator.getUserWhiteboards(options);
@@ -2725,7 +2729,10 @@ export const WhiteboardApiFp = function (configuration?: Configuration) {
       id: number,
       options?: RawAxiosRequestConfig,
     ): Promise<
-      (axios?: AxiosInstance, basePath?: string) => AxiosPromise<Whiteboard>
+      (
+        axios?: AxiosInstance,
+        basePath?: string,
+      ) => AxiosPromise<WhiteboardResponse>
     > {
       const localVarAxiosArgs =
         await localVarAxiosParamCreator.getWhiteboardById(id, options);
@@ -2772,14 +2779,82 @@ export const WhiteboardApiFp = function (configuration?: Configuration) {
     },
     /**
      *
+     * @summary Invite users to collaborate on the whiteboard
+     * @param {number} id ID of the whiteboard
+     * @param {InviteCollaboratorsRequest} inviteCollaboratorsRequest
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     */
+    async inviteCollaborators(
+      id: number,
+      inviteCollaboratorsRequest: InviteCollaboratorsRequest,
+      options?: RawAxiosRequestConfig,
+    ): Promise<
+      (axios?: AxiosInstance, basePath?: string) => AxiosPromise<void>
+    > {
+      const localVarAxiosArgs =
+        await localVarAxiosParamCreator.inviteCollaborators(
+          id,
+          inviteCollaboratorsRequest,
+          options,
+        );
+      const localVarOperationServerIndex = configuration?.serverIndex ?? 0;
+      const localVarOperationServerBasePath =
+        operationServerMap["WhiteboardApi.inviteCollaborators"]?.[
+          localVarOperationServerIndex
+        ]?.url;
+      return (axios, basePath) =>
+        createRequestFunction(
+          localVarAxiosArgs,
+          globalAxios,
+          BASE_PATH,
+          configuration,
+        )(axios, localVarOperationServerBasePath || basePath);
+    },
+    /**
+     *
+     * @summary Remove collaborators from the whiteboard
+     * @param {number} id ID of the whiteboard
+     * @param {RemoveCollaboratorsRequest} removeCollaboratorsRequest
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     */
+    async removeCollaborators(
+      id: number,
+      removeCollaboratorsRequest: RemoveCollaboratorsRequest,
+      options?: RawAxiosRequestConfig,
+    ): Promise<
+      (axios?: AxiosInstance, basePath?: string) => AxiosPromise<void>
+    > {
+      const localVarAxiosArgs =
+        await localVarAxiosParamCreator.removeCollaborators(
+          id,
+          removeCollaboratorsRequest,
+          options,
+        );
+      const localVarOperationServerIndex = configuration?.serverIndex ?? 0;
+      const localVarOperationServerBasePath =
+        operationServerMap["WhiteboardApi.removeCollaborators"]?.[
+          localVarOperationServerIndex
+        ]?.url;
+      return (axios, basePath) =>
+        createRequestFunction(
+          localVarAxiosArgs,
+          globalAxios,
+          BASE_PATH,
+          configuration,
+        )(axios, localVarOperationServerBasePath || basePath);
+    },
+    /**
+     *
      * @param {number} whiteboardId
-     * @param {WhiteboardStateDto} whiteboardStateDto
+     * @param {SaveWhiteboardStateRequest} saveWhiteboardStateRequest
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      */
     async saveWhiteboardState(
       whiteboardId: number,
-      whiteboardStateDto: WhiteboardStateDto,
+      saveWhiteboardStateRequest: SaveWhiteboardStateRequest,
       options?: RawAxiosRequestConfig,
     ): Promise<
       (axios?: AxiosInstance, basePath?: string) => AxiosPromise<void>
@@ -2787,7 +2862,7 @@ export const WhiteboardApiFp = function (configuration?: Configuration) {
       const localVarAxiosArgs =
         await localVarAxiosParamCreator.saveWhiteboardState(
           whiteboardId,
-          whiteboardStateDto,
+          saveWhiteboardStateRequest,
           options,
         );
       const localVarOperationServerIndex = configuration?.serverIndex ?? 0;
@@ -2860,7 +2935,7 @@ export const WhiteboardApiFactory = function (
     createWhiteboard(
       title: string,
       options?: RawAxiosRequestConfig,
-    ): AxiosPromise<Whiteboard> {
+    ): AxiosPromise<WhiteboardResponse> {
       return localVarFp
         .createWhiteboard(title, options)
         .then((request) => request(axios, basePath));
@@ -2880,6 +2955,20 @@ export const WhiteboardApiFactory = function (
         .then((request) => request(axios, basePath));
     },
     /**
+     *
+     * @param {number} id ID of the whiteboard
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     */
+    getCollaborators(
+      id: number,
+      options?: RawAxiosRequestConfig,
+    ): AxiosPromise<Array<UserResponse>> {
+      return localVarFp
+        .getCollaborators(id, options)
+        .then((request) => request(axios, basePath));
+    },
+    /**
      * Returns a list of whiteboards for the current user.
      * @summary Get whiteboards by user ID
      * @param {*} [options] Override http request option.
@@ -2887,7 +2976,7 @@ export const WhiteboardApiFactory = function (
      */
     getUserWhiteboards(
       options?: RawAxiosRequestConfig,
-    ): AxiosPromise<Array<Whiteboard>> {
+    ): AxiosPromise<Array<WhiteboardResponse>> {
       return localVarFp
         .getUserWhiteboards(options)
         .then((request) => request(axios, basePath));
@@ -2901,7 +2990,7 @@ export const WhiteboardApiFactory = function (
     getWhiteboardById(
       id: number,
       options?: RawAxiosRequestConfig,
-    ): AxiosPromise<Whiteboard> {
+    ): AxiosPromise<WhiteboardResponse> {
       return localVarFp
         .getWhiteboardById(id, options)
         .then((request) => request(axios, basePath));
@@ -2923,18 +3012,52 @@ export const WhiteboardApiFactory = function (
     },
     /**
      *
+     * @summary Invite users to collaborate on the whiteboard
+     * @param {number} id ID of the whiteboard
+     * @param {InviteCollaboratorsRequest} inviteCollaboratorsRequest
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     */
+    inviteCollaborators(
+      id: number,
+      inviteCollaboratorsRequest: InviteCollaboratorsRequest,
+      options?: RawAxiosRequestConfig,
+    ): AxiosPromise<void> {
+      return localVarFp
+        .inviteCollaborators(id, inviteCollaboratorsRequest, options)
+        .then((request) => request(axios, basePath));
+    },
+    /**
+     *
+     * @summary Remove collaborators from the whiteboard
+     * @param {number} id ID of the whiteboard
+     * @param {RemoveCollaboratorsRequest} removeCollaboratorsRequest
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     */
+    removeCollaborators(
+      id: number,
+      removeCollaboratorsRequest: RemoveCollaboratorsRequest,
+      options?: RawAxiosRequestConfig,
+    ): AxiosPromise<void> {
+      return localVarFp
+        .removeCollaborators(id, removeCollaboratorsRequest, options)
+        .then((request) => request(axios, basePath));
+    },
+    /**
+     *
      * @param {number} whiteboardId
-     * @param {WhiteboardStateDto} whiteboardStateDto
+     * @param {SaveWhiteboardStateRequest} saveWhiteboardStateRequest
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      */
     saveWhiteboardState(
       whiteboardId: number,
-      whiteboardStateDto: WhiteboardStateDto,
+      saveWhiteboardStateRequest: SaveWhiteboardStateRequest,
       options?: RawAxiosRequestConfig,
     ): AxiosPromise<void> {
       return localVarFp
-        .saveWhiteboardState(whiteboardId, whiteboardStateDto, options)
+        .saveWhiteboardState(whiteboardId, saveWhiteboardStateRequest, options)
         .then((request) => request(axios, basePath));
     },
     /**
@@ -2992,6 +3115,19 @@ export class WhiteboardApi extends BaseAPI {
   }
 
   /**
+   *
+   * @param {number} id ID of the whiteboard
+   * @param {*} [options] Override http request option.
+   * @throws {RequiredError}
+   * @memberof WhiteboardApi
+   */
+  public getCollaborators(id: number, options?: RawAxiosRequestConfig) {
+    return WhiteboardApiFp(this.configuration)
+      .getCollaborators(id, options)
+      .then((request) => request(this.axios, this.basePath));
+  }
+
+  /**
    * Returns a list of whiteboards for the current user.
    * @summary Get whiteboards by user ID
    * @param {*} [options] Override http request option.
@@ -3033,19 +3169,57 @@ export class WhiteboardApi extends BaseAPI {
 
   /**
    *
+   * @summary Invite users to collaborate on the whiteboard
+   * @param {number} id ID of the whiteboard
+   * @param {InviteCollaboratorsRequest} inviteCollaboratorsRequest
+   * @param {*} [options] Override http request option.
+   * @throws {RequiredError}
+   * @memberof WhiteboardApi
+   */
+  public inviteCollaborators(
+    id: number,
+    inviteCollaboratorsRequest: InviteCollaboratorsRequest,
+    options?: RawAxiosRequestConfig,
+  ) {
+    return WhiteboardApiFp(this.configuration)
+      .inviteCollaborators(id, inviteCollaboratorsRequest, options)
+      .then((request) => request(this.axios, this.basePath));
+  }
+
+  /**
+   *
+   * @summary Remove collaborators from the whiteboard
+   * @param {number} id ID of the whiteboard
+   * @param {RemoveCollaboratorsRequest} removeCollaboratorsRequest
+   * @param {*} [options] Override http request option.
+   * @throws {RequiredError}
+   * @memberof WhiteboardApi
+   */
+  public removeCollaborators(
+    id: number,
+    removeCollaboratorsRequest: RemoveCollaboratorsRequest,
+    options?: RawAxiosRequestConfig,
+  ) {
+    return WhiteboardApiFp(this.configuration)
+      .removeCollaborators(id, removeCollaboratorsRequest, options)
+      .then((request) => request(this.axios, this.basePath));
+  }
+
+  /**
+   *
    * @param {number} whiteboardId
-   * @param {WhiteboardStateDto} whiteboardStateDto
+   * @param {SaveWhiteboardStateRequest} saveWhiteboardStateRequest
    * @param {*} [options] Override http request option.
    * @throws {RequiredError}
    * @memberof WhiteboardApi
    */
   public saveWhiteboardState(
     whiteboardId: number,
-    whiteboardStateDto: WhiteboardStateDto,
+    saveWhiteboardStateRequest: SaveWhiteboardStateRequest,
     options?: RawAxiosRequestConfig,
   ) {
     return WhiteboardApiFp(this.configuration)
-      .saveWhiteboardState(whiteboardId, whiteboardStateDto, options)
+      .saveWhiteboardState(whiteboardId, saveWhiteboardStateRequest, options)
       .then((request) => request(this.axios, this.basePath));
   }
 

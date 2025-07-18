@@ -9,7 +9,6 @@ import {
   DialogTitle,
   DialogDescription,
 } from "@/components/ui/dialog";
-import { User } from "@/api/main/generated/api";
 import { useGetMe } from "@/hooks/api/account.api";
 import Avatar from "@/components/avatar/Avatar";
 
@@ -19,12 +18,11 @@ interface AccountModalProps {
 }
 
 export default function AccountModal({ isOpen, onClose }: AccountModalProps) {
-  const { data } = useGetMe();
-  const user: User | undefined = data?.data;
+  const { data: user } = useGetMe();
 
   return (
     <Dialog open={isOpen} onOpenChange={onClose}>
-      <DialogContent className="sm:max-w-md">
+      <DialogContent>
         <DialogHeader>
           <DialogTitle>Account</DialogTitle>
           <DialogDescription>View your account details</DialogDescription>
@@ -33,13 +31,15 @@ export default function AccountModal({ isOpen, onClose }: AccountModalProps) {
         <div className="my-4 flex flex-row space-x-10 px-4">
           <div className="h-full">
             <Avatar
-              username={user?.firstName}
+              username={user?.username ?? ""}
+              firstname={user?.firstName ?? ""}
+              lastname={user?.lastName ?? ""}
               className="h-20 w-20"
               fallbackClassName="text-4xl"
             />
           </div>
 
-          <div className="items-center space-y-8">
+          <div className="items-center space-y-4">
             <div>
               <h3 className="mb-2 text-sm font-medium text-gray-700">
                 Username
@@ -56,7 +56,7 @@ export default function AccountModal({ isOpen, onClose }: AccountModalProps) {
             <div className="space-y-2">
               <h3 className="text-sm font-medium text-gray-700">Email</h3>
               <div className="flex items-center space-x-2">
-                <Mail className="h-4 w-4 text-gray-400" />
+                <Mail className="h-4 w-4 text-gray-500" />
                 <p className="text-base text-gray-900">{user?.email}</p>
               </div>
             </div>

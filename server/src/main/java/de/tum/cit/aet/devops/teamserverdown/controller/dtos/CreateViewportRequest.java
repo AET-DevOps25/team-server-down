@@ -1,6 +1,6 @@
-package de.tum.cit.aet.devops.teamserverdown.dto;
+package de.tum.cit.aet.devops.teamserverdown.controller.dtos;
 
-public class ViewportCreateRequest {
+public class CreateViewportRequest {
   private double x;
   private double y;
   private double zoom;

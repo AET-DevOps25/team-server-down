@@ -1,4 +1,5 @@
 "use client";
+
 import { memo, useCallback, useRef } from "react";
 import {
   Handle,
@@ -15,6 +16,7 @@ import {
   NodeProperties,
 } from "@/types/NodeProperties";
 import { updateNode } from "@/util/updateNode";
+
 export interface ShapeNodeParams extends NodeProps {
   id: string;
   data: {

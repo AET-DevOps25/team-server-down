@@ -2,25 +2,33 @@ import React from "react";
 import {
   Avatar as ShadeCnAvatar,
   AvatarFallback,
-} from "@/components/ui/avatar"; // adjust as needed
+} from "@/components/ui/avatar";
+import generateColorFromString from "@/util/generateUserUniqueColor";
 
 interface PersonalAvatarProps {
-  username?: string;
+  username: string;
+  firstname: string;
+  lastname: string;
   className?: string;
   fallbackClassName?: string;
 }
 
 export default function Avatar({
   username,
+  firstname,
+  lastname,
   className = "",
   fallbackClassName = "",
 }: PersonalAvatarProps) {
+  const color = generateColorFromString(username);
   return (
-    <ShadeCnAvatar className={`h-10 w-10 bg-blue-600 ${className}`}>
+    <ShadeCnAvatar className={`h-10 w-10 ${className}`}>
       <AvatarFallback
-        className={`bg-blue-600 font-medium text-white ${fallbackClassName}`}
+        style={{ backgroundColor: color }}
+        className={`font-medium text-white ${fallbackClassName}`}
       >
-        {username?.charAt(0).toUpperCase()}
+        {firstname.charAt(0).toUpperCase()}
+        {lastname.charAt(0).toUpperCase()}
       </AvatarFallback>
     </ShadeCnAvatar>
   );

@@ -1,17 +1,22 @@
 "use client";
 
-import React, { useState, useRef, useEffect } from "react";
+import React, { useState, useRef, useEffect, useMemo } from "react";
 import formatDate from "@/util/formatDate";
 import { useRouter } from "next/navigation";
-import { Whiteboard } from "@/api/main/generated";
+import { WhiteboardResponse } from "@/api/main/generated";
 import {
   useDeleteWhiteboard,
   useUpdateWhiteboardTitle,
 } from "@/hooks/api/whiteboard.api";
 import WhiteboardThumbnail from "@/components/whiteboard-card/whiteboard-card-components/WhiteboardThumbnail";
 import WhiteboardEditPopover from "@/components/whiteboard-card/whiteboard-card-components/WhiteboardEditPopover";
+import { useGetMe } from "@/hooks/api/account.api";
 
-export default function ProjectCard({ project }: { project: Whiteboard }) {
+export default function ProjectCard({
+  project,
+}: {
+  project: WhiteboardResponse;
+}) {
   const router = useRouter();
 
   const [isEditing, setIsEditing] = useState(false);
@@ -20,6 +25,7 @@ export default function ProjectCard({ project }: { project: Whiteboard }) {
 
   const deleteWhiteboard = useDeleteWhiteboard();
   const updateTitle = useUpdateWhiteboardTitle(project.id!);
+  const getCurrentUser = useGetMe();
 
   useEffect(() => {
     if (!isEditing) return;
@@ -69,13 +75,16 @@ export default function ProjectCard({ project }: { project: Whiteboard }) {
       setIsEditing(false);
     }
   };
+  const isOwner = useMemo(() => {
+    return getCurrentUser.data?.id === project.user?.id;
+  }, [getCurrentUser.data, project.user]);
 
   return (
     <div
       className="group relative cursor-pointer rounded-lg border-2 border-gray-200 bg-white transition-all duration-200 hover:border-gray-300 hover:shadow-md"
       onClick={() => router.push(`/board/${project.id}`)}
     >
-      <div className="flex aspect-video items-center justify-center rounded-t-lg bg-gray-50 p-4">
+      <div className="flex aspect-video items-center justify-center rounded-t-lg bg-gray-50 p-2">
         <WhiteboardThumbnail id={project.id!} title={project.title} />
       </div>
       <div className="flex flex-row justify-between p-4">
@@ -103,12 +112,14 @@ export default function ProjectCard({ project }: { project: Whiteboard }) {
             <span>{formatDate(project.lastUpdatedAt!)}</span>
           </div>
         </div>
-        <div onClick={(e) => e.stopPropagation()}>
-          <WhiteboardEditPopover
-            onRename={handleRename}
-            onDelete={handleDelete}
-          />
-        </div>
+        {isOwner && (
+          <div onClick={(e) => e.stopPropagation()}>
+            <WhiteboardEditPopover
+              onRename={handleRename}
+              onDelete={handleDelete}
+            />
+          </div>
+        )}
       </div>
     </div>
   );

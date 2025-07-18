@@ -1,8 +1,8 @@
 import { useState, useMemo } from "react";
-import { Whiteboard } from "@/api/main/generated/api";
+import { WhiteboardResponse } from "@/api/main/generated/api";
 import { SortOption } from "@/types/SortingType";
 
-export function useSortedWhiteboards(whiteboards: Whiteboard[]) {
+export function useSortedWhiteboards(whiteboards: WhiteboardResponse[]) {
   const [sortBy, setSortBy] = useState<SortOption>("last-edited");
 
   const sortedWhiteboards = useMemo(() => {

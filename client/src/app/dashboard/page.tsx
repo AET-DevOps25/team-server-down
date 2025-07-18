@@ -8,11 +8,14 @@ import FilterBar from "@/components/filters/Filterbar";
 import { useSortedWhiteboards } from "@/hooks/useSortedWhiteboards";
 import { Clock, Home } from "lucide-react";
 import UserDropdown from "@/components/user-dropdown/UserDropdown";
+import { useFilteredWhiteboards } from "@/hooks/useFilteredWhiteboards";
 
 const Dashboard = () => {
   const { data: whiteboards = [] } = useWhiteboards();
+  const { filteredWhiteboards, filterBy, setFilterBy } =
+    useFilteredWhiteboards(whiteboards);
   const { sortedWhiteboards, sortBy, setSortBy } =
-    useSortedWhiteboards(whiteboards);
+    useSortedWhiteboards(filteredWhiteboards);
   const [activeSection, setActiveSection] = useState<"home" | "recent">("home");
 
   const recentWhiteboards = React.useMemo(() => {
@@ -50,15 +53,15 @@ const Dashboard = () => {
 
           <nav className="space-y-1">
             <div
-              className={`flex cursor-pointer items-center gap-3 rounded-md px-3 py-2 ${
+              className={`flex cursor-pointer items-center gap-4 rounded-md px-3 py-2 ${
                 activeSection === "home"
                   ? "bg-blue-50 text-gray-900"
                   : "text-gray-600 hover:bg-gray-100 hover:text-gray-900"
               }`}
               onClick={() => setActiveSection("home")}
             >
-              <Home className="h-4 w-4" />
-              <span className="text-sm font-medium">Home</span>
+              <Home className="h-5 w-5" />
+              <span>Home</span>
             </div>
 
             <div
@@ -69,11 +72,11 @@ const Dashboard = () => {
               }`}
               onClick={() => setActiveSection("recent")}
             >
-              <div className="flex items-center gap-3">
-                <Clock className="h-4 w-4" />
-                <span className="text-sm">Recent</span>
+              <div className="flex items-center gap-4">
+                <Clock className="h-5 w-5" />
+                <span>Recent</span>
               </div>
-              <span className="text-xs text-gray-400">
+              <span className="text-sm text-gray-400">
                 {recentWhiteboards.length > 0 ? recentWhiteboards.length : ""}
               </span>
             </div>
@@ -90,11 +93,16 @@ const Dashboard = () => {
               {activeSection === "home" ? "Your Boards" : "Recent Boards"}
             </h2>
             {activeSection === "home" && (
-              <FilterBar sortBy={sortBy} onSortChange={setSortBy} />
+              <FilterBar
+                sortBy={sortBy}
+                onSortChange={setSortBy}
+                filterBy={filterBy}
+                onFilterChange={setFilterBy}
+              />
             )}
           </div>
 
-          <div className="mx-8 flex-1 overflow-y-auto">
+          <div className="flex-1 overflow-y-auto">
             {activeSection === "home" ? (
               <div className="grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
                 <CreateWhiteboardCard />

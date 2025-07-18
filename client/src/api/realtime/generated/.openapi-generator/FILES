@@ -1,0 +1,10 @@
+.gitignore
+.npmignore
+api.ts
+base.ts
+common.ts
+configuration.ts
+docs/HandlerRootResponse.md
+docs/RootApi.md
+git_push.sh
+index.ts

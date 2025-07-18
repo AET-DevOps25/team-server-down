@@ -52,6 +52,22 @@ server:
       value: 'https://{{ .Values.server.url }}'
   replicaCount: 1
 
+realtime:
+  image:
+    repository: ghcr.io/aet-devops25/team-server-down/realtime
+    tag: ""
+    pullPolicy: Always
+  service:
+    type: ClusterIP
+    port: 9090
+    targetPort: 9090
+  env:
+    - name: REDIS_HOST
+      value: '{{ printf "%s-redis-master" .Release.Name }}'
+    - name: REDIS_PORT
+      value: "6379"
+  replicaCount: 1
+
 postgresql:
   primary:
     extraEnvVars:
@@ -68,6 +84,10 @@ postgresql:
     extraVolumeMounts:
       - name: db-init
         mountPath: /docker-entrypoint-initdb.d
+
+redis:
+  auth:
+    enabled: false
 
 keycloak:
   ingress:
@@ -135,6 +155,7 @@ ingress:
       - '{{ .Values.server.url }}'
       - '{{ .Values.auth.url }}'
       - '{{ .Values.genai.url }}'
+      - '{{ .Values.realtime.url }}'
     secretName: '{{ .Values.namespace }}-whiteboard-devops25-tls'
   rules:
     - host: '{{ .Values.client.url }}'
@@ -169,3 +190,11 @@ ingress:
             name: '{{ printf "%s-genai" .Release.Name }}'
             port:
               number: 8000
+    - host: '{{ .Values.realtime.url }}'
+      paths:
+        - path: /
+          pathType: Prefix
+          service:
+            name: '{{ printf "%s-realtime" .Release.Name }}'
+            port:
+              number: 9090

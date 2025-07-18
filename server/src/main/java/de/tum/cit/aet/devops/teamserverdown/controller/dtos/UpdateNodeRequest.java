@@ -1,6 +1,6 @@
-package de.tum.cit.aet.devops.teamserverdown.dto;
+package de.tum.cit.aet.devops.teamserverdown.controller.dtos;
 
-public class NodeUpdateDTO {
+public class UpdateNodeRequest {
   private String type;
   private Double positionX;
   private Double positionY;

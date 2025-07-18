@@ -7,17 +7,21 @@ RUN npm ci
 COPY . .
 
 ARG API_URL
+ENV NEXT_PUBLIC_API_URL=${API_URL}
+
 ARG GENAI_API_URL
 ENV NEXT_PUBLIC_GENAI_URL=${GENAI_API_URL}
-ENV NEXT_PUBLIC_API_URL=${API_URL}
+
+ARG REALTIME_API_URL
+ENV NEXT_PUBLIC_REALTIME_URL=${REALTIME_API_URL}
 
 ARG BASE_URL
 ENV NEXT_PUBLIC_BASE_URL=${BASE_URL}
 
 RUN npm run build
 
-ENV NEXT_TELEMETRY_DISABLED 1
-ENV NODE_ENV production
+ENV NEXT_TELEMETRY_DISABLED=1
+ENV NODE_ENV=production
 
 # Remove the existing node_modules directory and only install production dependencies
 RUN npm ci --only=production && npm cache clean --force
