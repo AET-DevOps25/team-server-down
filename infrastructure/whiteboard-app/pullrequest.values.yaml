@@ -151,6 +151,8 @@ grafana:
 prometheus:
   rbac:
     create: false
+  kube-state-metrics:
+    enabled: false
 
 ingress:
   enabled: true
