@@ -122,6 +122,10 @@ keycloak:
     - name: realm-export
       mountPath: /opt/bitnami/keycloak/data/import
 
+redis:
+  auth:
+    enabled: false
+
 genai:
   image:
     repository: ghcr.io/aet-devops25/team-server-down/genai
@@ -157,7 +161,7 @@ ingress:
       - "staging.whiteboard.student.k8s.aet.cit.tum.de"
       - "staging.api.whiteboard.student.k8s.aet.cit.tum.de"
       - "staging.auth.whiteboard.student.k8s.aet.cit.tum.de"
-      - "staging.realtime.whiteboard.student.k8s.cit.tum.de"
+      - "staging.realtime.whiteboard.student.k8s.aet.cit.tum.de"
       - "staging.genai.whiteboard.student.k8s.aet.cit.tum.de"
     secretName: "staging-whiteboard-devops25-tls"
   rules:
