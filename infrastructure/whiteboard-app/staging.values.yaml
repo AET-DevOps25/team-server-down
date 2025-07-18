@@ -116,6 +116,10 @@ keycloak:
     - name: realm-export
       mountPath: /opt/bitnami/keycloak/data/import
 
+redis:
+  auth:
+    enabled: false
+
 genai:
   image:
     repository: ghcr.io/aet-devops25/team-server-down/genai
