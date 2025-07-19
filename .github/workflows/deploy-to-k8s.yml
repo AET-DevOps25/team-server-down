@@ -302,15 +302,18 @@ jobs:
       
           if [[ "$BRANCH" == "main" ]]; then
             RELEASE_NAME="whiteboard-production"
+            OBSERVABILITY_RELEASE_NAME="whiteboard-observability-production"
           elif [[ "$BRANCH" == "develop" ]]; then
             RELEASE_NAME="whiteboard-staging"
+            OBSERVABILITY_RELEASE_NAME="whiteboard-observability-staging"
           else
             PR_NUMBER=${{ github.event.pull_request.number }}
             RELEASE_NAME="whiteboard-pr-${PR_NUMBER}"
+            RELEASE_NAME="whiteboard-staging"
           fi
       
           echo "RELEASE_NAME=${RELEASE_NAME}" >> $GITHUB_ENV
-          echo "release-name=${RELEASE_NAME}" >> $GITHUB_OUTPUT
+          echo "OBSERVABILITY_RELEASE_NAME=${OBSERVABILITY_RELEASE_NAME}" >> $GITHUB_ENV
 
       - name: Install Helm
         uses: azure/setup-helm@v3
@@ -338,7 +341,7 @@ jobs:
 
       - name: Deploy Observability Stack with Helm
         run: |
-          helm upgrade ${{ env.RELEASE_NAME }}-observability ./infrastructure/whiteboard-observability/ \
+          helm upgrade ${{ env.OBSERVABILITY_RELEASE_NAME }} ./infrastructure/whiteboard-observability/ \
             -f ./infrastructure/whiteboard-observability/staging.values.yaml \
             -n tsd-${{ env.NAMESPACE }} \
             --create-namespace \

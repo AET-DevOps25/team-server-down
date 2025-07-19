@@ -46,6 +46,6 @@ ingress:
         - path: /
           pathType: Prefix
           service:
-            name: '{{ printf "%s-grafana" .Release.Name }}'
+            name: '{{ printf "%s-observability-grafana" .Release.Name }}'
             port:
               number: 3000
