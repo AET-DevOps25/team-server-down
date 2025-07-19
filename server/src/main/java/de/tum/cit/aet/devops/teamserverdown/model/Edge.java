@@ -1,4 +1,5 @@
 package de.tum.cit.aet.devops.teamserverdown.model;
+
 import jakarta.persistence.*;
 
 @Entity
