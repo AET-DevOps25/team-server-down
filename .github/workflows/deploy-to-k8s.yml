@@ -318,26 +318,26 @@ jobs:
       - name: Install Helm
         uses: azure/setup-helm@v3
 
-      - name: Deploy App with Helm
-        run: |
-          helm upgrade ${{ env.RELEASE_NAME }} ./infrastructure/whiteboard-app/ \
-            -f ${{ env.VALUES_FILE }} \
-            -n tsd-${{ env.NAMESPACE }} \
-            --create-namespace \
-            --install \
-            --atomic \
-            --kubeconfig ${{ env.KUBECONFIG }} \
-            --set namespace="${{ env.NAMESPACE }}" \
-            --set server.image.tag="${{ env.IMAGE_TAG }}" \
-            --set client.image.tag="${{ env.IMAGE_TAG }}" \
-            --set genai.image.tag="${{ env.IMAGE_TAG }}" \
-            --set realtime.image.tag="${{ env.IMAGE_TAG }}" \
-            --set client.url="${{ env.CLIENT_URL }}" \
-            --set server.url="${{ env.SERVER_URL }}" \
-            --set auth.url="${{ env.AUTH_URL }}" \
-            --set genai.url="${{ env.GENAI_URL }}" \
-            --set genai.apiKey="${{ env.OPEN_WEB_UI_API_KEY }}" \
-            --set realtime.url="${{ env.REALTIME_URL }}" \
+#      - name: Deploy App with Helm
+#        run: |
+#          helm upgrade ${{ env.RELEASE_NAME }} ./infrastructure/whiteboard-app/ \
+#            -f ${{ env.VALUES_FILE }} \
+#            -n tsd-${{ env.NAMESPACE }} \
+#            --create-namespace \
+#            --install \
+#            --atomic \
+#            --kubeconfig ${{ env.KUBECONFIG }} \
+#            --set namespace="${{ env.NAMESPACE }}" \
+#            --set server.image.tag="${{ env.IMAGE_TAG }}" \
+#            --set client.image.tag="${{ env.IMAGE_TAG }}" \
+#            --set genai.image.tag="${{ env.IMAGE_TAG }}" \
+#            --set realtime.image.tag="${{ env.IMAGE_TAG }}" \
+#            --set client.url="${{ env.CLIENT_URL }}" \
+#            --set server.url="${{ env.SERVER_URL }}" \
+#            --set auth.url="${{ env.AUTH_URL }}" \
+#            --set genai.url="${{ env.GENAI_URL }}" \
+#            --set genai.apiKey="${{ env.OPEN_WEB_UI_API_KEY }}" \
+#            --set realtime.url="${{ env.REALTIME_URL }}" \
 
       - name: Deploy Observability Stack with Helm
         run: |
