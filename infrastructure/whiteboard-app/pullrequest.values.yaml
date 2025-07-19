@@ -175,6 +175,14 @@ loki:
     volume_enabled: true
   ruler:
     enable_api: true
+  minio:
+    enabled: true
+  s3:
+    endpoint: minio.minio.svc.cluster.local:9000
+    insecure: true
+    access_key_id: minio-access-key
+    secret_access_key: minio-secret-key
+    bucketnames: loki
 
 ingress:
   enabled: true
