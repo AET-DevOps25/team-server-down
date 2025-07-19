@@ -157,6 +157,8 @@ prometheus:
     enabled: false
 
 loki:
+  enterprise:
+    enabled: false
   commonConfig:
     replication_factor: 1
   schemaConfig:
