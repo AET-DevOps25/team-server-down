@@ -44,8 +44,16 @@ services:
   client:
     image: ghcr.io/aet-devops25/team-server-down/client:latest
     environment:
-      - NEXT_PUBLIC_API_URL=${PUBLIC_API_URL}
-      - NEXT_PUBLIC_GENAI_URL=${PUBLIC_GENAI_URL}
+      NEXT_PUBLIC_API_URL: ${NEXT_PUBLIC_API_URL:-http://localhost:9091}
+      NEXT_PUBLIC_BASE_URL: ${NEXT_PUBLIC_API_URL:-http://localhost:3000}
+      NEXT_PUBLIC_GENAI_URL: ${NEXT_PUBLIC_GENAI_URL:-http://localhost:8000}
+      NEXT_PUBLIC_REALTIME_URL: ${NEXT_PUBLIC_REALTIME_URL:-ws://localhost:9090}
+      NEXTAUTH_URL: ${NEXTAUTH_URL:-http://localhost:3000/api/auth/}
+      NEXTAUTH_SECRET: ${NEXTAUTH_SECRET:-feZJWB3mcQ93VBmqHKQI5er5NEIxcDPb3wtT/KaLB9s=}
+      KEYCLOAK_CLIENT_ID: ${KEYCLOAK_CLIENT_ID:-webclient}
+      KEYCLOAK_ISSUER: ${KEYCLOAK_ISSUER:-http://keycloak:8080/realms/development}
+      KEYCLOAK_END_SESSION_ENDPOINT: ${KEYCLOAK_END_SESSION_ENDPOINT:-http://keycloak:8080/realms/development/protocol/openid-connect/logout}
+      KEYCLOAK_CLIENT_SECRET: ${KEYCLOAK_CLIENT_SECRET:-SXiMvr1GG10bk2J63ODZC9SOaoAZ4dbe}
     depends_on:
       - server
     restart: unless-stopped
@@ -76,6 +84,30 @@ services:
       - /mnt/ebs/db-data:/var/lib/postgresql/data
     networks:
       - server
+  genai:
+    restart: always
+    build:
+      context: ./genai
+      dockerfile: Dockerfile
+    ports:
+      - "8000:8000"
+    environment:
+      OPEN_WEB_UI_API_KEY: sk-7eb81f98e32f48aaa59b315f73485aaa
+      SERVER_URL: ${SERVER_URL:-http://localhost:9091}
+      CLIENT_URL: ${CLIENT_URL:-http://localhost:3000}
+      GENAI_URL: ${GENAI_URL:-http://localhost:8000}
+      API_URL: ${API_URL:-https://gpu.aet.cit.tum.de/api/chat/completions}
+    volumes:
+      - ./genai:/app
+    networks:
+      - server
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.genai.rule=Host(`${GENAI_HOST}`)"
+      - "traefik.http.services.genai.loadbalancer.server.port=8000"
+      - "traefik.http.routers.genai.entrypoints=websecure"
+      - "traefik.http.routers.genai.tls.certresolver=letsencrypt"
+
 
 volumes:
   db-data:

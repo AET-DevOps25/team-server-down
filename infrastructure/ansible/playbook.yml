@@ -98,6 +98,10 @@
         echo "CLIENT_HOST=client.{{ public_ip.json.ip }}.nip.io" >> .env.prod
         echo "SERVER_HOST=api.{{ public_ip.json.ip }}.nip.io" >> .env.prod
         echo "PUBLIC_API_URL=https://api.{{ public_ip.json.ip }}.nip.io/api" >> .env.prod
+        echo "REDISINSIGHT_HOST=redisinsight.{{ public_ip.json.ip }}.nip.io" >> .env.prod
+        echo "GENAI_HOST=genai.{{ public_ip.json.ip }}.nip.io" >> .env.prod
+        echo "KEYCLOAK_HOST=keycloak.{{ public_ip.json.ip }}.nip.io" >> .env.prod
+
 
     - name: Start Container
       community.docker.docker_compose_v2:
