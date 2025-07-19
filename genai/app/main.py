@@ -3,6 +3,8 @@ from fastapi import FastAPI
 from app.routes import root
 from app.db.client import WeaviateClientSingleton
 from prometheus_fastapi_instrumentator import Instrumentator, metrics
+from prometheus_client import Counter, Histogram, Gauge
+import time
 import os
 import requests
 from typing import Any, List, Optional
@@ -39,6 +41,16 @@ API_URL = os.getenv("API_URL")
 SERVER_URL = os.getenv("SERVER_URL")
 CLIENT_URL = os.getenv("CLIENT_URL")
 GENAI_URL = os.getenv("GENAI_URL")
+
+
+LLM_TOKEN_COUNT = Histogram(
+    'llm_token_count',
+    'Number of tokens in requests/responses',
+    labelnames=['operation', 'type']
+)
+
+
+
 
 
 class OpenWebUILLM(LLM):
@@ -126,7 +138,7 @@ llm = OpenWebUILLM()
 
 
 class TextRequest(BaseModel):
-    user_text: List[str]
+    user_text: str
 
 
 class TextResponse(BaseModel):
@@ -135,19 +147,28 @@ class TextResponse(BaseModel):
 
 @router.post("/completion", response_model=TextResponse)
 async def complete_text(request: TextRequest):
+    operation = "completion"
+
     try:
-        input_text = " ".join(request.user_text)
+
+        input_tokens = len(request.user_text.split(' '))
+        LLM_TOKEN_COUNT.labels(operation=operation, type='input').observe(input_tokens)
+
         prompt = f"""Complete the following text with exactly one natural sentence:
-        {input_text}
-        
+        {request.user_text}
+
         Rules:
         - ALWAYS start your response with the exact input text
         - Add only ONE sentence
         - Keep the style consistent
         - Make it coherent with the input
         """
-        logger.info(f"Processing completion request for text: {input_text}")
+        logger.info(f"Processing completion request for text: {request.user_text}")
         result = llm(prompt)
+
+        output_tokens = len(result.split())
+        LLM_TOKEN_COUNT.labels(operation=operation, type='output').observe(output_tokens)
+
         logger.info(f"Generated completion: {result}")
         return TextResponse(llm_response=result)
     except Exception as e:
@@ -157,11 +178,21 @@ async def complete_text(request: TextRequest):
 
 @router.post("/summarization", response_model=TextResponse)
 async def summarize_text(request: TextRequest):
+    operation = "summarization"
+
     try:
+
+        input_tokens = len(request.user_text.split(' '))
+        LLM_TOKEN_COUNT.labels(operation=operation, type='input').observe(input_tokens)
+
         prompt = f"""Summarize the following text concisely:
-        {' '.join(request.user_text)}
+        {request.user_text}
         """
         result = llm(prompt)
+
+        output_tokens = len(result.split())
+        LLM_TOKEN_COUNT.labels(operation=operation, type='output').observe(output_tokens)
+
         return TextResponse(llm_response=result)
     except Exception as e:
         logger.error(f"Summarization error: {str(e)}")
@@ -170,21 +201,28 @@ async def summarize_text(request: TextRequest):
 
 @router.post("/rephrase", response_model=TextResponse)
 async def rephrase_text(request: TextRequest):
+    operation = "rephrase_text"
     logger.info(f"Received rephrase request: {request}")
+
     try:
-        input_text = " ".join(request.user_text)
-        word_count = len(input_text.split())
+        input_tokens = len(request.user_text.split(' '))
+        LLM_TOKEN_COUNT.labels(operation=operation, type='input').observe(input_tokens)
+
+        word_count = len(request.user_text.split())
         prompt = f"""Rephrase the following text:
-        {input_text}
-        
+        {request.user_text}
+
         Rules:
         - Keep EXACTLY {word_count} words
         - Maintain the original meaning
         - Use similar tone and style
         - Make it sound natural
         """
-        logger.info(f"Received rephrase request: {input_text}")
+        logger.info(f"Received rephrase request: {request.user_text}")
         result = llm(prompt)
+
+        output_tokens = len(result.split())
+        LLM_TOKEN_COUNT.labels(operation=operation, type='output').observe(output_tokens)
         # Ensure exact word count
         result_words = result.split()
         if len(result_words) > word_count:

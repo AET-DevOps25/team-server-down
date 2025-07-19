@@ -104,11 +104,11 @@ const StyleBar = ({
       let data;
 
       if (action === "rephrase") {
-        data = await rephraseText({ user_text: [selectedNodeLabel] });
+        data = await rephraseText({ user_text: selectedNodeLabel });
       } else if (action === "complete") {
-        data = await completeText({ user_text: [selectedNodeLabel] });
+        data = await completeText({ user_text: selectedNodeLabel });
       } else {
-        data = await summarizedText({ user_text: [selectedNodeLabel] });
+        data = await summarizedText({ user_text: selectedNodeLabel });
       }
 
       const llmResponse = data.llm_response;
