@@ -10,7 +10,7 @@ client:
   replicaCount: 1
   env:
     - name: KEYCLOAK_CLIENT_SECRET
-      value: SXiMvr1GG10bk2J63ODZC9SOaoAZ4dbe
+      value: '{{ .Values.keycloak.clientSecret }}'
     - name: NEXTAUTH_URL
       value: https://whiteboard.student.k8s.aet.cit.tum.de/api/auth/
     - name: NEXTAUTH_SECRET
