@@ -41,7 +41,7 @@ server:
     - name: DB_USER
       value: postgres
     - name: DB_PASSWORD
-      value: '{{ .Values.postgresql.secret }}'
+      value: '{{ .Values.postgresql.auth.postgresPassword }}'
     - name: ALLOWED_ORIGIN
       value: "https://staging.whiteboard.student.k8s.aet.cit.tum.de"
     - name: IDP_INTERNAL_URI
@@ -74,7 +74,7 @@ postgresql:
       - name: POSTGRES_USER
         value: postgres
       - name: POSTGRES_PASSWORD
-        value: '{{ .Values.postgresql.secret }}'
+        value: '{{ .Values.postgresql.auth.postgresPassword }}'
       - name: POSTGRES_MULTIPLE_DATABASES
         value: "main,keycloak"
     extraVolumes:
@@ -90,7 +90,7 @@ keycloak:
     enabled: false
   auth:
     adminUser: admin
-    adminPassword: '{{ .Values.postgresql.secret }}'
+    adminPassword: '{{ .Values.postgresql.auth.postgresPassword }}'
   postgresql:
     enabled: false
   externalDatabase:
