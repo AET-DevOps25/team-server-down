@@ -41,7 +41,7 @@ server:
     - name: DB_USER
       value: postgres
     - name: DB_PASSWORD
-      value: '{{ .Values.db.password }}'
+      value: '{{ .Values.postgresql.password }}'
     - name: ALLOWED_ORIGIN
       value: 'https://{{ .Values.client.url }}'
     - name: IDP_INTERNAL_URI
@@ -74,7 +74,7 @@ postgresql:
       - name: POSTGRES_USER
         value: postgres
       - name: POSTGRES_PASSWORD
-        value: '{{ .Values.db.password }}'
+        value: '{{ .Values.postgresql.password }}'
       - name: POSTGRES_MULTIPLE_DATABASES
         value: "main,keycloak"
     extraVolumes:
@@ -94,13 +94,13 @@ keycloak:
     enabled: false
   auth:
     adminUser: admin
-    adminPassword: '{{ .Values.db.password }}'
+    adminPassword: '{{ .Values.postgresql.password }}'
   postgresql:
     enabled: false
   externalDatabase:
     host: '{{ printf "%s-postgresql" .Release.Name }}'
     user: postgres
-    password: '{{ .Values.db.password }}'
+    password: '{{ .Values.postgresql.password }}'
     database: keycloak
     port: 5432
   extraEnvVars:
