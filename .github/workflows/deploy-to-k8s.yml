@@ -339,7 +339,6 @@ jobs:
             --set realtime.url="${{ env.REALTIME_URL }}" \
 
       - name: Deploy Observability Stack with Helm
-        if: github.ref_name == 'main' || github.ref_name == '89-deploy-observability-stack'
         run: |
           helm upgrade ${{ env.RELEASE_NAME }} ./infrastructure/whiteboard-observability/ \
             -f ${{ env.VALUES_FILE }} \
