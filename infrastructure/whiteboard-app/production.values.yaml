@@ -14,7 +14,7 @@ client:
     - name: NEXTAUTH_URL
       value: https://whiteboard.student.k8s.aet.cit.tum.de/api/auth/
     - name: NEXTAUTH_SECRET
-      value: feZJWB3mcQ93VBmqHKQI5er5NEIxcDPb3wtT/KaLB9s=
+      value: '{{ .Values.nextauth.secret }}'
     - name: KEYCLOAK_CLIENT_ID
       value: webclient
     - name: KEYCLOAK_ISSUER
