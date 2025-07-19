@@ -165,21 +165,12 @@ loki:
   commonConfig:
     replication_factor: 1
   storage:
-    bucketNames:
-      chunks: "loki-chunks"
-      ruler: "loki-ruler"
-      admin: "loki-admin"
-    s3:
-      endpoint: http://{{ include "loki.minio.fullname" . }}:9000
-      accessKeyId: loki
-      secretAccessKey: supersecret
-      s3ForcePathStyle: true
-      insecure: true
+    type: filesystem
   schemaConfig:
     configs:
       - from: 2024-04-01
         store: tsdb
-        object_store: s3
+        object_store: filesystem
         schema: v13
         index:
           prefix: loki_index_
@@ -207,9 +198,6 @@ singleBinary:
 
 chunksCache:
   writebackSizeLimit: 10MB
-
-minio:
-  enabled: true
 
 backend:
   replicas: 0
