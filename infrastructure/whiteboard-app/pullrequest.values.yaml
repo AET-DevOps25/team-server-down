@@ -177,8 +177,6 @@ loki:
     enabled: true
   querier:
     max_concurrent: 4
-  minio:
-    enabled: true
 
 deploymentMode: SingleBinary
 singleBinary:
