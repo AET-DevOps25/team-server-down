@@ -147,6 +147,18 @@ grafana:
     namespaced: true
   adminUser: admin
   adminPassword: admin
+  extraVolumes:
+    - name: grafana-datasources-config
+      configMap:
+        name: grafana-datasources-configmap
+    - name: grafana-dashboards-config
+      configMap:
+        name: grafana-dashboards-configmap
+  extraVolumeMounts:
+    - name: grafana-datasources-config
+      mountPath: /etc/grafana/provisioning/datasources
+    - name: grafana-dashboards-config
+      mountPath: /etc/grafana/provisioning/dashboards
 
 prometheus:
   rbac:
@@ -155,6 +167,14 @@ prometheus:
     enabled: false
   prometheus-node-exporter:
     enabled: false
+  server:
+    extraVolumes:
+      - name: prometheus-config
+        configMap:
+          name: prometheus-configmap
+    extraVolumeMounts:
+      - name: prometheus-config
+        mountPath: /etc/prometheus
 
 ingress:
   enabled: true
