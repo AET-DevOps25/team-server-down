@@ -4,5 +4,5 @@ datasources:
   - name: Prometheus
     type: prometheus
     access: proxy
-    url: '{{ .Values.server.url }}'
+    url: 'https://{{ .Values.server.url }}'
     isDefault: true
