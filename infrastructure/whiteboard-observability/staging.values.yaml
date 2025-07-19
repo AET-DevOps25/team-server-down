@@ -1,0 +1,51 @@
+grafana:
+  rbac:
+    create: true
+    namespaced: true
+  adminUser: admin
+  adminPassword: admin
+  extraVolumes:
+    - name: grafana-datasources-config
+      configMap:
+        name: grafana-datasources-configmap
+  extraVolumeMounts:
+    - name: grafana-datasources-config
+      mountPath: /etc/grafana/provisioning/datasources
+
+prometheus:
+  rbac:
+    create: false
+  kube-state-metrics:
+    enabled: false
+  prometheus-node-exporter:
+    enabled: false
+  server:
+    extraVolumes:
+      - name: prometheus-config
+        configMap:
+          name: prometheus-configmap
+    extraVolumeMounts:
+      - name: prometheus-config
+        mountPath: /etc/prometheus
+
+ingress:
+  enabled: true
+  className: "nginx"
+  annotations:
+    cert-manager.io/cluster-issuer: "letsencrypt-staging"
+    nginx.ingress.kubernetes.io/rewrite-target: /
+    nginx.ingress.kubernetes.io/use-forwarded-headers: "true"
+    nginx.ingress.kubernetes.io/proxy-buffer-size: "8k"
+  tls:
+    hosts:
+      - '{{ .Values.metrics.url }}'
+    secretName: '{{ .Values.namespace }}-whiteboard-observability-devops25-tls'
+  rules:
+    - host: '{{ .Values.metrics.url }}'
+      paths:
+        - path: /
+          pathType: Prefix
+          service:
+            name: '{{ printf "%s-grafana" .Release.Name }}'
+            port:
+              number: 3000

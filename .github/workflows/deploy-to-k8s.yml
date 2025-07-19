@@ -337,8 +337,17 @@ jobs:
             --set genai.url="${{ env.GENAI_URL }}" \
             --set genai.apiKey="${{ env.OPEN_WEB_UI_API_KEY }}" \
             --set realtime.url="${{ env.REALTIME_URL }}" \
+      - name: Deploy Observability Stack with Helm
+        if: github.ref_name == 'main' || github.ref_name == '89-deploy-observability-stack'
+        run: |
+          helm upgrade ${{ }} ./infrastructure/whiteboard-observability/ \
+            -f ${{ env.VALUES_FILE }} \
+            -n tsd-${{ env.NAMESPACE }} \
+            --create-namespace \
+            --install \
+            --atomic \
+            --kubeconfig ${{ env.KUBECONFIG }} \
             --set metrics.url="${{ env.METRICS_URL }}"
-
   comment-pr:
     needs: deploy
     runs-on: ubuntu-latest
