@@ -1,11 +1,9 @@
 grafana:
+  ingress:
+    enabled: false
   rbac:
     create: false
     namespaced: true
-  service:
-    type: ClusterIP
-    port: 80
-    targetPort: 3000
   adminUser: admin
   adminPassword: admin
   extraVolumes:
@@ -52,4 +50,4 @@ ingress:
           service:
             name: '{{ printf "%s-grafana" .Release.Name }}'
             port:
-              number: 80
+              number: 3000
