@@ -219,11 +219,12 @@ jobs:
 
 
   deploy:
-#    needs:
+    needs:
 #      - build-client
 #      - build-server
 #      - build-genai
 #      - build-realtime
+      - setup
     runs-on: ubuntu-latest
     outputs:
       client_url: ${{ steps.set-vars.outputs.CLIENT_URL }}
