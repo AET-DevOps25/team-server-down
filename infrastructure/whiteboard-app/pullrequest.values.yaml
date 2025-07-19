@@ -157,6 +157,8 @@ prometheus:
     enabled: false
 
 loki:
+  commonConfig:
+    replication_factor: 1
   schemaConfig:
     configs:
       - from: "2024-04-01"
@@ -166,8 +168,6 @@ loki:
         index:
           prefix: loki_index_
           period: 24h
-    pattern_ingester:
-      enabled: true
   pattern_ingester:
     enabled: true
   limits_config:
