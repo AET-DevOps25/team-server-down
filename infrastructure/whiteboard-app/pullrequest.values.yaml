@@ -162,8 +162,8 @@ loki:
   schemaConfig:
     configs:
       - from: 2020-10-24
-        store: tsdb
-        object_store: s3
+        store: filesystem
+        object_store: filesystem
         schema: v11
         index:
           prefix: index_
@@ -175,8 +175,6 @@ loki:
     volume_enabled: true
   ruler:
     enable_api: true
-  minio:
-    enabled: true
 
 ingress:
   enabled: true
