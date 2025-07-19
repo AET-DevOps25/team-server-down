@@ -231,6 +231,9 @@ jobs:
       auth_url: ${{ steps.set-vars.outputs.AUTH_URL }}
       genai_url: ${{ steps.set-vars.outputs.GENAI_URL }}
       realtime_url: ${{ steps.set-vars.outputs.REALTIME_URL }}
+      keycloak_client_secret: ${{ steps.set-vars.outputs.KEYCLOAK_CLIENT_SECRET }}
+      nextauth_secret: ${{ steps.set-vars.outputs.NEXTAUTH_SECRET }}
+      db_password: ${{ steps.set-vars.outputs.DB_PASSWORD }}
     steps:
       - name: Checkout repository
         uses: actions/checkout@v3
@@ -288,7 +291,10 @@ jobs:
           echo "GENAI_URL=$GENAI_URL" >> $GITHUB_ENV
           echo "OPEN_WEB_UI_API_KEY=${{ secrets.OPEN_WEB_UI_API_KEY }}" >> $GITHUB_ENV
           echo "REALTIME_URL=$REALTIME_URL" >> $GITHUB_ENV
-          
+          echo "KeyCLOAK_CLIENT_SECRET=$KEYCLOAK_CLIENT_SECRET" >> $GITHUB_ENV
+          echo "NEXTAUTH_SECRET=$NEXTAUTH_SECRET" >> $GITHUB_ENV
+          echo "DB_PASSWORD=$DB_PASSWORD" >> $GITHUB_ENV
+ 
           echo "CLIENT_URL=$CLIENT_URL" >> $GITHUB_OUTPUT
           echo "SERVER_URL=$SERVER_URL" >> $GITHUB_OUTPUT
           echo "AUTH_URL=$AUTH_URL" >> $GITHUB_OUTPUT
