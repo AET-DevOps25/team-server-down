@@ -348,7 +348,7 @@ jobs:
             --set realtime.url="${{ env.REALTIME_URL }}" \
             --set keycloak.clientSecret="${{ env.KEYCLOAK_CLIENT_SECRET }}" \
             --set nextauth.secret="${{ env.NEXTAUTH_SECRET }}" \
-            --set postgresql.password="${{ env.DB_PASSWORD }}" \
+            --set postgresql.secret="${{ env.DB_PASSWORD }}" \
 
   comment-pr:
     needs: deploy

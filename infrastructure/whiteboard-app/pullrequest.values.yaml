@@ -74,7 +74,7 @@ postgresql:
       - name: POSTGRES_USER
         value: postgres
       - name: POSTGRES_PASSWORD
-        value: '{{ .Values.postgresql.password }}'
+        value: '{{ .Values.postgresql.secret }}'
       - name: POSTGRES_MULTIPLE_DATABASES
         value: "main,keycloak"
     extraVolumes:
@@ -94,13 +94,13 @@ keycloak:
     enabled: false
   auth:
     adminUser: admin
-    adminPassword: '{{ .Values.postgresql.password }}'
+    adminPassword: '{{ .Values.postgresql.secret }}'
   postgresql:
     enabled: false
   externalDatabase:
     host: '{{ printf "%s-postgresql" .Release.Name }}'
     user: postgres
-    password: '{{ .Values.postgresql.password }}'
+    password: '{{ .Values.postgresql.secret }}'
     database: keycloak
     port: 5432
   extraEnvVars:
