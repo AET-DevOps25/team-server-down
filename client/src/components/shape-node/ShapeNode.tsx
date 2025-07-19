@@ -1,6 +1,7 @@
 "use client";
 
 import { memo, useCallback, useRef } from "react";
+import { useParams } from "next/navigation";
 import {
   Handle,
   NodeProps,
@@ -16,22 +17,32 @@ import {
   NodeProperties,
 } from "@/types/NodeProperties";
 import { updateNode } from "@/util/updateNode";
+import { useAmIOwner } from "@/hooks/api/whiteboard.api";
+import { useGetMe } from "@/hooks/api/account.api";
+import shapeRegistry from "@/util/shapeRegistry";
 
 export interface ShapeNodeParams extends NodeProps {
   id: string;
   data: {
     label: string;
     shapeType: string;
-    Shape: React.ComponentType<React.SVGProps<SVGSVGElement>>;
     nodeProperties: NodeProperties;
   };
   selected: boolean;
 }
 
 const ShapeNode = ({ id, data, selected }: ShapeNodeParams) => {
-  const { Shape, nodeProperties, label } = data;
+  const { nodeProperties, label } = data;
   const { setNodes } = useReactFlow();
   const inputRef = useRef<HTMLInputElement>(null);
+
+  const params = useParams();
+  const whiteboardId = Number(params.id);
+
+  const { data: user } = useGetMe();
+  const { data: isOwner } = useAmIOwner(whiteboardId, user?.id);
+
+  const Shape = shapeRegistry({ shapeType: data.shapeType });
 
   const onUpdateNode = (updater: {
     label?: string;
@@ -65,20 +76,22 @@ const ShapeNode = ({ id, data, selected }: ShapeNodeParams) => {
         position: "relative",
       }}
     >
-      <NodeToolbar isVisible={selected} position={Position.Top}>
-        <div className="flex items-center gap-2">
-          <StyleBar
-            nodeProperties={nodeProperties}
-            onUpdateNode={(updatedProperties: Partial<NodeProperties>) =>
-              onUpdateNode({ nodeProperties: updatedProperties })
-            }
-            onUpdateLabel={(newLabel: string) =>
-              onUpdateNode({ label: newLabel })
-            }
-            selectedNodeLabel={label}
-          />
-        </div>
-      </NodeToolbar>
+      {isOwner && (
+        <NodeToolbar isVisible={selected} position={Position.Top}>
+          <div className="flex items-center gap-2">
+            <StyleBar
+              nodeProperties={nodeProperties}
+              onUpdateNode={(updatedProperties: Partial<NodeProperties>) =>
+                onUpdateNode({ nodeProperties: updatedProperties })
+              }
+              onUpdateLabel={(newLabel: string) =>
+                onUpdateNode({ label: newLabel })
+              }
+              selectedNodeLabel={label}
+            />
+          </div>
+        </NodeToolbar>
+      )}
 
       <NodeResizer
         color="#3859ff"
@@ -107,7 +120,7 @@ const ShapeNode = ({ id, data, selected }: ShapeNodeParams) => {
 
         <input
           ref={inputRef}
-          className={`z-10 min-h-[100px] w-4/5 bg-transparent text-center focus:outline-none`}
+          className={`z-10 h-full w-4/5 bg-transparent text-center focus:outline-none`}
           style={{
             color: nodeProperties.textColor,
             fontSize: `${nodeProperties.fontSize}px`,

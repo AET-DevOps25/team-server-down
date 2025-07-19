@@ -1,4 +1,6 @@
-FROM golang:1.24-alpine AS builder
+FROM golang:1.24-alpine
+RUN apk add --no-cache curl
+RUN curl -v https://proxy.golang.org
 
 WORKDIR /app
 

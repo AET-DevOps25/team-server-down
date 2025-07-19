@@ -67,6 +67,9 @@ services:
     build:
       context: ./realtime
       dockerfile: Dockerfile.local
+    dns:
+      - 8.8.8.8
+      - 8.8.4.4
     environment:
       REDIS_HOST: ${REDIS_HOST:-redis}
       REDIS_PORT: ${REDIS_PORT:-6379}
