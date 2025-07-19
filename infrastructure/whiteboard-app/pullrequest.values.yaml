@@ -159,7 +159,7 @@ prometheus:
 loki:
   commonConfig:
     replication_factor: 1
-  schema_config:
+  schemaConfig:
     configs:
       - from: "2024-04-01"
         store: tsdb
