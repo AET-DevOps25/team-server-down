@@ -15,6 +15,18 @@ export function useWhiteboards() {
   });
 }
 
+export function useGetWhiteboardById(whiteboardId: number) {
+  return useQuery({
+    queryKey: ["whiteboard", whiteboardId],
+    queryFn: async () => {
+      const { data } =
+        await whiteboardApiFactory.getWhiteboardById(whiteboardId);
+      return data;
+    },
+    retry: 0,
+  });
+}
+
 export function useAmIOwner(whiteboardId: number, userId?: number) {
   return useQuery({
     queryKey: ["whiteboard", whiteboardId, userId],
@@ -203,20 +215,38 @@ export const useSubscribeToWhiteboardEvents = (
 };
 
 export const usePublishWhiteboardEvents = (whiteboardId: number) => {
+  const retryTimeout = useRef<NodeJS.Timeout | null>(null);
   const wsRef = useRef<WebSocket | null>(null);
 
   useEffect(() => {
-    const ws = new WebSocket(
-      `${process.env.NEXT_PUBLIC_REALTIME_URL}/ws/whiteboard/${whiteboardId}/publish`,
-    );
-    wsRef.current = ws;
+    let shouldReconnect = true;
 
-    ws.onopen = () => {
-      console.log("connected to publishing channel");
+    const connect = () => {
+      const ws = new WebSocket(
+        `${process.env.NEXT_PUBLIC_REALTIME_URL}/ws/whiteboard/${whiteboardId}/publish`,
+      );
+      wsRef.current = ws;
+
+      ws.onopen = () => {
+        console.log("connected to publishing channel");
+      };
+
+      ws.onclose = () => {
+        console.warn("WebSocket closed. Attempting to reconnect...");
+        if (shouldReconnect) {
+          retryTimeout.current = setTimeout(connect, 2000);
+        }
+      };
     };
 
+    connect();
+
     return () => {
-      ws.close();
+      shouldReconnect = false;
+      if (retryTimeout.current) {
+        clearTimeout(retryTimeout.current);
+      }
+      wsRef.current?.close();
     };
   }, []);
 

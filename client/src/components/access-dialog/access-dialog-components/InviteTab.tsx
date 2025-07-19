@@ -25,6 +25,9 @@ export default function InviteTab({
 
   return (
     <>
+      <div className="text-md text-gray-800">
+        Share with viewers (read-only access)
+      </div>
       <Input
         placeholder="Enter emails here"
         onKeyDown={handleKeyDown}
