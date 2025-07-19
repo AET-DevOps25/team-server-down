@@ -1,0 +1,8 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: grafana-datasources-configmap
+data:
+  prometheus.yml: |-
+{{- $config := .Files.Get "files/grafana/provisioning/datasources/prometheus.yml" }}
+{{ tpl $config . | indent 4 }}
