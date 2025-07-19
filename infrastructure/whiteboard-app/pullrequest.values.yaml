@@ -10,11 +10,11 @@ client:
   replicaCount: 1
   env:
     - name: KEYCLOAK_CLIENT_SECRET
-      value: '{{ .Values.keycloak.clientSecret }}'
+      value: SXiMvr1GG10bk2J63ODZC9SOaoAZ4dbe
     - name: NEXTAUTH_URL
       value: 'https://{{ .Values.client.url }}/api/auth/'
     - name: NEXTAUTH_SECRET
-      value: '{{ .Values.nextauth.secret }}'
+      value: feZJWB3mcQ93VBmqHKQI5er5NEIxcDPb3wtT/KaLB9s=
     - name: KEYCLOAK_CLIENT_ID
       value: webclient
     - name: KEYCLOAK_ISSUER
