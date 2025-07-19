@@ -350,6 +350,7 @@ jobs:
             --kubeconfig ${{ env.KUBECONFIG }} \
             --set namespace="${{ env.NAMESPACE }}" \
             --set server.url="${{ env.SERVER_URL }}" \
+            --set genai.url="${{ env.GENAI_URL }}" \
             --set metrics.url="${{ env.METRICS_URL }}"
 
   comment-pr:
