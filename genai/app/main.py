@@ -1,13 +1,10 @@
-from contextlib import asynccontextmanager
 from fastapi import FastAPI
-from app.routes import root
-from prometheus_fastapi_instrumentator import Instrumentator, metrics
-from prometheus_client import Counter, Histogram, Gauge
-import time
+from prometheus_fastapi_instrumentator import Instrumentator
+from prometheus_client import Histogram
 import os
 import requests
 from typing import Any, List, Optional
-from fastapi import FastAPI, HTTPException, APIRouter
+from fastapi import HTTPException, APIRouter
 from pydantic import BaseModel
 from langchain.llms.base import LLM
 from langchain.callbacks.manager import CallbackManagerForLLMRun
@@ -43,9 +40,9 @@ GENAI_URL = os.getenv("GENAI_URL")
 
 
 LLM_TOKEN_COUNT = Histogram(
-    'llm_token_count',
-    'Number of tokens in requests/responses',
-    labelnames=['operation', 'type']
+    "llm_token_count",
+    "Number of tokens in requests/responses",
+    labelnames=["operation", "type"],
 )
 
 
@@ -59,11 +56,11 @@ class OpenWebUILLM(LLM):
         return "open_webui"
 
     def _call(
-            self,
-            prompt: str,
-            stop: Optional[List[str]] = None,
-            run_manager: Optional[CallbackManagerForLLMRun] = None,
-            **kwargs: Any,
+        self,
+        prompt: str,
+        stop: Optional[List[str]] = None,
+        run_manager: Optional[CallbackManagerForLLMRun] = None,
+        **kwargs: Any,
     ) -> str:
         if not self.api_key:
             raise ValueError("API_KEY environment variable is required")
@@ -107,8 +104,6 @@ class OpenWebUILLM(LLM):
             raise Exception(f"API request failed: {str(e)}")
 
 
-
-
 @app.get("/v3/api-docs", include_in_schema=False)
 def custom_openapi():
     return JSONResponse(
@@ -146,8 +141,8 @@ async def complete_text(request: TextRequest):
     operation = "completion"
 
     try:
-        input_tokens = len(request.user_text.split(' '))
-        LLM_TOKEN_COUNT.labels(operation=operation, type='input').observe(input_tokens)
+        input_tokens = len(request.user_text.split(" "))
+        LLM_TOKEN_COUNT.labels(operation=operation, type="input").observe(input_tokens)
 
         prompt = f"""Complete the following text with exactly one natural sentence:
         {request.user_text}
@@ -162,7 +157,9 @@ async def complete_text(request: TextRequest):
         result = llm(prompt)
 
         output_tokens = len(result.split())
-        LLM_TOKEN_COUNT.labels(operation=operation, type='output').observe(output_tokens)
+        LLM_TOKEN_COUNT.labels(operation=operation, type="output").observe(
+            output_tokens
+        )
 
         logger.info(f"Generated completion: {result}")
         return TextResponse(llm_response=result)
@@ -176,8 +173,8 @@ async def summarize_text(request: TextRequest):
     operation = "summarization"
 
     try:
-        input_tokens = len(request.user_text.split(' '))
-        LLM_TOKEN_COUNT.labels(operation=operation, type='input').observe(input_tokens)
+        input_tokens = len(request.user_text.split(" "))
+        LLM_TOKEN_COUNT.labels(operation=operation, type="input").observe(input_tokens)
 
         prompt = f"""Summarize the following text concisely:
         {request.user_text}
@@ -185,7 +182,9 @@ async def summarize_text(request: TextRequest):
         result = llm(prompt)
 
         output_tokens = len(result.split())
-        LLM_TOKEN_COUNT.labels(operation=operation, type='output').observe(output_tokens)
+        LLM_TOKEN_COUNT.labels(operation=operation, type="output").observe(
+            output_tokens
+        )
 
         return TextResponse(llm_response=result)
     except Exception as e:
@@ -199,8 +198,8 @@ async def rephrase_text(request: TextRequest):
     logger.info(f"Received rephrase request: {request}")
 
     try:
-        input_tokens = len(request.user_text.split(' '))
-        LLM_TOKEN_COUNT.labels(operation=operation, type='input').observe(input_tokens)
+        input_tokens = len(request.user_text.split(" "))
+        LLM_TOKEN_COUNT.labels(operation=operation, type="input").observe(input_tokens)
 
         word_count = len(request.user_text.split())
         prompt = f"""Rephrase the following text:
@@ -216,7 +215,9 @@ async def rephrase_text(request: TextRequest):
         result = llm(prompt)
 
         output_tokens = len(result.split())
-        LLM_TOKEN_COUNT.labels(operation=operation, type='output').observe(output_tokens)
+        LLM_TOKEN_COUNT.labels(operation=operation, type="output").observe(
+            output_tokens
+        )
         # Ensure exact word count
         result_words = result.split()
         if len(result_words) > word_count:
