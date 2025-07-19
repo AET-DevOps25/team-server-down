@@ -232,7 +232,6 @@ jobs:
       auth_url: ${{ steps.set-vars.outputs.AUTH_URL }}
       genai_url: ${{ steps.set-vars.outputs.GENAI_URL }}
       realtime_url: ${{ steps.set-vars.outputs.REALTIME_URL }}
-      metrics_url: ${{ steps.set-vars.outputs.METRICS_URL }}
     steps:
       - name: Checkout repository
         uses: actions/checkout@v3
@@ -290,7 +289,6 @@ jobs:
           echo "AUTH_URL=$AUTH_URL" >> $GITHUB_OUTPUT
           echo "GENAI_URL=$GENAI_URL" >> $GITHUB_OUTPUT
           echo "REALTIME_URL=$REALTIME_URL" >> $GITHUB_OUTPUT
-          echo "METRICS_URL=$METRICS_URL" >> $GITHUB_OUTPUT
 
       - name: Set up Kubeconfig
         run: |
@@ -348,6 +346,7 @@ jobs:
             --atomic \
             --kubeconfig ${{ env.KUBECONFIG }} \
             --set metrics.url="${{ env.METRICS_URL }}"
+
   comment-pr:
     needs: deploy
     runs-on: ubuntu-latest
@@ -358,7 +357,6 @@ jobs:
       AUTH_URL: ${{ needs.deploy.outputs.auth_url }}
       GENAI_URL: ${{ needs.deploy.outputs.genai_url }}
       REALTIME_URL: ${{ needs.deploy.outputs.realtime_url }}
-      METRICS_URL: ${{ needs.deploy.outputs.metrics_url }}
     steps:
       - name: Comment on Pull Request with URLs
         uses: actions/github-script@v6
@@ -371,7 +369,6 @@ jobs:
             const authUrl = `https://${process.env.AUTH_URL}`;
             const genaiUrl = `https://${process.env.GENAI_URL}`;
             const realtimeUrl = `https://${process.env.REALTIME_URL}`
-            const metricsUrl = `https://${process.env.METRICS_URL}`
             
             // Check existing comments to avoid duplicates
             const { data: comments } = await github.rest.issues.listComments({
@@ -391,7 +388,6 @@ jobs:
             - **Realtime:** [${realtimeUrl}/swagger/index.html](${realtimeUrl}/swagger/index.html)
             - **GenAI:** [${genaiUrl}/docs](${genaiUrl}/docs)
             - **Keycloak:** [${authUrl}](${authUrl})
-            - **Grafana:** [${metricsUrl}](${metricsUrl})
             `;
           
             await github.rest.issues.createComment({
