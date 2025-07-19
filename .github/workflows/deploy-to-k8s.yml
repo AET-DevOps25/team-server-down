@@ -338,7 +338,7 @@ jobs:
 
       - name: Deploy Observability Stack with Helm
         run: |
-          helm upgrade ${{ env.RELEASE_NAME }} ./infrastructure/whiteboard-observability/ \
+          helm upgrade ${{ env.RELEASE_NAME }}-observability ./infrastructure/whiteboard-observability/ \
             -f ${{ env.VALUES_FILE }} \
             -n tsd-${{ env.NAMESPACE }} \
             --create-namespace \
