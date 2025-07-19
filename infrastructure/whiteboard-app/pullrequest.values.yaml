@@ -154,11 +154,16 @@ grafana:
     - name: grafana-dashboards-config
       configMap:
         name: grafana-dashboards-configmap
+    - name:  grafana-server-dashboard-config
+      configMap:
+        name: grafana-server-dashboard-configmap
   extraVolumeMounts:
     - name: grafana-datasources-config
       mountPath: /etc/grafana/provisioning/datasources
     - name: grafana-dashboards-config
       mountPath: /etc/grafana/provisioning/dashboards
+    - name: grafana-server-dashboard-config
+      mountPath: /etc/grafana/provisioning/dashboards/server
 
 prometheus:
   rbac:
