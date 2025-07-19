@@ -251,6 +251,10 @@ jobs:
             echo "NAMESPACE=production" >> $GITHUB_ENV
             echo "IMAGE_TAG=latest" >> $GITHUB_ENV
             echo "VALUES_FILE=./infrastructure/whiteboard-app/production.values.yaml" >> $GITHUB_ENV
+            echo "KEYCLOAK_CLIENT_SECRET=${{ secrets.PRODUCTION_KEYCLOAK_CLIENT_SECRET }}" >> $GITHUB_ENV
+            echo "NEXTAUTH_SECRET=${{ secrets.PRODUCTION_NEXTAUTH_SECRET }}" >> $GITHUB_ENV
+            echo "DB_PASSWORD=${{ secrets.PRODUCTION_DB_PASSWORD }}" >> $GITHUB_ENV
+            
           elif [[ "$BRANCH" == "develop" ]]; then
             CLIENT_URL=staging.whiteboard.student.k8s.aet.cit.tum.de
             SERVER_URL=staging.api.whiteboard.student.k8s.aet.cit.tum.de
@@ -260,6 +264,9 @@ jobs:
             echo "NAMESPACE=staging" >> $GITHUB_ENV
             echo "IMAGE_TAG=develop" >> $GITHUB_ENV
             echo "VALUES_FILE=./infrastructure/whiteboard-app/staging.values.yaml" >> $GITHUB_ENV
+            echo "KEYCLOAK_CLIENT_SECRET=${{ secrets.STAGING_KEYCLOAK_CLIENT_SECRET }}" >> $GITHUB_ENV
+            echo "NEXTAUTH_SECRET=${{ secrets.STAGING_NEXTAUTH_SECRET }}" >> $GITHUB_ENV
+            echo "DB_PASSWORD=${{ secrets.STAGING_DB_PASSWORD }}" >> $GITHUB_ENV
           else
             BRANCH_SAFE=${BRANCH//\//-}
             CLIENT_URL=$BRANCH_SAFE.whiteboard.student.k8s.aet.cit.tum.de
@@ -270,6 +277,9 @@ jobs:
             echo "NAMESPACE=$BRANCH_SAFE" >> $GITHUB_ENV
             echo "IMAGE_TAG=$BRANCH_SAFE" >> $GITHUB_ENV
             echo "VALUES_FILE=./infrastructure/whiteboard-app/pullrequest.values.yaml" >> $GITHUB_ENV
+            echo "KEYCLOAK_CLIENT_SECRET=${{ secrets.PR_KEYCLOAK_CLIENT_SECRET }}" >> $GITHUB_ENV
+            echo "NEXTAUTH_SECRET=${{ secrets.PR_NEXTAUTH_SECRET }}" >> $GITHUB_ENV
+            echo "DB_PASSWORD=${{ secrets.PR_DB_PASSWORD }}" >> $GITHUB_ENV   
           fi
           
           echo "CLIENT_URL=$CLIENT_URL" >> $GITHUB_ENV
@@ -329,7 +339,10 @@ jobs:
             --set auth.url="${{ env.AUTH_URL }}" \
             --set genai.url="${{ env.GENAI_URL }}" \
             --set genai.apiKey="${{ env.OPEN_WEB_UI_API_KEY }}" \
-            --set realtime.url="${{ env.REALTIME_URL }}"
+            --set realtime.url="${{ env.REALTIME_URL }}" \
+            --set keycloak.clientSecret="${{ env.KEYCLOAK_CLIENT_SECRET }}" \
+            --set nextauth.secret="${{ env.NEXTAUTH_SECRET }}" \
+            --set db.password="${{ env.DB_PASSWORD }}" \
 
   comment-pr:
     needs: deploy
