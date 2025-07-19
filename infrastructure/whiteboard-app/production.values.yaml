@@ -10,11 +10,11 @@ client:
   replicaCount: 1
   env:
     - name: KEYCLOAK_CLIENT_SECRET
-      value: '{{ .Values.KEYCLOAK_CLIENT_SECRET }}'
+      value: '{{ .Values.keycloak.clientSecret }}'
     - name: NEXTAUTH_URL
       value: https://whiteboard.student.k8s.aet.cit.tum.de/api/auth/
     - name: NEXTAUTH_SECRET
-      value: '{{ .Values.NEXTAUTH_SECRET }}'
+      value: '{{ .Values.nextauth.secret }}'
     - name: KEYCLOAK_CLIENT_ID
       value: webclient
     - name: KEYCLOAK_ISSUER
@@ -41,7 +41,7 @@ server:
     - name: DB_USER
       value: postgres
     - name: DB_PASSWORD
-      value: '{{ .Values.DB_PASSWORD }}'
+      value: '{{ .Values.db.password }}'
     - name: ALLOWED_ORIGIN
       value: "https://whiteboard.student.k8s.aet.cit.tum.de"
     - name: IDP_INTERNAL_URI
@@ -74,7 +74,7 @@ postgresql:
       - name: POSTGRES_USER
         value: postgres
       - name: POSTGRES_PASSWORD
-        value: '{{ .Values.DB_PASSWORD }}'
+        value: '{{ .Values.db.password }}'
       - name: POSTGRES_MULTIPLE_DATABASES
         value: "main,keycloak"
     extraVolumes:
@@ -90,13 +90,13 @@ keycloak:
     enabled: false
   auth:
     adminUser: admin
-    adminPassword: '{{ .Values.DB_PASSWORD }}'
+    adminPassword: '{{ .Values.db.password }}'
   postgresql:
     enabled: false
   externalDatabase:
     host: '{{ printf "%s-postgresql" .Release.Name }}'
     user: postgres
-    password: '{{ .Values.DB_PASSWORD }}'
+    password: '{{ .Values.db.password }}'
     database: keycloak
     port: 5432
   extraEnvVars:
