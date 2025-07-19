@@ -85,7 +85,6 @@ export default function Whiteboard({ whiteboardId }: WhiteboardProps) {
 
   const [allCursors, setAllCursors] = useState<Cursor[]>([]);
 
-  // whiteboard logic
   const { saveWhiteboardState } = useSaveWhiteboardState({
     whiteboardId,
     nodes: getNodes(),
