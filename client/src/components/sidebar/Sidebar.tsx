@@ -11,7 +11,6 @@ import {
   defaultShapeNodeProperties,
   defaultTextNodeProperties,
 } from "@/types/NodeProperties";
-import shapeRegistry from "@/util/shapeRegistry";
 
 interface SidebarProps {
   onAddNode: (node: Node) => void;
@@ -74,7 +73,6 @@ export default function Sidebar({ onAddNode }: SidebarProps) {
       data: {
         shapeType: item.shape,
         label: item.label,
-        Shape: shapeRegistry({ shapeType: item.shape }),
         nodeProperties: defaultShapeNodeProperties,
       },
       position: { x: Math.random() * 300, y: Math.random() * 300 }, // Random position

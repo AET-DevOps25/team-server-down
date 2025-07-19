@@ -39,7 +39,6 @@ import CustomCursor from "@/components/custom-cursor/CustomCursor";
 import { useGetMe } from "@/hooks/api/account.api";
 import { WhiteboardEvent } from "@/api/realtime/dtos/WhiteboardEvent";
 import { z } from "zod";
-import shapeRegistry from "@/util/shapeRegistry";
 
 const nodeTypes = {
   text: TextNode,
@@ -60,6 +59,10 @@ export default function Whiteboard({ whiteboardId }: WhiteboardProps) {
   const [nodes, setNodes, onNodesChange] = useNodesState<Node>([]);
   const [edges, setEdges, onEdgesChange] = useEdgesState<Edge>([]);
   const [rfInstance, setRfInstance] = useState<ReactFlowInstance | null>(null);
+
+  type ActivityMap = Record<string, boolean>;
+  const [userActivity, setUserActivity] = useState<ActivityMap>({});
+  const userTimeouts = useRef<Record<string, NodeJS.Timeout>>({});
 
   const { getNodes, getEdges, getViewport } = useReactFlow();
 
@@ -225,6 +228,16 @@ export default function Whiteboard({ whiteboardId }: WhiteboardProps) {
         if (id === user?.id) return; // skip current user
         if (!position) return;
 
+        setUserActivity((prev) => ({ ...prev, [username]: true }));
+
+        if (userTimeouts.current[username]) {
+          clearTimeout(userTimeouts.current[username]);
+        }
+
+        userTimeouts.current[username] = setTimeout(() => {
+          setUserActivity((prev) => ({ ...prev, [username]: false }));
+        }, 10000);
+
         setAllCursors((prevCursors) => {
           const otherCursors = prevCursors.filter((c) => c.id !== id);
           return [...otherCursors, { id, username, position }];
@@ -236,8 +249,6 @@ export default function Whiteboard({ whiteboardId }: WhiteboardProps) {
       }
 
       if (event.type === "nodePosition") {
-        console.log(isOwner)
-        console.log("HERE")
         const incomingNodes = event.payload;
 
         setNodes((prevNodes) => {
@@ -260,11 +271,6 @@ export default function Whiteboard({ whiteboardId }: WhiteboardProps) {
                 shapeType: incoming.data.shapeType,
                 label: incoming.data.label,
                 nodeProperties: incoming.data.nodeProperties,
-                ...(incoming.type === "shapeNode" && {
-                  Shape: shapeRegistry({
-                    shapeType: incoming.data.shapeType ?? "",
-                  }),
-                }),
               },
             };
           });
@@ -423,6 +429,7 @@ export default function Whiteboard({ whiteboardId }: WhiteboardProps) {
           <MenuBar whiteboardId={whiteboardId} isEditable={isOwner} />
           <CollaborationTopbar
             whiteboardId={whiteboardId}
+            userActivity={userActivity}
             isSharable={isOwner}
           />
         </div>
