@@ -21,8 +21,8 @@ services:
       - ./letsencrypt:/letsencrypt
 
   server:
-    image: ghcr.io/aet-devops25/team-server-down/server:latest
-    pull_policy: always
+    image: ghcr.io/aet-devops25/team-server-down/server:aws-deployment
+#    pull_policy: always
     environment:
       DB_HOST: ${DB_HOST:-db}
       DB_PORT: ${DB_PORT:-5432}
@@ -43,8 +43,8 @@ services:
       - "traefik.http.routers.server.tls.certresolver=letsencrypt"
 
   client:
-    image: ghcr.io/aet-devops25/team-server-down/client:latest
-    pull_policy: always
+    image: ghcr.io/aet-devops25/team-server-down/client:aws-deployment
+#    pull_policy: always
     environment:
       NEXT_PUBLIC_API_URL: ${NEXT_PUBLIC_API_URL:-http://localhost:9091}
       NEXT_PUBLIC_BASE_URL: ${NEXT_PUBLIC_API_URL:-http://localhost:3000}
@@ -88,8 +88,8 @@ services:
       - server
   genai:
     restart: always
-    image: ghcr.io/aet-devops25/team-server-down/genai:latest
-    pull_policy: always
+    image: ghcr.io/aet-devops25/team-server-down/genai:aws-deployment
+#    pull_policy: always
     environment:
       OPEN_WEB_UI_API_KEY: sk-7eb81f98e32f48aaa59b315f73485aaa
       SERVER_URL: ${SERVER_URL:-http://localhost:9091}
