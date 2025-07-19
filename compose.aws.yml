@@ -22,6 +22,7 @@ services:
 
   server:
     image: ghcr.io/aet-devops25/team-server-down/server:latest
+    pull_policy: always
     environment:
       DB_HOST: ${DB_HOST:-db}
       DB_PORT: ${DB_PORT:-5432}
@@ -37,12 +38,13 @@ services:
     labels:
       - "traefik.enable=true"
       - "traefik.http.routers.server.rule=Host(`${SERVER_HOST}`)"
-      - "traefik.http.services.server.loadbalancer.server.port=8080"
+      - "traefik.http.services.server.loadbalancer.server.port=9091"
       - "traefik.http.routers.server.entrypoints=websecure"
       - "traefik.http.routers.server.tls.certresolver=letsencrypt"
 
   client:
     image: ghcr.io/aet-devops25/team-server-down/client:latest
+    pull_policy: always
     environment:
       NEXT_PUBLIC_API_URL: ${NEXT_PUBLIC_API_URL:-http://localhost:9091}
       NEXT_PUBLIC_BASE_URL: ${NEXT_PUBLIC_API_URL:-http://localhost:3000}
@@ -86,11 +88,8 @@ services:
       - server
   genai:
     restart: always
-    build:
-      context: ./genai
-      dockerfile: Dockerfile
-    ports:
-      - "8000:8000"
+    image: ghcr.io/aet-devops25/team-server-down/genai:latest
+    pull_policy: always
     environment:
       OPEN_WEB_UI_API_KEY: sk-7eb81f98e32f48aaa59b315f73485aaa
       SERVER_URL: ${SERVER_URL:-http://localhost:9091}
