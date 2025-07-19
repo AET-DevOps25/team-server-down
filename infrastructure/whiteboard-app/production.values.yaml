@@ -74,7 +74,7 @@ postgresql:
       - name: POSTGRES_USER
         value: postgres
       - name: POSTGRES_PASSWORD
-        value: '{{ .Values.postgresql.secret }}'
+        value: password
       - name: POSTGRES_MULTIPLE_DATABASES
         value: "main,keycloak"
     extraVolumes:
