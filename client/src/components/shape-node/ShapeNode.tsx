@@ -120,7 +120,7 @@ const ShapeNode = ({ id, data, selected }: ShapeNodeParams) => {
 
         <input
           ref={inputRef}
-          className={`z-10 h-full w-4/5 bg-transparent text-center focus:outline-none`}
+          className={`z-10 min-h-[100px] w-4/5 bg-transparent text-center focus:outline-none`}
           style={{
             color: nodeProperties.textColor,
             fontSize: `${nodeProperties.fontSize}px`,
