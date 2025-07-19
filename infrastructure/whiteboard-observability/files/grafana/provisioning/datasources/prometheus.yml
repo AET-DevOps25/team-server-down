@@ -4,5 +4,5 @@ datasources:
   - name: Prometheus
     type: prometheus
     access: proxy
-    url: '{{ printf "http://%s-server:9091" .Release.Name }}'
+    url: '{{ .Values.server.url }}'
     isDefault: true
