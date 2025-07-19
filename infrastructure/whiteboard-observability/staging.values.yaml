@@ -1,6 +1,6 @@
 grafana:
-  ingress:
-    enabled: false
+  service:
+    port: 3000
   rbac:
     create: false
     namespaced: true
@@ -50,4 +50,4 @@ ingress:
           service:
             name: '{{ printf "%s-grafana" .Release.Name }}'
             port:
-              number: 3000
+              number: 80
