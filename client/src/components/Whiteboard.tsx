@@ -39,7 +39,6 @@ import CustomCursor from "@/components/custom-cursor/CustomCursor";
 import { useGetMe } from "@/hooks/api/account.api";
 import { WhiteboardEvent } from "@/api/realtime/dtos/WhiteboardEvent";
 import { z } from "zod";
-import shapeRegistry from "@/util/shapeRegistry";
 
 const nodeTypes = {
   text: TextNode,
