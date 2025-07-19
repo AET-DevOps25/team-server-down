@@ -348,6 +348,7 @@ jobs:
             --install \
             --atomic \
             --kubeconfig ${{ env.KUBECONFIG }} \
+            --set namespace="${{ env.NAMESPACE }}" \
             --set metrics.url="${{ env.METRICS_URL }}"
 
   comment-pr:

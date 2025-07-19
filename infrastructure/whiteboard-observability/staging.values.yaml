@@ -4,13 +4,13 @@ grafana:
     namespaced: true
   adminUser: admin
   adminPassword: admin
-#  extraVolumes:
-#    - name: grafana-datasources-config
-#      configMap:
-#        name: grafana-datasources-configmap
-#  extraVolumeMounts:
-#    - name: grafana-datasources-config
-#      mountPath: /etc/grafana/provisioning/datasources
+  extraVolumes:
+    - name: grafana-datasources-config
+      configMap:
+        name: grafana-datasources-configmap
+  extraVolumeMounts:
+    - name: grafana-datasources-config
+      mountPath: /etc/grafana/provisioning/datasources
 
 prometheus:
   rbac:
