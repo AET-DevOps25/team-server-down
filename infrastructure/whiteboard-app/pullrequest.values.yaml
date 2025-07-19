@@ -167,7 +167,7 @@ loki:
   ruler:
     enable_api: true
   minio:
-    enabled: false
+    enabled: true
 
 ingress:
   enabled: true
