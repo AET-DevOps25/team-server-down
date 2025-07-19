@@ -41,7 +41,7 @@ server:
     - name: DB_USER
       value: postgres
     - name: DB_PASSWORD
-      value: '{{ .Values.postgresql.secret }}'
+      value: password
     - name: ALLOWED_ORIGIN
       value: "https://staging.whiteboard.student.k8s.aet.cit.tum.de"
     - name: IDP_INTERNAL_URI
