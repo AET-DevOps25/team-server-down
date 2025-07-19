@@ -50,4 +50,4 @@ ingress:
           service:
             name: '{{ printf "%s-grafana" .Release.Name }}'
             port:
-              number: 80
+              number: 3000
