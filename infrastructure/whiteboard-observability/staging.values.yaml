@@ -10,9 +10,14 @@ grafana:
     - name: grafana-datasources-config
       configMap:
         name: grafana-datasources-configmap
+    - name: grafana-dashboards-config
+      configMap:
+        name: grafana-dashboards-configmap
   extraVolumeMounts:
     - name: grafana-datasources-config
       mountPath: /etc/grafana/provisioning/datasources
+    - name: grafana-dashboards-config
+      mountPath: /etc/grafana/provisioning/dashboards
 
 prometheus:
   rbac:
