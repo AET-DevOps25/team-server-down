@@ -265,7 +265,7 @@ jobs:
             REALTIME_URL=staging.realtime.whiteboard.student.k8s.aet.cit.tum.de
             echo "NAMESPACE=staging" >> $GITHUB_ENV
             echo "IMAGE_TAG=develop" >> $GITHUB_ENV
-            echo "VALUES_FILE=./infrastructure/whiteboard-app/staging.values.yaml"
+            echo "VALUES_FILE=./infrastructure/whiteboard-app/staging.values.yaml" >> $GITHUB_ENV
             KEYCLOAK_CLIENT_SECRET="${{ secrets.STAGING_KEYCLOAK_CLIENT_SECRET }}"
             NEXTAUTH_SECRET="${{ secrets.STAGING_NEXTAUTH_SECRET }}"
             POSTGRESQL_SECRET="${{ secrets.STAGING_DB_PASSWORD }}"
