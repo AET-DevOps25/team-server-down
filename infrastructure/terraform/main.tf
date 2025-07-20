@@ -87,10 +87,10 @@ resource "aws_route_table_association" "a-rtb-subnet" {
   route_table_id = aws_route_table.teamserverdown-route-table.id
 }
 
-resource "aws_key_pair" "ssh-key" {
-  key_name   = "teamserverdown-key"
-  public_key = file(var.ssh_key)
-}
+# resource "aws_key_pair" "ssh-key" {
+#   key_name   = "teamserverdown-key"
+#   public_key = file(var.ssh_key)
+# }
 
 resource "aws_ebs_volume" "teamserverdown_volume" {
   availability_zone = var.avail_zone
@@ -135,7 +135,6 @@ resource "aws_instance" "teamserverdown-server" {
 }
 
 resource "aws_eip" "teamserverdown_eip" {
-  vpc = true
 }
 
 resource "aws_eip_association" "eip_assoc" {
@@ -148,10 +147,10 @@ output "static_public_ip" {
 }
 
 resource "null_resource" "wait_for_ssh" {
-  depends_on = [aws_instance.teamserverdown-server]
+  depends_on = [aws_eip_association.eip_assoc]
 
   provisioner "local-exec" {
-    command = "bash -c 'until nc -zv ${aws_instance.teamserverdown-server.public_ip} 22; do sleep 5; done'"
+    command = "bash -c 'until nc -zv ${aws_eip.teamserverdown_eip.public_ip} 22; do sleep 5; done'"
   }
 }
 
@@ -159,10 +158,10 @@ resource "null_resource" "configure_server" {
   depends_on = [null_resource.wait_for_ssh]
 
   triggers = {
-    trigger = aws_instance.teamserverdown-server.public_ip
+    trigger = aws_eip.teamserverdown_eip.public_ip
   }
   provisioner "local-exec" {
     working_dir = "/Users/leon.liang/Downloads/team-server-down/infrastructure/ansible"
-    command = "ansible-playbook --inventory ${aws_instance.teamserverdown-server.public_ip}, --private-key ${var.ssh_private_key} --user ubuntu playbook.yml --ssh-extra-args='-o StrictHostKeyChecking=no'"
+    command = "ansible-playbook --inventory ${aws_eip.teamserverdown_eip.public_ip}, --private-key ${var.ssh_private_key} --user ubuntu playbook.yml --ssh-extra-args='-o StrictHostKeyChecking=no'"
   }
 }
