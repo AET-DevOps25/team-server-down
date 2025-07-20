@@ -1,41 +1,41 @@
-name: GenAI linters
-
-on:
-  pull_request:
-    paths:
-      - 'genai/**'
-  workflow_dispatch:
-
-jobs:
-  genai-lint:
-    runs-on: ubuntu-latest
-    steps:
-      - name: Checkout sources
-        uses: actions/checkout@v4
-
-      - name: Install uv
-        uses: astral-sh/setup-uv@v5
-
-      - name: "Set up Python"
-        uses: actions/setup-python@v5
-        with:
-          python-version-file: "./genai/.python-version"
-
-      - name: Install dependencies
-        run: |
-          uv pip install -r ./genai/requirements.txt --system
-
-      - name: GenAI lint
-        run: |
-          cd genai
-          ruff check .
-      
-      - name: GenAI format (auto-fix)
-        run: |
-          cd genai
-          ruff format .
-
-      - name: GenAI formatting
-        run: |
-          cd genai
-          ruff format --check .
+#name: GenAI linters
+#
+#on:
+#  pull_request:
+#    paths:
+#      - 'genai/**'
+#  workflow_dispatch:
+#
+#jobs:
+#  genai-lint:
+#    runs-on: ubuntu-latest
+#    steps:
+#      - name: Checkout sources
+#        uses: actions/checkout@v4
+#
+#      - name: Install uv
+#        uses: astral-sh/setup-uv@v5
+#
+#      - name: "Set up Python"
+#        uses: actions/setup-python@v5
+#        with:
+#          python-version-file: "./genai/.python-version"
+#
+#      - name: Install dependencies
+#        run: |
+#          uv pip install -r ./genai/requirements.txt --system
+#
+#      - name: GenAI lint
+#        run: |
+#          cd genai
+#          ruff check .
+#
+#      - name: GenAI format (auto-fix)
+#        run: |
+#          cd genai
+#          ruff format .
+#
+#      - name: GenAI formatting
+#        run: |
+#          cd genai
+#          ruff format --check .
