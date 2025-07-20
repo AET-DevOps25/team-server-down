@@ -2,6 +2,15 @@ global:
   scrape_interval: 15s
   evaluation_interval: 15s
 
+alerting:
+  alertmanagers:
+    - static_configs:
+        - targets:
+            - '{{ printf "%s-alertmanager" .Release.Name }}'
+
+rule_files:
+  - "alert.rules.yml"
+
 scrape_configs:
   - job_name: 'server_job'
     metrics_path: '/actuator/prometheus'

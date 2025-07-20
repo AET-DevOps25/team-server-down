@@ -6,3 +6,6 @@ data:
   prometheus.yml: |-
 {{- $config := .Files.Get "files/prometheus/prometheus.yml" }}
 {{ tpl $config . | indent 4 }}
+  alert.rules.yml: |-
+{{- $alertConfig := .Files.Get "files/prometheus/alert.rules.yml" }}
+{{ tpl $alertConfig . | indent 4 }}
