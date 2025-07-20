@@ -43,8 +43,8 @@ prometheus:
   alertmanager:
     config:
       global:
-        smtp_smarthost: '{{ printf "%s-mailhog" .Release.Name }}:1025'
-        smtp_from: 'alertmanager@{{ .Values.client.url }}'
+        smtp_smarthost: 'whiteboard-observability-staging-mailhog:1025'
+        smtp_from: 'alertmanager@staging.whiteboard.student.k8s.aet.cit.tum.de'
         smtp_require_tls: false
       route:
         receiver: 'mailhog-alerts'
@@ -55,9 +55,9 @@ prometheus:
       receivers:
         - name: 'mailhog-alerts'
           email_configs:
-            - to: 'teamserverdown@{{ .Values.client.url }}'
-              from: 'alertmanager@{{ .Values.client.url }}'
-              smarthost: '{{ printf "%s-mailhog" .Release.Name }}:1025'
+            - to: 'teamserverdown@staging.whiteboard.student.k8s.aet.cit.tum.de'
+              from: 'alertmanager@staging.whiteboard.student.k8s.aet.cit.tum.de'
+              smarthost: 'whiteboard-observability-staging-mailhog:1025'
               send_resolved: true
 
 ingress:
