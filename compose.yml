@@ -1,6 +1,17 @@
 name: team-server-down
 
 services:
+  mailhog:
+    restart: always
+    build:
+      context: ./docker/mailhog
+      dockerfile: Dockerfile
+    ports:
+      - "1025:1025"
+      - "8025:8025"
+    networks:
+      - server
+
   keycloak:
     restart: always
     build:
@@ -170,6 +181,63 @@ services:
     networks:
       - server
 
+  grafana:
+    restart: always
+    build:
+      context: ./docker/grafana
+      dockerfile: Dockerfile
+    ports:
+      - "3001:3000"
+    volumes:
+      - grafana-data:/var/lib/grafana
+      - ./docker/grafana/provisioning:/etc/grafana/provisioning:ro
+    environment:
+      - GF_SECURITY_ADMIN_USER=admin
+      - GF_SECURITY_ADMIN_PASSWORD=admin
+      - GF_USERS_ALLOW_SIGN_UP=false
+      - GF_FEATURE_TOGGLES_ENABLE=logsInExplore
+      - GF_LOG_CONSOLECOLORS=true
+    depends_on:
+      - prometheus
+    networks:
+      - server
+
+  prometheus:
+    restart: always
+    build:
+      context: ./docker/prometheus
+      dockerfile: Dockerfile
+    ports:
+      - "9092:9090"
+    volumes:
+      - ./docker/prometheus/config:/etc/prometheus
+      - prometheus-data:/prometheus
+    command:
+      - '--config.file=/etc/prometheus/prometheus.yml'
+      - '--storage.tsdb.path=/prometheus'
+      - '--web.console.libraries=/etc/prometheus/console_libraries'
+      - '--web.console.templates=/etc/prometheus/consoles'
+      - '--web.enable-lifecycle'
+    networks:
+      - server
+
+  alertmanager:
+    restart: always
+    build:
+      context: ./docker/alertmanager
+      dockerfile: Dockerfile
+    ports:
+      - "9093:9093"
+    volumes:
+      - ./docker/alertmanager/config.yml:/etc/alertmanager/config.yml:ro
+      - alertmanager-data:/alertmanager
+    command:
+      - '--config.file=/etc/alertmanager/config.yml'
+      - '--storage.path=/alertmanager'
+      - '--log.level=debug'
+    networks:
+      - server
+
 networks:
   server:
 
@@ -178,3 +246,6 @@ volumes:
   node-modules-client:
   redis-data:
   redis-insight-data:
+  grafana-data:
+  prometheus-data:
+  alertmanager-data:

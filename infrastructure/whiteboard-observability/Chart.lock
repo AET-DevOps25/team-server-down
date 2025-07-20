@@ -1,0 +1,12 @@
+dependencies:
+- name: grafana
+  repository: https://grafana.github.io/helm-charts
+  version: 9.2.10
+- name: prometheus
+  repository: https://prometheus-community.github.io/helm-charts
+  version: 27.28.0
+- name: mailhog
+  repository: https://codecentric.github.io/helm-charts
+  version: 5.8.0
+digest: sha256:b1512e01eadc92c03de33e061fdf24f4ba22e910166fbe57fd8805f0ffca1e9d
+generated: "2025-07-20T13:30:29.991761+02:00"

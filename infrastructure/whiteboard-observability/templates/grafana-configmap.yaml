@@ -1,0 +1,24 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: grafana-datasources-configmap
+data:
+  prometheus.yml: |-
+{{- $dataSourceConfig := .Files.Get "files/grafana/provisioning/datasources/prometheus.yml" }}
+{{ tpl $dataSourceConfig . | indent 4 }}
+
+---
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: grafana-dashboards-configmap
+data:
+  dashboards.yml: |-
+{{- $dashboardsConfig := .Files.Get "files/grafana/provisioning/dashboards/dashboards.yml" }}
+{{ tpl $dashboardsConfig . | indent 4 }}
+  server-dashboard.json: |-
+{{ .Files.Get "files/grafana/provisioning/dashboards/server-dashboard.json" | indent 4 }}
+  genai-dashboard.json: |-
+{{ .Files.Get "files/grafana/provisioning/dashboards/genai-dashboard.json" | indent 4 }}
+  realtime-dashboard.json: |-
+{{ .Files.Get "files/grafana/provisioning/dashboards/realtime-dashboard.json" | indent 4 }}

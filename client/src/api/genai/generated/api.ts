@@ -60,10 +60,10 @@ export interface HTTPValidationError {
 export interface TextRequest {
   /**
    *
-   * @type {Array<string>}
+   * @type {string}
    * @memberof TextRequest
    */
-  user_text: Array<string>;
+  user_text: string;
 }
 /**
  *
@@ -182,6 +182,45 @@ export const DefaultApiAxiosParamCreator = function (
       options: RawAxiosRequestConfig = {},
     ): Promise<RequestArgs> => {
       const localVarPath = `/health`;
+      // use dummy base URL string because the URL constructor only accepts absolute URLs.
+      const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
+      let baseOptions;
+      if (configuration) {
+        baseOptions = configuration.baseOptions;
+      }
+
+      const localVarRequestOptions = {
+        method: "GET",
+        ...baseOptions,
+        ...options,
+      };
+      const localVarHeaderParameter = {} as any;
+      const localVarQueryParameter = {} as any;
+
+      setSearchParams(localVarUrlObj, localVarQueryParameter);
+      let headersFromBaseOptions =
+        baseOptions && baseOptions.headers ? baseOptions.headers : {};
+      localVarRequestOptions.headers = {
+        ...localVarHeaderParameter,
+        ...headersFromBaseOptions,
+        ...options.headers,
+      };
+
+      return {
+        url: toPathString(localVarUrlObj),
+        options: localVarRequestOptions,
+      };
+    },
+    /**
+     * Endpoint that serves Prometheus metrics.
+     * @summary Metrics
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     */
+    metricsMetricsGet: async (
+      options: RawAxiosRequestConfig = {},
+    ): Promise<RequestArgs> => {
+      const localVarPath = `/metrics`;
       // use dummy base URL string because the URL constructor only accepts absolute URLs.
       const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
       let baseOptions;
@@ -383,6 +422,32 @@ export const DefaultApiFp = function (configuration?: Configuration) {
         )(axios, localVarOperationServerBasePath || basePath);
     },
     /**
+     * Endpoint that serves Prometheus metrics.
+     * @summary Metrics
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     */
+    async metricsMetricsGet(
+      options?: RawAxiosRequestConfig,
+    ): Promise<
+      (axios?: AxiosInstance, basePath?: string) => AxiosPromise<any>
+    > {
+      const localVarAxiosArgs =
+        await localVarAxiosParamCreator.metricsMetricsGet(options);
+      const localVarOperationServerIndex = configuration?.serverIndex ?? 0;
+      const localVarOperationServerBasePath =
+        operationServerMap["DefaultApi.metricsMetricsGet"]?.[
+          localVarOperationServerIndex
+        ]?.url;
+      return (axios, basePath) =>
+        createRequestFunction(
+          localVarAxiosArgs,
+          globalAxios,
+          BASE_PATH,
+          configuration,
+        )(axios, localVarOperationServerBasePath || basePath);
+    },
+    /**
      *
      * @summary Rephrase Text
      * @param {TextRequest} textRequest
@@ -485,6 +550,17 @@ export const DefaultApiFactory = function (
         .then((request) => request(axios, basePath));
     },
     /**
+     * Endpoint that serves Prometheus metrics.
+     * @summary Metrics
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     */
+    metricsMetricsGet(options?: RawAxiosRequestConfig): AxiosPromise<any> {
+      return localVarFp
+        .metricsMetricsGet(options)
+        .then((request) => request(axios, basePath));
+    },
+    /**
      *
      * @summary Rephrase Text
      * @param {TextRequest} textRequest
@@ -551,6 +627,19 @@ export class DefaultApi extends BaseAPI {
   public healthCheckHealthGet(options?: RawAxiosRequestConfig) {
     return DefaultApiFp(this.configuration)
       .healthCheckHealthGet(options)
+      .then((request) => request(this.axios, this.basePath));
+  }
+
+  /**
+   * Endpoint that serves Prometheus metrics.
+   * @summary Metrics
+   * @param {*} [options] Override http request option.
+   * @throws {RequiredError}
+   * @memberof DefaultApi
+   */
+  public metricsMetricsGet(options?: RawAxiosRequestConfig) {
+    return DefaultApiFp(this.configuration)
+      .metricsMetricsGet(options)
       .then((request) => request(this.axios, this.basePath));
   }
 

@@ -1,0 +1,92 @@
+grafana:
+  service:
+    port: 3000
+  rbac:
+    create: false
+    namespaced: true
+  adminUser: admin
+  adminPassword: admin
+  extraVolumes:
+    - name: grafana-datasources-config
+      configMap:
+        name: grafana-datasources-configmap
+    - name: grafana-dashboards-config
+      configMap:
+        name: grafana-dashboards-configmap
+  extraVolumeMounts:
+    - name: grafana-datasources-config
+      mountPath: /etc/grafana/provisioning/datasources
+    - name: grafana-dashboards-config
+      mountPath: /etc/grafana/provisioning/dashboards
+
+prometheus:
+  rbac:
+    create: false
+  kube-state-metrics:
+    enabled: false
+  prometheus-node-exporter:
+    enabled: false
+  server:
+    extraVolumes:
+      - name: prometheus-config
+        configMap:
+          name: prometheus-configmap
+    extraVolumeMounts:
+      - name: prometheus-config
+        mountPath: /etc/prometheus
+    defaultFlagsOverride:
+      - '--config.file=/etc/prometheus/prometheus.yml'
+      - '--storage.tsdb.path=/prometheus'
+      - '--web.console.libraries=/etc/prometheus/console_libraries'
+      - '--web.console.templates=/etc/prometheus/consoles'
+      - '--web.enable-lifecycle'
+  alertmanager:
+    config:
+      global:
+        smtp_smarthost: 'whiteboard-observability-production-mailhog:1025'
+        smtp_from: 'alertmanager@whiteboard.student.k8s.aet.cit.tum.de'
+        smtp_require_tls: false
+      route:
+        receiver: 'mailhog-alerts'
+        group_by: [ 'alertname' ]
+        group_wait: 10s
+        group_interval: 1m
+        repeat_interval: 30m
+      receivers:
+        - name: 'mailhog-alerts'
+          email_configs:
+            - to: 'teamserverdown@whiteboard.student.k8s.aet.cit.tum.de'
+              from: 'alertmanager@whiteboard.student.k8s.aet.cit.tum.de'
+              smarthost: 'whiteboard-observability-production-mailhog:1025'
+              send_resolved: true
+
+ingress:
+  enabled: true
+  className: "nginx"
+  annotations:
+    cert-manager.io/cluster-issuer: "letsencrypt-prod"
+    nginx.ingress.kubernetes.io/rewrite-target: /
+    nginx.ingress.kubernetes.io/use-forwarded-headers: "true"
+    nginx.ingress.kubernetes.io/proxy-buffer-size: "8k"
+  tls:
+    hosts:
+      - '{{ .Values.metrics.url }}'
+      - "mailhog.whiteboard.student.k8s.aet.cit.tum.de"
+    secretName: '{{ .Values.namespace }}-whiteboard-observability-devops25-tls'
+  rules:
+    - host: '{{ .Values.metrics.url }}'
+      paths:
+        - path: /
+          pathType: Prefix
+          service:
+            name: '{{ printf "%s-grafana" .Release.Name }}'
+            port:
+              number: 3000
+    - host: "mailhog.whiteboard.student.k8s.aet.cit.tum.de"
+      paths:
+        - path: /
+          pathType: Prefix
+          service:
+            name: '{{ printf "%s-mailhog" .Release.Name }}'
+            port:
+              number: 8025

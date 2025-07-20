@@ -7,8 +7,6 @@ import {
   Position,
   useReactFlow,
 } from "@xyflow/react";
-import { Eye, EyeOff } from "lucide-react";
-import { Button } from "@/components/ui/button";
 import {
   getFontStyle,
   handleStyle,
@@ -16,6 +14,9 @@ import {
 } from "@/types/NodeProperties";
 import StyleBar from "@/components/style-bar/StyleBar";
 import { updateNode } from "@/util/updateNode";
+import { useAmIOwner } from "@/hooks/api/whiteboard.api";
+import { useGetMe } from "@/hooks/api/account.api";
+import { useParams } from "next/navigation";
 
 interface TextNodeProps extends NodeProps {
   id: string;
@@ -40,8 +41,13 @@ function hexToRgb(hex: string) {
 export default function TextNode({ id, data, selected }: TextNodeProps) {
   const [isEditing, setIsEditing] = useState(false);
   const [text, setText] = useState<string>(data.label as string);
-  const [showStyleBar, setShowStyleBar] = useState(true);
   const { setNodes } = useReactFlow();
+
+  const params = useParams();
+  const whiteboardId = Number(params.id);
+
+  const { data: user } = useGetMe();
+  const { data: isOwner } = useAmIOwner(whiteboardId, user?.id);
 
   const { nodeProperties, label } = data;
   const bgRgb = hexToRgb(nodeProperties.color);
@@ -68,7 +74,7 @@ export default function TextNode({ id, data, selected }: TextNodeProps) {
 
   return (
     <>
-      {showStyleBar && (
+      {isOwner && (
         <NodeToolbar isVisible={selected} position={Position.Top}>
           <StyleBar
             nodeProperties={nodeProperties}
@@ -83,29 +89,13 @@ export default function TextNode({ id, data, selected }: TextNodeProps) {
         </NodeToolbar>
       )}
 
-      <NodeToolbar position={Position.Right}>
-        <div className="mt-2">
-          <Button
-            variant="ghost"
-            size="sm"
-            onClick={() => setShowStyleBar(!showStyleBar)}
-            className="h-7 w-7 p-1"
-          >
-            {showStyleBar ? (
-              <Eye className="h-4 w-4" />
-            ) : (
-              <EyeOff className="h-4 w-4" />
-            )}
-          </Button>
-        </div>
-      </NodeToolbar>
-
       <NodeResizer
         color="#3859ff"
         isVisible={selected}
         minWidth={100}
         minHeight={50}
       />
+
       <div className="h-full w-full">
         <div
           className="flex h-full w-full items-center justify-center p-4"

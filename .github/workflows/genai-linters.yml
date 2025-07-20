@@ -29,7 +29,7 @@ jobs:
         run: |
           cd genai
           ruff check .
-      
+
       - name: GenAI format (auto-fix)
         run: |
           cd genai
