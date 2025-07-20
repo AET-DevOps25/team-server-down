@@ -43,8 +43,8 @@ prometheus:
   alertmanager:
     config:
       global:
-        smtp_smarthost: 'whiteboard-observability-staging-mailhog:1025'
-        smtp_from: 'alertmanager@staging.whiteboard.student.k8s.aet.cit.tum.de'
+        smtp_smarthost: 'whiteboard-observability-production-mailhog:1025'
+        smtp_from: 'alertmanager@whiteboard.student.k8s.aet.cit.tum.de'
         smtp_require_tls: false
       route:
         receiver: 'mailhog-alerts'
@@ -55,9 +55,9 @@ prometheus:
       receivers:
         - name: 'mailhog-alerts'
           email_configs:
-            - to: 'teamserverdown@staging.whiteboard.student.k8s.aet.cit.tum.de'
-              from: 'alertmanager@staging.whiteboard.student.k8s.aet.cit.tum.de'
-              smarthost: 'whiteboard-observability-staging-mailhog:1025'
+            - to: 'teamserverdown@whiteboard.student.k8s.aet.cit.tum.de'
+              from: 'alertmanager@whiteboard.student.k8s.aet.cit.tum.de'
+              smarthost: 'whiteboard-observability-production-mailhog:1025'
               send_resolved: true
 
 ingress:
@@ -71,7 +71,7 @@ ingress:
   tls:
     hosts:
       - '{{ .Values.metrics.url }}'
-      - "staging.mailhog.whiteboard.student.k8s.aet.cit.tum.de"
+      - "mailhog.whiteboard.student.k8s.aet.cit.tum.de"
     secretName: '{{ .Values.namespace }}-whiteboard-observability-devops25-tls'
   rules:
     - host: '{{ .Values.metrics.url }}'
@@ -82,7 +82,7 @@ ingress:
             name: '{{ printf "%s-grafana" .Release.Name }}'
             port:
               number: 3000
-    - host: "staging.mailhog.whiteboard.student.k8s.aet.cit.tum.de"
+    - host: "mailhog.whiteboard.student.k8s.aet.cit.tum.de"
       paths:
         - path: /
           pathType: Prefix

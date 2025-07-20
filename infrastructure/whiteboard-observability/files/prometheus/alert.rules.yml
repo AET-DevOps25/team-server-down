@@ -2,7 +2,7 @@ groups:
   - name: service-availability
     rules:
       - alert: Service Down
-        expr: up{job=~"server_job|genai_job"} == 0
+        expr: up{job=~"server_job|genai_job|realtime_job"} == 0
         for: 1m
         labels:
           severity: critical

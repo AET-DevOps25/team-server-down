@@ -1,20 +1,20 @@
-#name: Server tests
-#
-#on:
-#  pull_request:
-#    paths:
-#      - 'server/**'
-#  workflow_dispatch:
-#
-#jobs:
-#  server-test:
-#    runs-on: ubuntu-latest
-#    steps:
-#      - name: Checkout sources
-#        uses: actions/checkout@v4
-#
-#      - name: Start containers
-#        run: |
-#          docker compose up -d --build --wait --wait-timeout 30 db
-#          docker compose run --rm --entrypoint="gradle test" server
-#          docker compose down
+name: Server tests
+
+on:
+  pull_request:
+    paths:
+      - 'server/**'
+  workflow_dispatch:
+
+jobs:
+  server-test:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout sources
+        uses: actions/checkout@v4
+
+      - name: Start containers
+        run: |
+          docker compose up -d --build --wait --wait-timeout 30 db
+          docker compose run --rm --entrypoint="gradle test" server
+          docker compose down
