@@ -44,7 +44,8 @@ services:
   client:
     image: ghcr.io/aet-devops25/team-server-down/client:latest
     environment:
-      - PUBLIC_API_URL=${PUBLIC_API_URL}
+      - NEXT_PUBLIC_API_URL=${PUBLIC_API_URL}
+      - NEXT_PUBLIC_GENAI_URL=${PUBLIC_GENAI_URL}
     depends_on:
       - server
     restart: unless-stopped
@@ -72,12 +73,13 @@ services:
     ports:
       - "5432:5432"
     volumes:
-      - db-data:/var/lib/postgresql/data
+      - /mnt/ebs/db-data:/var/lib/postgresql/data
     networks:
       - server
 
 volumes:
   db-data:
+
 
 networks:
   server:

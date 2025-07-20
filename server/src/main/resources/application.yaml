@@ -1,4 +1,17 @@
+server:
+  port: 9091
+
+springdoc:
+  swagger-ui:
+    oauth2-redirect-url: ${SERVER_URL}/swagger-ui/oauth2-redirect.html
+
 spring:
+  security:
+    oauth2:
+      resourceserver:
+        jwt:
+          issuer-uri: ${IDP_INTERNAL_URI}
+          jwk-set-uri: ${IDP_INTERNAL_URI}/protocol/openid-connect/certs
   datasource:
     url: jdbc:postgresql://${DB_HOST}:${DB_PORT}/${DB_NAME}
     username: ${DB_USER}
@@ -12,3 +25,12 @@ spring:
   flyway:
     enabled: true
     validate-on-migrate: true
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: [ "prometheus" ]
+  endpoint:
+    prometheus:
+      access: unrestricted

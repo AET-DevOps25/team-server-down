@@ -31,9 +31,6 @@ jobs:
         run: npx prettier --check "src/**/*.{ts,tsx}"
         working-directory: client
 
-      - name: Fix Prettier formatting
-        run: npm run format
+      - name: Run Type Check
+        run: npx --package=typescript@latest -- tsc --build .
         working-directory: client
-        if: failure()
-
-

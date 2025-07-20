@@ -1,36 +1,36 @@
-# Install dependencies only when needed
-FROM node:18-alpine AS deps
-
-# Set working directory
+FROM node:24.2-bullseye-slim AS build
 WORKDIR /app
 
-# Install dependencies
-COPY package.json package-lock.json ./
+COPY package*.json ./
 RUN npm ci
-
-# Rebuild the source code only when needed
-FROM node:20-slim AS builder
-WORKDIR /app
 
 COPY . .
 
-COPY --from=deps /app/node_modules ./node_modules
+ARG API_URL
+ENV NEXT_PUBLIC_API_URL=${API_URL}
 
-# Build the Next.js app
+ARG GENAI_API_URL
+ENV NEXT_PUBLIC_GENAI_URL=${GENAI_API_URL}
+
+ARG REALTIME_API_URL
+ENV NEXT_PUBLIC_REALTIME_URL=${REALTIME_API_URL}
+
+ARG BASE_URL
+ENV NEXT_PUBLIC_BASE_URL=${BASE_URL}
+
 RUN npm run build
 
-# Production image
-FROM node:20-alpine AS runner
-WORKDIR /app
-
+ENV NEXT_TELEMETRY_DISABLED=1
 ENV NODE_ENV=production
 
-# Copy only essential files
-COPY --from=builder /app/.next ./.next
-COPY --from=builder /app/node_modules ./node_modules
-COPY --from=builder /app/package.json ./package.json
+# Remove the existing node_modules directory and only install production dependencies
+RUN npm ci --only=production && npm cache clean --force
 
-EXPOSE 3000
+FROM node:24.2-alpine3.21 AS production
 
-# Start the Next.js application
+COPY --from=build /app/.next ./.next
+COPY --from=build /app/node_modules ./node_modules
+COPY --from=build /app/package.json ./package.json
+COPY --from=build /app/public ./public
+
 CMD ["npm", "start"]

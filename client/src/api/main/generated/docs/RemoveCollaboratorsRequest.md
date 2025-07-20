@@ -1,0 +1,20 @@
+# RemoveCollaboratorsRequest
+
+
+## Properties
+
+Name | Type | Description | Notes
+------------ | ------------- | ------------- | -------------
+**userIds** | **Array&lt;number&gt;** |  | [optional] [default to undefined]
+
+## Example
+
+```typescript
+import { RemoveCollaboratorsRequest } from './api';
+
+const instance: RemoveCollaboratorsRequest = {
+    userIds,
+};
+```
+
+[[Back to Model list]](../README.md#documentation-for-models) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to README]](../README.md)

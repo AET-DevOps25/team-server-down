@@ -1,0 +1,12 @@
+FROM golang:1.24-alpine as development
+
+WORKDIR /app
+
+RUN go install github.com/air-verse/air@latest
+
+COPY go.mod go.sum ./
+RUN go mod download
+
+COPY . .
+
+ENTRYPOINT ["air", "--build.cmd", "go build -o build/realtime ./cmd/api/main.go", "--build.bin", "./build/realtime"]

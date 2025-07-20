@@ -1,0 +1,9 @@
+<svg viewBox="0 0 100 100" preserveAspectRatio="none" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <defs>
+        <polygon id="parallelogram" vector-effect="non-scaling-stroke" points="25,0 100,0 75,100 0,100" />
+        <clipPath id="clipParallelogram">
+            <use xlink:href="#parallelogram" />
+        </clipPath>
+    </defs>
+    <use xlink:href="#parallelogram" clip-path="url(#clipParallelogram)" />
+</svg>

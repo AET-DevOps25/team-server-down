@@ -1,0 +1,200 @@
+client:
+  image:
+    repository: ghcr.io/aet-devops25/team-server-down/client
+    tag: develop
+    pullPolicy: Always
+  service:
+    type: ClusterIP
+    port: 3000
+    targetPort: 3000
+  replicaCount: 1
+  env:
+    - name: KEYCLOAK_CLIENT_SECRET
+      value: '{{ .Values.keycloak.clientSecret }}'
+    - name: NEXTAUTH_URL
+      value: https://staging.whiteboard.student.k8s.aet.cit.tum.de/api/auth/
+    - name: NEXTAUTH_SECRET
+      value: '{{ .Values.nextauth.secret }}'
+    - name: KEYCLOAK_CLIENT_ID
+      value: webclient
+    - name: KEYCLOAK_ISSUER
+      value: https://staging.auth.whiteboard.student.k8s.aet.cit.tum.de/realms/staging
+    - name: KEYCLOAK_END_SESSION_ENDPOINT
+      value: https://staging.auth.whiteboard.student.k8s.aet.cit.tum.de/realms/staging/protocol/openid-connect/logout
+
+server:
+  image:
+    repository: ghcr.io/aet-devops25/team-server-down/server
+    tag: develop
+    pullPolicy: Always
+  service:
+    type: ClusterIP
+    port: 9091
+    targetPort: 9091
+  env:
+    - name: DB_HOST
+      value: '{{ printf "%s-postgresql" .Release.Name }}'
+    - name: DB_PORT
+      value: "5432"
+    - name: DB_NAME
+      value: main
+    - name: DB_USER
+      value: postgres
+    - name: DB_PASSWORD
+      value: '{{ .Values.postgresql.auth.postgresPassword }}'
+    - name: ALLOWED_ORIGIN
+      value: "https://staging.whiteboard.student.k8s.aet.cit.tum.de"
+    - name: IDP_INTERNAL_URI
+      value: "https://staging.auth.whiteboard.student.k8s.aet.cit.tum.de/realms/staging"
+    - name: IDP_EXTERNAL_URI
+      value: "https://staging.auth.whiteboard.student.k8s.aet.cit.tum.de/realms/staging"
+    - name: SERVER_URL
+      value: "https://staging.api.whiteboard.student.k8s.aet.cit.tum.de"
+  replicaCount: 1
+
+realtime:
+  image:
+    repository: ghcr.io/aet-devops25/team-server-down/realtime
+    tag: develop
+    pullPolicy: Always
+  service:
+    type: ClusterIP
+    port: 9090
+    targetPort: 9090
+  env:
+    - name: REDIS_HOST
+      value: '{{ printf "%s-redis-master" .Release.Name }}'
+    - name: REDIS_PORT
+      value: "6379"
+  replicaCount: 1
+
+postgresql:
+  auth:
+    username: postgres
+    postgresPassword: ""
+  primary:
+    extraEnvVars:
+      - name: POSTGRES_MULTIPLE_DATABASES
+        value: "main,keycloak"
+    extraVolumes:
+      - name: db-init
+        configMap:
+          name: postgresql-configmap
+    extraVolumeMounts:
+      - name: db-init
+        mountPath: /docker-entrypoint-initdb.d
+
+keycloak:
+  ingress:
+    enabled: false
+  auth:
+    adminUser: admin
+    adminPassword: ""
+  postgresql:
+    enabled: false
+  externalDatabase:
+    host: '{{ printf "%s-postgresql" .Release.Name }}'
+    user: postgres
+    password: ""
+    database: keycloak
+    port: 5432
+  extraEnvVars:
+    - name: KEYCLOAK_EXTRA_ARGS
+      value: "--import-realm"
+    - name: KC_PROXY
+      value: edge
+    - name: KC_PROXY_HEADERS
+      value: xforwarded
+    - name: KC_HOSTNAME
+      value: staging.auth.whiteboard.student.k8s.aet.cit.tum.de
+  extraVolumes:
+    - name: realm-export
+      configMap:
+        name: keycloak-configmap
+  extraVolumeMounts:
+    - name: realm-export
+      mountPath: /opt/bitnami/keycloak/data/import
+
+redis:
+  auth:
+    enabled: false
+
+genai:
+  image:
+    repository: ghcr.io/aet-devops25/team-server-down/genai
+    tag: develop
+    pullPolicy: Always
+  service:
+    type: ClusterIP
+    port: 8000
+    targetPort: 8000
+  replicaCount: 1
+  env:
+    - name: OPEN_WEB_UI_API_KEY
+      value: '{{ .Values.genai.apiKey }}'
+    - name: API_URL
+      value: https://gpu.aet.cit.tum.de/api/chat/completions
+    - name: SERVER_URL
+      value: https://staging.api.whiteboard.student.k8s.aet.cit.tum.de
+    - name: CLIENT_URL
+      value: https://staging.whiteboard.student.k8s.aet.cit.tum
+    - name: GENAI_URL
+      value: https://staging.genai.whiteboard.student.k8s.aet.cit
+
+ingress:
+  enabled: true
+  className: "nginx"
+  annotations:
+    cert-manager.io/cluster-issuer: "letsencrypt-prod"
+    nginx.ingress.kubernetes.io/rewrite-target: /
+    nginx.ingress.kubernetes.io/use-forwarded-headers: "true"
+    nginx.ingress.kubernetes.io/proxy-buffer-size: "8k"
+  tls:
+    hosts:
+      - "staging.whiteboard.student.k8s.aet.cit.tum.de"
+      - "staging.api.whiteboard.student.k8s.aet.cit.tum.de"
+      - "staging.auth.whiteboard.student.k8s.aet.cit.tum.de"
+      - "staging.realtime.whiteboard.student.k8s.aet.cit.tum.de"
+      - "staging.genai.whiteboard.student.k8s.aet.cit.tum.de"
+    secretName: "staging-whiteboard-devops25-tls"
+  rules:
+    - host: "staging.whiteboard.student.k8s.aet.cit.tum.de"
+      paths:
+        - path: /
+          pathType: Prefix
+          service:
+            name: '{{ printf "%s-client" .Release.Name }}'
+            port:
+              number: 3000
+    - host: "staging.api.whiteboard.student.k8s.aet.cit.tum.de"
+      paths:
+        - path: /
+          pathType: Prefix
+          service:
+            name: '{{ printf "%s-server" .Release.Name }}'
+            port:
+              number: 9091
+    - host: "staging.auth.whiteboard.student.k8s.aet.cit.tum.de"
+      paths:
+        - path: /
+          pathType: Prefix
+          service:
+            name: '{{ printf "%s-keycloak" .Release.Name }}'
+            port:
+              number: 80
+    - host: "staging.genai.whiteboard.student.k8s.aet.cit.tum.de"
+      paths:  
+        - path: /
+          pathType: Prefix
+          service:
+            name: '{{ printf "%s-genai" .Release.Name }}'
+            port:
+              number: 8000
+    - host: 'staging.realtime.whiteboard.student.k8s.aet.cit.tum.de'
+      paths:
+        - path: /
+          pathType: Prefix
+          service:
+            name: '{{ printf "%s-realtime" .Release.Name }}'
+            port:
+              number: 9090

@@ -1,0 +1,8 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: keycloak-configmap
+data:
+  realm-export.json: |-
+{{- $realmJson := .Files.Get "files/keycloak/realm-export.json" }}
+{{ tpl $realmJson . | indent 4 }}

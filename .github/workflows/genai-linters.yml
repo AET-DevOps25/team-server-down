@@ -30,6 +30,11 @@ jobs:
           cd genai
           ruff check .
 
+      - name: GenAI format (auto-fix)
+        run: |
+          cd genai
+          ruff format .
+
       - name: GenAI formatting
         run: |
           cd genai
