@@ -10,11 +10,11 @@ client:
   replicaCount: 1
   env:
     - name: KEYCLOAK_CLIENT_SECRET
-      value: SXiMvr1GG10bk2J63ODZC9SOaoAZ4dbe
+      value: '{{ .Values.keycloak.clientSecret }}'
     - name: NEXTAUTH_URL
       value: 'https://{{ .Values.client.url }}/api/auth/'
     - name: NEXTAUTH_SECRET
-      value: feZJWB3mcQ93VBmqHKQI5er5NEIxcDPb3wtT/KaLB9s=
+      value: '{{ .Values.nextauth.secret }}'
     - name: KEYCLOAK_CLIENT_ID
       value: webclient
     - name: KEYCLOAK_ISSUER
@@ -41,7 +41,7 @@ server:
     - name: DB_USER
       value: postgres
     - name: DB_PASSWORD
-      value: password
+      value: '{{ .Values.postgresql.auth.postgresPassword }}'
     - name: ALLOWED_ORIGIN
       value: 'https://{{ .Values.client.url }}'
     - name: IDP_INTERNAL_URI
@@ -94,13 +94,13 @@ keycloak:
     enabled: false
   auth:
     adminUser: admin
-    adminPassword: password
+    adminPassword: '{{ .Values.postgresql.auth.postgresPassword }}'
   postgresql:
     enabled: false
   externalDatabase:
     host: '{{ printf "%s-postgresql" .Release.Name }}'
     user: postgres
-    password: password
+    password: '{{ .Values.postgresql.auth.postgresPassword }}'
     database: keycloak
     port: 5432
   extraEnvVars:
