@@ -52,6 +52,7 @@ ingress:
   tls:
     hosts:
       - '{{ .Values.metrics.url }}'
+      - "staging.mailhog.whiteboard.student.k8s.aet.cit.tum.de"
     secretName: '{{ .Values.namespace }}-whiteboard-observability-devops25-tls'
   rules:
     - host: '{{ .Values.metrics.url }}'
@@ -59,6 +60,6 @@ ingress:
         - path: /
           pathType: Prefix
           service:
-            name: '{{ printf "%s-grafana" .Release.Name }}'
+            name: '{{ printf "%s-mailhog" .Release.Name }}'
             port:
-              number: 3000
+              number: 8025

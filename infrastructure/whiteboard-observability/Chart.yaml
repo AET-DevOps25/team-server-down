@@ -11,3 +11,6 @@ dependencies:
   - name: prometheus
     version: 27.28.0
     repository: "https://prometheus-community.github.io/helm-charts"
+  - name: mailhog
+    version: 5.8.0
+    repository: https://codecentric.github.io/helm-charts
