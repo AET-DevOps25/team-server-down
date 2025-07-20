@@ -358,7 +358,7 @@ jobs:
             --set keycloak.auth.adminPassword="${{ env.KEYCLOAK_SECRET }}" \
 
       - name: Deploy Observability Stack with Helm
-        if: github.ref == 'refs/heads/develop' || github.ref == 'refs/heads/main'
+        if: github.event_name != 'pull_request' && (github.ref == 'refs/heads/develop' || github.ref == 'refs/heads/main')
         run: |
           helm upgrade ${{ env.OBSERVABILITY_RELEASE_NAME }} ./infrastructure/whiteboard-observability/ \
             -f ${{ env.VALUES_FILE }} \
