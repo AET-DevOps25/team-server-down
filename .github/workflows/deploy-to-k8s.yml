@@ -348,6 +348,7 @@ jobs:
             --atomic \
             --kubeconfig ${{ env.KUBECONFIG }} \
             --set namespace="${{ env.NAMESPACE }}" \
+            --set client.url="${{ env.CLIENT_URL }}"
             --set server.url="${{ env.SERVER_URL }}" \
             --set genai.url="${{ env.GENAI_URL }}" \
             --set metrics.url="${{ env.METRICS_URL }}"

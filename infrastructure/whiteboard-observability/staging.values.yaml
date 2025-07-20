@@ -40,6 +40,25 @@ prometheus:
       - '--web.console.libraries=/etc/prometheus/console_libraries'
       - '--web.console.templates=/etc/prometheus/consoles'
       - '--web.enable-lifecycle'
+  alertmanager:
+    config:
+      global:
+        smtp_smarthost: '{{ printf "%s-mailhog" .Release.Name }}:1025'
+        smtp_from: 'alertmanager@{{ .Values.client.url }}'
+        smtp_require_tls: false
+      route:
+        receiver: 'mailhog-alerts'
+        group_by: [ 'alertname' ]
+        group_wait: 10s
+        group_interval: 1m
+        repeat_interval: 30m
+      receivers:
+        - name: 'mailhog-alerts'
+          email_configs:
+            - to: 'teamserverdown@{{ .Values.client.url }}'
+              from: 'alertmanager@{{ .Values.client.url }}'
+              smarthost: '{{ printf "%s-mailhog" .Release.Name }}:1025'
+              send_resolved: true
 
 ingress:
   enabled: true
