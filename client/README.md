@@ -1,38 +1,52 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+## AI-Powered Whiteboard Client
 
-## Getting Started
+This is the client for AI-Powered Whiteboard. The frontend runs locally on http://localhost:3000
 
-First, run the development server:
+## Tech Stack
 
-```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
-```
+We used Next.js with typescript as our primary framework for building the application, and for the UI components, we utilized the ShadCn and tailwind to create a consistent and modern user interface.
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+## Development with Docker
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+In order to start the client, server and genai run the below command 
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+`docker compose up`
 
-## Learn More
+ and in order to build do 
 
-To learn more about Next.js, take a look at the following resources:
+`docker compose up --build`
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+## Development without Docker
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+Navigate to client folder and then run the following command for local development 
 
-## Deploy on Vercel
+`npm run dev`
+
+or to build the client do 
+
+`npm run build`
+
+To check for linting errors, run:
+
+`npm run lint`
+
+## OpenAPI Client Generation
+
+To generate or update the OpenAPI client for the server, run the following command inside the client directory:
+
+`npm run openapi:generate:main`
+
+To generate or update the OpenAPI client for the realtime service, use:
+
+`npm run openapi:generate:realtime`
+
+For the GenAI OpenAPI client, run:
+
+`npm run openapi:generate:genai`
 
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+
+
+
 
