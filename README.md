@@ -179,9 +179,9 @@ Enjoy our application! Every service has its own README file which you can read 
 
 - **Swagger UI:**  
   [http://localhost:9091/swagger-ui/index.html](http://localhost:9091/swagger-ui/index.html)  
-  _To try out endpoints, you need to authorize:_
+  _To try out endpoints, you need to authorize (see compose.yml):_
    - Username: `webclient`
-   - Password: `SXiMvr1GG10bk2J63ODZC9SOaoAZ4dbe`
+   - Password: KEYCLOAK_CLIENT_SECRET
 - **OpenAPI (JSON):**  
   [http://localhost:9091/v3/api-docs](http://localhost:9091/v3/api-docs)
 - **Metrics endpoint:**  
