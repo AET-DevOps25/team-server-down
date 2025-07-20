@@ -89,7 +89,7 @@ keycloak:
     enabled: false
   auth:
     adminUser: admin
-    adminPassword: '{{ .Values.postgresql.auth.postgresPassword }}'
+    adminPassword: '{{ .Values.keycloak.auth.adminPassword }}'
   postgresql:
     enabled: false
   externalDatabase:

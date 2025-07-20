@@ -356,7 +356,8 @@ jobs:
             --set keycloak.clientSecret="${{ env.KEYCLOAK_CLIENT_SECRET }}" \
             --set nextauth.secret="${{ env.NEXTAUTH_SECRET }}" \
             --set postgresql.auth.postgresPassword="${{ env.POSTGRESQL_SECRET }}" \
-            --set keycloak.externalDatabase.password="${{ env.KEYCLOAK_SECRET }}" \
+            --set keycloak.externalDatabase.password="${{ env.POSTGRESQL_SECRET }}" \
+            --set keycloak.auth.adminPassword="${{ env.KEYCLOAK_SECRET }}" \
 
   comment-pr:
     needs: deploy
