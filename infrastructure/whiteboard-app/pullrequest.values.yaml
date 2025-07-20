@@ -70,8 +70,8 @@ realtime:
 
 postgresql:
   auth:
-    user: postgres
-    password: ""
+    username: postgres
+    postgresPassword: ""
   primary:
     extraEnvVars:
       - name: POSTGRES_MULTIPLE_DATABASES
