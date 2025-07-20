@@ -172,18 +172,17 @@ public class WhiteboardController {
       return ResponseEntity.status(404).build();
     }
 
-      List<User> collaborators = new ArrayList<>();
-      collaborators.add(whiteboardOpt.get().getUser());
-      collaborators.addAll(userWhiteboardAccessRepository.findUsersByWhiteboardId(id));
+    List<User> collaborators = new ArrayList<>();
+    collaborators.add(whiteboardOpt.get().getUser());
+    collaborators.addAll(userWhiteboardAccessRepository.findUsersByWhiteboardId(id));
 
-      List<UserResponse> whiteboardUserListResponse =
-              collaborators.stream().map(UserResponse::fromEntity).collect(Collectors.toList());
+    List<UserResponse> whiteboardUserListResponse =
+        collaborators.stream().map(UserResponse::fromEntity).collect(Collectors.toList());
 
-      return ResponseEntity.ok(whiteboardUserListResponse);
+    return ResponseEntity.ok(whiteboardUserListResponse);
   }
 
-
-    @PostMapping("/{id}/invitations")
+  @PostMapping("/{id}/invitations")
   @Operation(summary = "Invite users to collaborate on the whiteboard")
   public ResponseEntity<Void> inviteCollaborators(
       @Parameter(description = "ID of the whiteboard", required = true) @PathVariable Long id,

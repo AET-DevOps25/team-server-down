@@ -1,7 +1,6 @@
 "use client";
 import React, {
   MouseEventHandler,
-  ReactNode,
   useCallback,
   useEffect,
   useState,
@@ -60,7 +59,6 @@ export default function Whiteboard({ whiteboardId }: WhiteboardProps) {
   const [nodes, setNodes, onNodesChange] = useNodesState<Node>([]);
   const [edges, setEdges, onEdgesChange] = useEdgesState<Edge>([]);
   const [rfInstance, setRfInstance] = useState<ReactFlowInstance | null>(null);
-
 
   type ActivityMap = Record<string, boolean>;
   const [userActivity, setUserActivity] = useState<ActivityMap>({});
