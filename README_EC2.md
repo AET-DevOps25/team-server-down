@@ -75,18 +75,13 @@ Make sure Terraform is installed locally.
 Initialize Terraform:
 
 ```bash
-Copy
-Edit
 terraform init
 
 ```
 
-```bash
 Apply the Terraform plan:
 
-bash
-Copy
-Edit
+```bash
 terraform apply
 Confirm by typing yes when prompted.
 ```
