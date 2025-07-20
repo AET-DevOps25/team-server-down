@@ -18,3 +18,5 @@ data:
 {{ tpl $dashboardsConfig . | indent 4 }}
   server-dashboard.json: |-
 {{ .Files.Get "files/grafana/provisioning/dashboards/server-dashboard.json" | indent 4 }}
+  genai-dashboard.json: |-
+  {{ .Files.Get "files/grafana/provisioning/dashboards/genai-dashboard.json" | indent 4 }}
