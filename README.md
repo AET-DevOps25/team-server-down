@@ -74,13 +74,10 @@ Leon focused primarily on building the end-to-end real-time collaboration featur
 **Xhulia Jasimi**  
 Xhulia was the main force behind our Spring Boot server—developing most of the backend logic, endpoints, and database integrations. She contributed on the client side, implementing UI features and bridging the client and spring boot server. Additionally, she was involved in creating Grafana dashboard for Observability. Xhulia contributed on Kubernetes deployments, documentation, and system modelling diagrams. 
 
----
 
+---
 Throughout the project, all team members collaborated closely—setting up the initial project structure, designing the CI/CD pipeline, performing code reviews, and helping each other across different parts of the stack. Everyone jumped in where needed, ensuring a smooth and successful delivery.
----
 
-All team members actively collaborated on the initial project setup, CI/CD pipeline design, and DevOps practices. Everyone contributed to code reviews, troubleshooting, and supported each other throughout all stages of development and deployment.
----
 
 # Running the Application
 
