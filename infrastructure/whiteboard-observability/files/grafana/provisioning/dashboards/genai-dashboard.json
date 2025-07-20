@@ -1,412 +1,522 @@
 {
-  "annotations": {
-    "list": [
+  "annotations":{
+    "list":[
       {
-        "builtIn": 1,
-        "datasource": {
-          "type": "grafana",
-          "uid": "-- Grafana --"
+        "builtIn":1,
+        "datasource":{
+          "type":"grafana",
+          "uid":"-- Grafana --"
         },
-        "enable": true,
-        "hide": true,
-        "iconColor": "rgba(0, 211, 255, 1)",
-        "name": "Annotations & Alerts",
-        "type": "dashboard"
+        "enable":true,
+        "hide":true,
+        "iconColor":"rgba(0, 211, 255, 1)",
+        "name":"Annotations & Alerts",
+        "type":"dashboard"
       },
       {
-        "datasource": {
-          "type": "prometheus",
-          "uid": "PBFA97CFB590B2093"
+        "datasource":{
+          "type":"prometheus",
+          "uid":"PBFA97CFB590B2093"
         },
-        "enable": true,
-        "hide": false,
-        "iconColor": "orange",
-        "name": "Client Error Spike",
-        "target": {
-          "expr": "sum(rate(http_requests_total{status=~\"4xx\"}[5m])) > 0.1",
-          "interval": "",
-          "refId": "Anno"
+        "enable":true,
+        "hide":false,
+        "iconColor":"orange",
+        "name":"Client Error Spike",
+        "target":{
+          "expr":"sum(rate(http_requests_total{status=~\"4xx\"}[5m])) > 0.1",
+          "interval":"",
+          "refId":"Anno"
         },
-        "textFormat": "High rate of client errors detected, exceeding 0.1 requests per second",
-        "titleFormat": "Client Error Spike"
+        "textFormat":"High rate of client errors detected, exceeding 0.1 requests per second",
+        "titleFormat":"Client Error Spike"
       },
       {
-        "datasource": {
-          "type": "prometheus",
-          "uid": "PBFA97CFB590B2093"
+        "datasource":{
+          "type":"prometheus",
+          "uid":"PBFA97CFB590B2093"
         },
-        "enable": true,
-        "hide": false,
-        "iconColor": "red",
-        "name": "Server Error Spike",
-        "tagKeys": "server, error",
-        "target": {
-          "expr": "sum(rate(http_requests_total{status=~\"5xx\"}[5m])) > 0.1",
-          "interval": "",
-          "refId": "Anno"
+        "enable":true,
+        "hide":false,
+        "iconColor":"red",
+        "name":"Server Error Spike",
+        "tagKeys":"server, error",
+        "target":{
+          "expr":"sum(rate(http_requests_total{status=~\"5xx\"}[5m])) > 0.1",
+          "interval":"",
+          "refId":"Anno"
         },
-        "textFormat": "Server error rate exceeded threshold (>0.1 req/s)",
-        "titleFormat": "Server Error Spike"
+        "textFormat":"Server error rate exceeded threshold (>0.1 req/s)",
+        "titleFormat":"Server Error Spike"
       }
     ]
   },
-  "description": "Dashboard showing system metrics including request count, latency, and error rate.",
-  "editable": true,
-  "fiscalYearStartMonth": 0,
-  "graphTooltip": 0,
-  "id": 2,
-  "links": [],
-  "panels": [
+  "description":"Dashboard showing system metrics including request count, latency, and error rate.",
+  "editable":true,
+  "fiscalYearStartMonth":0,
+  "graphTooltip":0,
+  "id":3,
+  "links":[
+
+  ],
+  "panels":[
     {
-      "datasource": {
-        "type": "prometheus",
-        "uid": "PBFA97CFB590B2093"
+      "datasource":{
+        "type":"prometheus",
+        "uid":"PBFA97CFB590B2093"
       },
-      "fieldConfig": {
-        "defaults": {
-          "color": {
-            "mode": "palette-classic"
+      "fieldConfig":{
+        "defaults":{
+          "color":{
+            "mode":"palette-classic"
           },
-          "custom": {
-            "axisBorderShow": false,
-            "axisCenteredZero": false,
-            "axisColorMode": "text",
-            "axisLabel": "",
-            "axisPlacement": "auto",
-            "barAlignment": 0,
-            "barWidthFactor": 0.6,
-            "drawStyle": "line",
-            "fillOpacity": 20,
-            "gradientMode": "none",
-            "hideFrom": {
-              "legend": false,
-              "tooltip": false,
-              "viz": false
+          "custom":{
+            "axisBorderShow":false,
+            "axisCenteredZero":false,
+            "axisColorMode":"text",
+            "axisLabel":"",
+            "axisPlacement":"auto",
+            "barAlignment":0,
+            "barWidthFactor":0.6,
+            "drawStyle":"line",
+            "fillOpacity":20,
+            "gradientMode":"none",
+            "hideFrom":{
+              "legend":false,
+              "tooltip":false,
+              "viz":false
             },
-            "insertNulls": false,
-            "lineInterpolation": "smooth",
-            "lineWidth": 2,
-            "pointSize": 5,
-            "scaleDistribution": {
-              "type": "linear"
+            "insertNulls":false,
+            "lineInterpolation":"smooth",
+            "lineWidth":2,
+            "pointSize":5,
+            "scaleDistribution":{
+              "type":"linear"
             },
-            "showPoints": "auto",
-            "spanNulls": false,
-            "stacking": {
-              "group": "A",
-              "mode": "none"
+            "showPoints":"auto",
+            "spanNulls":false,
+            "stacking":{
+              "group":"A",
+              "mode":"none"
             },
-            "thresholdsStyle": {
-              "mode": "area"
+            "thresholdsStyle":{
+              "mode":"area"
             }
           },
-          "mappings": [],
-          "thresholds": {
-            "mode": "absolute",
-            "steps": [
+          "mappings":[
+
+          ],
+          "thresholds":{
+            "mode":"absolute",
+            "steps":[
               {
-                "color": "green"
+                "color":"green"
               },
               {
-                "color": "orange",
-                "value": 70
+                "color":"orange",
+                "value":70
               },
               {
-                "color": "red",
-                "value": 80
+                "color":"red",
+                "value":80
               }
             ]
           }
         },
-        "overrides": [
-          {
-            "__systemRef": "hideSeriesFrom",
-            "matcher": {
-              "id": "byNames",
-              "options": {
-                "mode": "exclude",
-                "names": [
-                  "GET 2xx "
-                ],
-                "prefix": "All except:",
-                "readOnly": true
-              }
-            },
-            "properties": [
-              {
-                "id": "custom.hideFrom",
-                "value": {
-                  "legend": false,
-                  "tooltip": false,
-                  "viz": true
-                }
-              }
-            ]
-          }
+        "overrides":[
+
         ]
       },
-      "gridPos": {
-        "h": 17,
-        "w": 12,
-        "x": 0,
-        "y": 0
+      "gridPos":{
+        "h":17,
+        "w":12,
+        "x":0,
+        "y":0
       },
-      "id": 1,
-      "options": {
-        "legend": {
-          "calcs": [
+      "id":1,
+      "options":{
+        "legend":{
+          "calcs":[
             "mean",
             "max"
           ],
-          "displayMode": "table",
-          "placement": "bottom",
-          "showLegend": true
+          "displayMode":"table",
+          "placement":"bottom",
+          "showLegend":true
         },
-        "tooltip": {
-          "hideZeros": false,
-          "mode": "multi",
-          "sort": "none"
+        "tooltip":{
+          "hideZeros":false,
+          "mode":"multi",
+          "sort":"none"
         }
       },
-      "pluginVersion": "12.0.2",
-      "targets": [
+      "pluginVersion":"12.0.2",
+      "targets":[
         {
-          "datasource": {
-            "type": "prometheus",
-            "uid": "PBFA97CFB590B2093"
+          "datasource":{
+            "type":"prometheus",
+            "uid":"PBFA97CFB590B2093"
           },
-          "editorMode": "code",
-          "expr": "sum by (handler, method, status) (increase(http_requests_total{job=\"genai_job\"}[5m]))",
-          "legendFormat": "{{method}} {{status}} {{uri}}",
-          "range": true,
-          "refId": "A"
+          "editorMode":"code",
+          "expr":"sum by (handler, method, status) (increase(http_requests_total{job=\"genai_job\"}[5m]))",
+          "legendFormat":"{{method}} {{status}} {{uri}}",
+          "range":true,
+          "refId":"A"
         }
       ],
-      "title": "Request Count",
-      "type": "timeseries"
+      "title":"Request Count",
+      "type":"timeseries"
     },
     {
-      "datasource": {
-        "type": "prometheus",
-        "uid": "PBFA97CFB590B2093"
+      "datasource":{
+        "type":"prometheus",
+        "uid":"PBFA97CFB590B2093"
       },
-      "fieldConfig": {
-        "defaults": {
-          "color": {
-            "mode": "palette-classic"
+      "fieldConfig":{
+        "defaults":{
+          "color":{
+            "mode":"palette-classic"
           },
-          "custom": {
-            "axisBorderShow": false,
-            "axisCenteredZero": false,
-            "axisColorMode": "text",
-            "axisLabel": "Average Latency (seconds)",
-            "axisPlacement": "auto",
-            "barAlignment": 0,
-            "barWidthFactor": 0.6,
-            "drawStyle": "line",
-            "fillOpacity": 20,
-            "gradientMode": "none",
-            "hideFrom": {
-              "legend": false,
-              "tooltip": false,
-              "viz": false
+          "custom":{
+            "axisBorderShow":false,
+            "axisCenteredZero":false,
+            "axisColorMode":"text",
+            "axisLabel":"Average Latency (seconds)",
+            "axisPlacement":"auto",
+            "barAlignment":0,
+            "barWidthFactor":0.6,
+            "drawStyle":"line",
+            "fillOpacity":20,
+            "gradientMode":"none",
+            "hideFrom":{
+              "legend":false,
+              "tooltip":false,
+              "viz":false
             },
-            "insertNulls": false,
-            "lineInterpolation": "smooth",
-            "lineWidth": 2,
-            "pointSize": 5,
-            "scaleDistribution": {
-              "type": "linear"
+            "insertNulls":false,
+            "lineInterpolation":"smooth",
+            "lineWidth":2,
+            "pointSize":5,
+            "scaleDistribution":{
+              "type":"linear"
             },
-            "showPoints": "auto",
-            "spanNulls": false,
-            "stacking": {
-              "group": "A",
-              "mode": "none"
+            "showPoints":"auto",
+            "spanNulls":false,
+            "stacking":{
+              "group":"A",
+              "mode":"none"
             },
-            "thresholdsStyle": {
-              "mode": "area"
+            "thresholdsStyle":{
+              "mode":"area"
             }
           },
-          "mappings": [],
-          "thresholds": {
-            "mode": "absolute",
-            "steps": [
+          "mappings":[
+
+          ],
+          "thresholds":{
+            "mode":"absolute",
+            "steps":[
               {
-                "color": "green"
+                "color":"green"
               },
               {
-                "color": "red",
-                "value": 80
+                "color":"red",
+                "value":80
               }
             ]
           }
         },
-        "overrides": []
+        "overrides":[
+
+        ]
       },
-      "gridPos": {
-        "h": 17,
-        "w": 12,
-        "x": 12,
-        "y": 0
+      "gridPos":{
+        "h":17,
+        "w":12,
+        "x":12,
+        "y":0
       },
-      "id": 2,
-      "options": {
-        "legend": {
-          "calcs": [
+      "id":2,
+      "options":{
+        "legend":{
+          "calcs":[
             "mean",
             "max"
           ],
-          "displayMode": "table",
-          "placement": "bottom",
-          "showLegend": true
+          "displayMode":"table",
+          "placement":"bottom",
+          "showLegend":true
         },
-        "tooltip": {
-          "hideZeros": false,
-          "mode": "multi",
-          "sort": "none"
+        "tooltip":{
+          "hideZeros":false,
+          "mode":"multi",
+          "sort":"none"
         }
       },
-      "pluginVersion": "12.0.2",
-      "targets": [
+      "pluginVersion":"12.0.2",
+      "targets":[
         {
-          "datasource": {
-            "type": "prometheus",
-            "uid": "PBFA97CFB590B2093"
+          "datasource":{
+            "type":"prometheus",
+            "uid":"PBFA97CFB590B2093"
           },
-          "editorMode": "code",
-          "expr": "sum(rate(http_request_duration_seconds_sum{job=\"genai_job\"}[5m])) by (method, handler) /\nsum(rate(http_request_duration_seconds_count{job=\"genai_job\"}[5m])) by (method, handler)",
-          "legendFormat": "{{method}} {{handler}}",
-          "range": true,
-          "refId": "A"
+          "editorMode":"code",
+          "expr":"sum(rate(http_request_duration_seconds_sum{job=\"genai_job\"}[5m])) by (method, handler) /\nsum(rate(http_request_duration_seconds_count{job=\"genai_job\"}[5m])) by (method, handler)",
+          "legendFormat":"{{method}} {{handler}}",
+          "range":true,
+          "refId":"A"
         }
       ],
-      "title": "Latency",
-      "type": "timeseries"
+      "title":"Latency",
+      "type":"timeseries"
     },
     {
-      "datasource": {
-        "type": "prometheus",
-        "uid": "PBFA97CFB590B2093"
+      "datasource":{
+        "type":"prometheus",
+        "uid":"PBFA97CFB590B2093"
       },
-      "fieldConfig": {
-        "defaults": {
-          "color": {
-            "mode": "palette-classic"
+      "fieldConfig":{
+        "defaults":{
+          "color":{
+            "mode":"palette-classic"
           },
-          "custom": {
-            "axisBorderShow": false,
-            "axisCenteredZero": false,
-            "axisColorMode": "text",
-            "axisLabel": "",
-            "axisPlacement": "auto",
-            "barAlignment": 0,
-            "barWidthFactor": 0.6,
-            "drawStyle": "line",
-            "fillOpacity": 0,
-            "gradientMode": "none",
-            "hideFrom": {
-              "legend": false,
-              "tooltip": false,
-              "viz": false
+          "custom":{
+            "axisBorderShow":false,
+            "axisCenteredZero":false,
+            "axisColorMode":"text",
+            "axisLabel":"",
+            "axisPlacement":"auto",
+            "barAlignment":0,
+            "barWidthFactor":0.6,
+            "drawStyle":"line",
+            "fillOpacity":0,
+            "gradientMode":"none",
+            "hideFrom":{
+              "legend":false,
+              "tooltip":false,
+              "viz":false
             },
-            "insertNulls": false,
-            "lineInterpolation": "linear",
-            "lineWidth": 1,
-            "pointSize": 5,
-            "scaleDistribution": {
-              "type": "linear"
+            "insertNulls":false,
+            "lineInterpolation":"linear",
+            "lineWidth":1,
+            "pointSize":5,
+            "scaleDistribution":{
+              "type":"linear"
             },
-            "showPoints": "auto",
-            "spanNulls": false,
-            "stacking": {
-              "group": "A",
-              "mode": "none"
+            "showPoints":"auto",
+            "spanNulls":false,
+            "stacking":{
+              "group":"A",
+              "mode":"none"
             },
-            "thresholdsStyle": {
-              "mode": "off"
+            "thresholdsStyle":{
+              "mode":"off"
             }
           },
-          "mappings": [],
-          "thresholds": {
-            "mode": "absolute",
-            "steps": [
+          "mappings":[
+
+          ],
+          "thresholds":{
+            "mode":"absolute",
+            "steps":[
               {
-                "color": "green"
+                "color":"green"
               },
               {
-                "color": "red",
-                "value": 80
+                "color":"red",
+                "value":80
               }
             ]
           }
         },
-        "overrides": []
+        "overrides":[
+
+        ]
       },
-      "gridPos": {
-        "h": 12,
-        "w": 12,
-        "x": 0,
-        "y": 17
+      "gridPos":{
+        "h":12,
+        "w":12,
+        "x":0,
+        "y":17
       },
-      "id": 4,
-      "options": {
-        "legend": {
-          "calcs": [],
-          "displayMode": "list",
-          "placement": "bottom",
-          "showLegend": true
+      "id":4,
+      "options":{
+        "legend":{
+          "calcs":[
+
+          ],
+          "displayMode":"list",
+          "placement":"bottom",
+          "showLegend":true
         },
-        "tooltip": {
-          "hideZeros": false,
-          "mode": "single",
-          "sort": "none"
+        "tooltip":{
+          "hideZeros":false,
+          "mode":"single",
+          "sort":"none"
         }
       },
-      "pluginVersion": "12.0.2",
-      "targets": [
+      "pluginVersion":"12.0.2",
+      "targets":[
         {
-          "editorMode": "code",
-          "expr": "sum by (handler, method) (increase(http_requests_total{status=~\"4..\", job=\"genai_job\"}[5m]))",
-          "legendFormat": "{{label_name}}",
-          "range": true,
-          "refId": "A"
+          "editorMode":"code",
+          "expr":"sum by (handler, method) (increase(http_requests_total{status=~\"4..\", job=\"genai_job\"}[5m]))",
+          "legendFormat":"{{label_name}}",
+          "range":true,
+          "refId":"A"
         },
         {
-          "datasource": {
-            "type": "prometheus",
-            "uid": "PBFA97CFB590B2093"
+          "datasource":{
+            "type":"prometheus",
+            "uid":"PBFA97CFB590B2093"
           },
-          "editorMode": "code",
-          "expr": "sum by (handler, method) (increase(http_requests_total{status=~\"4..\", job=\"genai_job\"}[5m]))",
-          "hide": false,
-          "instant": false,
-          "legendFormat": "__auto",
-          "range": true,
-          "refId": "B"
+          "editorMode":"code",
+          "expr":"sum by (handler, method) (increase(http_requests_total{status=~\"4..\", job=\"genai_job\"}[5m]))",
+          "hide":false,
+          "instant":false,
+          "legendFormat":"__auto",
+          "range":true,
+          "refId":"B"
         }
       ],
-      "title": "Errors",
-      "type": "timeseries"
+      "title":"Errors",
+      "type":"timeseries"
+    },
+    {
+      "datasource":{
+        "type":"prometheus",
+        "uid":"PBFA97CFB590B2093"
+      },
+      "description":"This dashboard displays the average number of input and output tokens generated per request for each operation (completion, summarization, rephrase_text) over time. The values represent the mean input and output token count, calculated every 5 minutes, grouped by operation.",
+      "fieldConfig":{
+        "defaults":{
+          "color":{
+            "mode":"palette-classic"
+          },
+          "custom":{
+            "axisBorderShow":false,
+            "axisCenteredZero":false,
+            "axisColorMode":"text",
+            "axisLabel":"",
+            "axisPlacement":"auto",
+            "barAlignment":0,
+            "barWidthFactor":0.6,
+            "drawStyle":"line",
+            "fillOpacity":0,
+            "gradientMode":"none",
+            "hideFrom":{
+              "legend":false,
+              "tooltip":false,
+              "viz":false
+            },
+            "insertNulls":false,
+            "lineInterpolation":"linear",
+            "lineWidth":1,
+            "pointSize":5,
+            "scaleDistribution":{
+              "type":"linear"
+            },
+            "showPoints":"auto",
+            "spanNulls":false,
+            "stacking":{
+              "group":"A",
+              "mode":"none"
+            },
+            "thresholdsStyle":{
+              "mode":"off"
+            }
+          },
+          "mappings":[
+
+          ],
+          "thresholds":{
+            "mode":"absolute",
+            "steps":[
+              {
+                "color":"green"
+              },
+              {
+                "color":"red",
+                "value":80
+              }
+            ]
+          }
+        },
+        "overrides":[
+
+        ]
+      },
+      "gridPos":{
+        "h":12,
+        "w":12,
+        "x":12,
+        "y":17
+      },
+      "id":5,
+      "options":{
+        "legend":{
+          "calcs":[
+
+          ],
+          "displayMode":"list",
+          "placement":"bottom",
+          "showLegend":true
+        },
+        "tooltip":{
+          "hideZeros":false,
+          "mode":"single",
+          "sort":"none"
+        }
+      },
+      "pluginVersion":"12.0.2",
+      "targets":[
+        {
+          "editorMode":"code",
+          "exemplar":false,
+          "expr":"rate(llm_token_count_sum{type=\"output\"}[5m]) \n/\nrate(llm_token_count_count{type=\"output\"}[5m])",
+          "format":"time_series",
+          "instant":false,
+          "legendFormat":"output - {{operation}}",
+          "range":true,
+          "refId":"A"
+        },
+        {
+          "datasource":{
+            "type":"prometheus",
+            "uid":"PBFA97CFB590B2093"
+          },
+          "editorMode":"code",
+          "expr":"rate(llm_token_count_sum{type=\"input\"}[5m]) \n/\nrate(llm_token_count_count{type=\"input\"}[5m])",
+          "hide":false,
+          "instant":false,
+          "legendFormat":"input - {{operation}}",
+          "range":true,
+          "refId":"B"
+        }
+      ],
+      "title":"LLM API Token Analytics",
+      "type":"timeseries"
     }
   ],
-  "preload": false,
-  "refresh": "10s",
-  "schemaVersion": 41,
-  "tags": [
+  "preload":false,
+  "refresh":"10s",
+  "schemaVersion":41,
+  "tags":[
     "monitoring",
     "alerts"
   ],
-  "templating": {
-    "list": []
+  "templating":{
+    "list":[
+
+    ]
   },
-  "time": {
-    "from": "now-6h",
-    "to": "now"
+  "time":{
+    "from":"now-6h",
+    "to":"now"
   },
-  "timepicker": {},
-  "timezone": "browser",
-  "title": "GenAi System Metrics Dashboard",
-  "uid": "genai-metrics-dashboard1111",
-  "version": 1
+  "timepicker":{
+
+  },
+  "timezone":"browser",
+  "title":"GenAi System Metrics Dashboard",
+  "uid":"genai-metrics-dashboard1111",
+  "version":2
 }
