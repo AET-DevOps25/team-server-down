@@ -34,6 +34,3 @@ jobs:
       - name: Run Type Check
         run: npx --package=typescript@latest -- tsc --build .
         working-directory: client
-
-
-

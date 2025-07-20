@@ -1,0 +1,11 @@
+groups:
+  - name: service-availability
+    rules:
+      - alert: Service Down
+        expr: up{job=~"server_job|genai_job|realtime_job"} == 0
+        for: 1m
+        labels:
+          severity: critical
+        annotations:
+          summary: "Service {{ $labels.job }} is down"
+          description: "Service {{ $labels.job }} on {{ $labels.instance }} has been down for more than 1 minute"

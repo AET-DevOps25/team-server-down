@@ -5,7 +5,7 @@
 
 Name | Type | Description | Notes
 ------------ | ------------- | ------------- | -------------
-**user_text** | **Array&lt;string&gt;** |  | [default to undefined]
+**user_text** | **string** |  | [default to undefined]
 
 ## Example
 

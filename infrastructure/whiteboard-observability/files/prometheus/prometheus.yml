@@ -1,0 +1,32 @@
+global:
+  scrape_interval: 15s
+  evaluation_interval: 15s
+
+alerting:
+  alertmanagers:
+    - static_configs:
+        - targets:
+            - '{{ printf "%s-alertmanager" .Release.Name }}:9093'
+
+rule_files:
+  - "/etc/prometheus/alert.rules.yml"
+
+scrape_configs:
+  - job_name: 'server_job'
+    metrics_path: '/actuator/prometheus'
+    scheme: https
+    static_configs:
+      - targets:
+        - '{{ .Values.server.url }}'
+
+  - job_name: 'genai_job'
+    metrics_path: '/metrics'
+    static_configs:
+      - targets:
+          - '{{ .Values.genai.url }}'
+
+  - job_name: 'realtime_job'
+    metrics_path: '/metrics'
+    static_configs:
+      - targets:
+          - '{{ .Values.realtime.url }}'
