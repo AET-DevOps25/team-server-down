@@ -1,0 +1,33 @@
+name: Lint and Format Check
+
+on:
+  pull_request:
+    paths:
+      - 'client/**'
+  workflow_dispatch:
+
+jobs:
+  client-test:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: '18.18.0'
+
+      - name: Install dependencies
+        run: npm install
+        working-directory: client
+
+      - name: Run Client Jest tests
+        run: npm run test
+        working-directory: client
+
+
+
+
+

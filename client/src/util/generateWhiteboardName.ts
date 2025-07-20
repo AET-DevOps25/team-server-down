@@ -1,4 +1,4 @@
-const nameGenerators = {
+export const nameGenerators = {
   project: {
     adjectives: [
       "Active",

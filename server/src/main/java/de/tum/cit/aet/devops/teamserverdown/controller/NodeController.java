@@ -18,13 +18,11 @@ public class NodeController {
     this.nodeRepository = nodeRepository;
   }
 
-  // Get all nodes for a whiteboard
   @GetMapping("/whiteboard/{whiteboardId}")
   public List<Node> getAllByWhiteboardId(@PathVariable long whiteboardId) {
     return nodeRepository.findByWhiteboardId(whiteboardId);
   }
 
-  // Create a node
   @PostMapping
   public Node createNode(@RequestBody Node node) {
     return nodeRepository.save(node);
