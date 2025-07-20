@@ -16,9 +16,6 @@ import {
 } from "@/types/NodeProperties";
 import StyleBar from "@/components/style-bar/StyleBar";
 import { updateNode } from "@/util/updateNode";
-import { useParams } from "next/navigation";
-import { useGetMe } from "@/hooks/api/account.api";
-import { useAmIOwner } from "@/hooks/api/whiteboard.api";
 
 interface TextNodeProps extends NodeProps {
   id: string;
@@ -46,12 +43,6 @@ export default function TextNode({ id, data, selected }: TextNodeProps) {
   const [showStyleBar, setShowStyleBar] = useState(true);
   const { setNodes } = useReactFlow();
 
-  const params = useParams();
-  const whiteboardId = Number(params.id);
-
-  const { data: user } = useGetMe();
-  const { data: isOwner } = useAmIOwner(whiteboardId, user?.id);
-
   const { nodeProperties, label } = data;
   const bgRgb = hexToRgb(nodeProperties.color);
   const borderRgb = hexToRgb(nodeProperties.borderColor);
@@ -77,7 +68,7 @@ export default function TextNode({ id, data, selected }: TextNodeProps) {
 
   return (
     <>
-      {isOwner && showStyleBar && (
+      {showStyleBar && (
         <NodeToolbar isVisible={selected} position={Position.Top}>
           <StyleBar
             nodeProperties={nodeProperties}
