@@ -2,20 +2,24 @@ package handler
 
 import (
 	"context"
+	"github.com/AET-DevOps25/team-server-down/pkg/api/metrics"
 	"github.com/AET-DevOps25/team-server-down/pkg/mq"
 	"github.com/gin-gonic/gin"
 	"github.com/gorilla/websocket"
 	"log"
 	"net/http"
+	"time"
 )
 
 type WhiteboardHandler struct {
-	mq *mq.RedisMQ
+	mq      *mq.RedisMQ
+	metrics *metrics.Metrics
 }
 
-func NewWhiteboardHandler(redisMQ *mq.RedisMQ) *WhiteboardHandler {
+func NewWhiteboardHandler(redisMQ *mq.RedisMQ, metrics *metrics.Metrics) *WhiteboardHandler {
 	return &WhiteboardHandler{
 		redisMQ,
+		metrics,
 	}
 }
 
@@ -33,9 +37,19 @@ func (wh *WhiteboardHandler) GetWhiteboardEvents(c *gin.Context) {
 	conn, err := upgrader.Upgrade(c.Writer, c.Request, nil)
 	if err != nil {
 		log.Printf("WebSocket upgrade failed: %v", err)
+		wh.metrics.WebsocketUpgradeErrors.Inc()
 		return
 	}
 	defer conn.Close()
+
+	wh.metrics.WebsocketConnectionsActive.Inc()
+	defer wh.metrics.WebsocketConnectionsActive.Dec()
+
+	start := time.Now()
+	defer func() {
+		duration := time.Since(start).Seconds()
+		wh.metrics.WebsocketConnectionDuration.Observe(duration)
+	}()
 
 	ctx, cancel := context.WithCancel(c.Request.Context())
 	defer cancel()
@@ -79,9 +93,11 @@ func (wh *WhiteboardHandler) GetWhiteboardEvents(c *gin.Context) {
 				return
 			}
 			if err := conn.WriteMessage(websocket.TextMessage, msg); err != nil {
+				wh.metrics.WebsocketWriteErrors.Inc()
 				cancel()
 				return
 			}
+			wh.metrics.WebsocketSentMessages.Inc()
 		}
 	}
 }
@@ -91,15 +107,29 @@ func (wh *WhiteboardHandler) PublishWhiteboardEvents(c *gin.Context) {
 
 	conn, err := upgrader.Upgrade(c.Writer, c.Request, nil)
 	if err != nil {
+		log.Printf("WebSocket upgrade failed: %v", err)
+		wh.metrics.WebsocketUpgradeErrors.Inc()
 		return
 	}
 	defer conn.Close()
 
+	wh.metrics.WebsocketConnectionsActive.Inc()
+	defer wh.metrics.WebsocketConnectionsActive.Dec()
+
+	start := time.Now()
+	defer func() {
+		duration := time.Since(start).Seconds()
+		wh.metrics.WebsocketConnectionDuration.Observe(duration)
+	}()
+
 	for {
 		_, message, err := conn.ReadMessage()
 		if err != nil {
+			wh.metrics.WebsocketReadErrors.Inc()
 			break
 		}
+		wh.metrics.WebsocketSentMessages.Inc()
+
 		err = wh.mq.Publish(whiteboardId, string(message))
 		if err != nil {
 			log.Printf("Failed to publish message: %v", err)
