@@ -8,8 +8,8 @@ variable avail_zone {}
 variable env_prefix {}
 variable instance_type {}
 variable ssh_key {}
-# variable my_ip {}
 variable ssh_private_key{}
+
 
 resource "aws_vpc" "teamserverdown-vpc" {
   cidr_block = var.vpc_cidr_block
@@ -92,22 +92,59 @@ resource "aws_key_pair" "ssh-key" {
   public_key = file(var.ssh_key)
 }
 
-output "server-ip" {
-  value = aws_instance.teamserverdown-server.public_ip
+resource "aws_ebs_volume" "teamserverdown_volume" {
+  availability_zone = var.avail_zone
+  size              = 10  
+  tags = {
+    Name = "${var.env_prefix}-ebs-volume"
+  }
 }
+
+resource "aws_volume_attachment" "teamserverdown_attachment" {
+  device_name = "/dev/xvdf" 
+  volume_id   = aws_ebs_volume.teamserverdown_volume.id
+  instance_id = aws_instance.teamserverdown-server.id
+  force_detach = true  
+}
+
 
 resource "aws_instance" "teamserverdown-server" {
   ami                         = "ami-084568db4383264d4"
   instance_type               = var.instance_type
   key_name                    = "teamserverdown-key"
-  associate_public_ip_address = true
   subnet_id                   = aws_subnet.teamserverdown-subnet-1.id
   vpc_security_group_ids      = [aws_security_group.teamserverdown-sg.id]
   availability_zone			      = var.avail_zone
 
+  user_data = <<-EOF
+              #!/bin/bash
+              until ls /dev/xvdf; do sleep 1; done
+
+              file -s /dev/xvdf | grep ext4 || mkfs.ext4 /dev/xvdf
+
+              mkdir -p /mnt/data
+              mount /dev/xvdf /mnt/data
+
+              echo '/dev/xvdf /mnt/data ext4 defaults,nofail 0 2' >> /etc/fstab
+              EOF
+
+
   tags = {
     Name = "${var.env_prefix}-server"
   }
+}
+
+resource "aws_eip" "teamserverdown_eip" {
+  vpc = true
+}
+
+resource "aws_eip_association" "eip_assoc" {
+  instance_id   = aws_instance.teamserverdown-server.id
+  allocation_id = aws_eip.teamserverdown_eip.id
+}
+
+output "static_public_ip" {
+  value = aws_eip.teamserverdown_eip.public_ip
 }
 
 resource "null_resource" "wait_for_ssh" {
@@ -125,7 +162,7 @@ resource "null_resource" "configure_server" {
     trigger = aws_instance.teamserverdown-server.public_ip
   }
   provisioner "local-exec" {
-    working_dir = "/Users/leonliang/tum-informatik/SS25/DevOps/team-server-down/infrastructure/ansible"
+    working_dir = "/Users/leon.liang/Downloads/team-server-down/infrastructure/ansible"
     command = "ansible-playbook --inventory ${aws_instance.teamserverdown-server.public_ip}, --private-key ${var.ssh_private_key} --user ubuntu playbook.yml --ssh-extra-args='-o StrictHostKeyChecking=no'"
   }
 }
