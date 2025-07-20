@@ -119,53 +119,6 @@ If the PostgreSQL database is not created, it may be due to Docker lacking permi
    ./db_init.sh
    ```
 
-Of course! Here’s the updated markdown including your additional details:
-
-```markdown
-# Running the Application
-
-Each service includes its own `Dockerfile` in its respective folder. The entire stack is orchestrated using `compose.yml`, which also configures and fetches any required external services. You are welcome to explore these files to better understand the system architecture.
-
-## Prerequisites
-
-- Docker Desktop installed locally with permission to run scripts
-- Stable internet connection
-
-## Setup
-
-1. **Create Environment File**  
-   Before running the application, create a `.env` file in the root directory by copying `.env.example` as a reference.  
-   Make sure to add your API key for OpenWeb UI.
-
-2. **Navigate to Project Root**  
-   In your terminal, navigate to the root directory of the project (where this README is located).
-
-3. **Build and Start the Containers**
-   ```bash
-   docker compose build
-   docker compose up
-   ```
-_Note: Spring Boot may take some time to start up._
-
-## Troubleshooting: PostgreSQL Database Not Created
-
-If the PostgreSQL database is not created, Docker may not have permission to execute `.sh` files. To fix this:
-
-1. Enter the running `db` container:
-   ```bash
-   docker exec -it <db_container_name> /bin/bash
-   ```
-2. Navigate to the init script directory:
-   ```bash
-   cd docker-entrypoint-initdb.d
-   ```
-3. Ensure the script is executable and run it:
-   ```bash
-   chmod +x db_init.sh
-   ./db_init.sh
-   ```
----
-
 ## Additional Information
 
 Enjoy our application! Every service has its own README file which you can read for further information on how to run tests and other commands.
