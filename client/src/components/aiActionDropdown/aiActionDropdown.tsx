@@ -1,4 +1,10 @@
-import { Sparkles, Type, FileText, RefreshCw } from "lucide-react";
+import {
+  Sparkles,
+  Type,
+  FileText,
+  RefreshCw,
+  LoaderCircle,
+} from "lucide-react";
 import { Button } from "@/components/ui/button";
 import {
   DropdownMenu,
@@ -44,9 +50,13 @@ export function AIActionDropdown({
                 ? "cursor-not-allowed opacity-50"
                 : "bg-purple-100 text-purple-600 hover:bg-purple-200 hover:text-purple-600"
             }`}
-            disabled={disabled || loading}
+            disabled={disabled}
           >
-            <Sparkles className={`size-5 ${loading ? "animate-spin" : ""}`} />
+            {loading ? (
+              <LoaderCircle className="size-5 animate-spin" />
+            ) : (
+              <Sparkles className={`size-5 ${loading ? "animate-spin" : ""}`} />
+            )}
           </Button>
         </DropdownMenuTrigger>
         <DropdownMenuContent align="end" className="w-48">

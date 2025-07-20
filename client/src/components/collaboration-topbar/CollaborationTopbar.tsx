@@ -8,11 +8,15 @@ import { useGetWhiteboardCollaborators } from "@/hooks/api/whiteboard.api";
 
 interface CollaborationTopbarProps {
   whiteboardId: number;
+  userActivity: Record<string, boolean>;
+
   isSharable?: boolean;
 }
 
 const CollaborationTopbar = ({
   whiteboardId,
+  userActivity,
+
   isSharable = true,
 }: CollaborationTopbarProps) => {
   const { data: user } = useGetMe();
@@ -35,16 +39,23 @@ const CollaborationTopbar = ({
           className="h-8 w-8"
           fallbackClassName="text-sm"
         />
-        {collaboratorsWithoutSelf?.map((collaborator, i) => (
-          <Avatar
-            key={i}
-            username={collaborator?.username ?? ""}
-            firstname={collaborator?.firstName ?? ""}
-            lastname={collaborator?.lastName ?? ""}
-            className="h-8 w-8"
-            fallbackClassName="text-sm"
-          />
-        ))}
+        {collaboratorsWithoutSelf?.map((collaborator, i) => {
+          if (!collaborator?.username) return null;
+          const isInactive =
+            collaborator.username in userActivity &&
+            !userActivity[collaborator.username];
+
+          return (
+            <Avatar
+              key={i}
+              username={collaborator?.username ?? ""}
+              firstname={collaborator?.firstName ?? ""}
+              lastname={collaborator?.lastName ?? ""}
+              className={`h-8 w-8 ${isInactive ? "opacity-70 grayscale-25" : ""}`}
+              fallbackClassName="text-sm"
+            />
+          );
+        })}
       </div>
       {isSharable && (
         <Button

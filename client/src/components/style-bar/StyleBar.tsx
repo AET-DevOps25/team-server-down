@@ -1,6 +1,6 @@
 "use client";
 import React from "react";
-import { memo, useState } from "react";
+import { memo } from "react";
 import StylePopover from "@/components/style-bar/style-bar-components/StylePopover";
 import FontSizeSelector from "@/components/style-bar/style-bar-components/FontSizeSelector";
 import TextStylingSelector from "@/components/style-bar/style-bar-components/TextStylingSelector";
@@ -12,7 +12,6 @@ import {
   useTextSummarization,
 } from "@/hooks/api/llm.api";
 import { AIActionDropdown } from "../aiActionDropdown/aiActionDropdown";
-import { LoadingOverlay } from "../spinner/LoadingOverlay";
 
 interface StyleBarProps {
   nodeProperties: NodeProperties;
@@ -45,7 +44,6 @@ const StyleBar = ({
   const { mutateAsync: rephraseText } = useTextRephrase();
   const { mutateAsync: completeText } = useTextCompletion();
   const { mutateAsync: summarizedText } = useTextSummarization();
-  const [isLoading, setIsLoading] = useState(false);
 
   const onChangeBgColor = (color: string) => {
     onUpdateNode({ color });
@@ -98,8 +96,6 @@ const StyleBar = ({
   const handleAIAction = async (
     action: "complete" | "summarize" | "rephrase",
   ) => {
-    setIsLoading(true);
-
     try {
       let data;
 
@@ -115,8 +111,6 @@ const StyleBar = ({
       onUpdateLabel(llmResponse);
     } catch (error) {
       console.error("LLM error:", error);
-    } finally {
-      setIsLoading(false);
     }
   };
 
@@ -237,11 +231,10 @@ const StyleBar = ({
         />
 
         <AIActionDropdown
-          disabled={!selectedNodeLabel || isLoading}
+          disabled={!selectedNodeLabel}
           onAIAction={handleAIAction}
         />
       </div>
-      {isLoading && <LoadingOverlay />}
     </>
   );
 };

@@ -20,7 +20,7 @@ export function useRestoreWhiteboard({
   const { setNodes, setEdges, setViewport } = useReactFlow();
 
   const result = useQuery({
-    queryKey: ["whiteboard", whiteboardId],
+    queryKey: ["restoreWhiteboard", whiteboardId],
     queryFn: async () => {
       const [nodesResponse, edgesResponse, viewportResponse] =
         await Promise.all([
