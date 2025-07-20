@@ -6,7 +6,7 @@ alerting:
   alertmanagers:
     - static_configs:
         - targets:
-            - '{{ printf "%s-alertmanager" .Release.Name }}'
+            - '{{ printf "%s-alertmanager" .Release.Name }}:9093'
 
 rule_files:
   - "/etc/prometheus/alert.rules.yml"
