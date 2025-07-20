@@ -53,3 +53,18 @@ It addresses the need for a flexible, collaborative space where users can visual
 
 ### Analysis Object Model
 ![AOM](docs/AOM.png)
+
+---
+
+## Team Members
+
+Armanpreet Ghotra: 
+responsible for the GenAI integration and also implemented observability. She additionally contributed to client-side development.
+
+Leon Liang: 
+led the development of real-time services and implemented authentication mechanisms. He also deployed observability tools and managed the deployment process for PR services.
+
+Xhulia Jasimi:
+primarily focused on server-side development and made significant contributions to both client and springboot server side. She also supported the implementation of observability.
+
+
