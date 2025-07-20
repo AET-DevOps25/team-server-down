@@ -1,0 +1,17 @@
+global:
+  smtp_smarthost: 'mailhog:1025'
+  smtp_from: 'alertmanager@whiteboard.student.k8s.aet.cit.tum.de'
+  smtp_require_tls: false
+route:
+  receiver: 'mailhog-alerts'
+  group_by: [ 'alertname' ]
+  group_wait: 10s
+  group_interval: 1m
+  repeat_interval: 30m
+receivers:
+  - name: 'mailhog-alerts'
+    email_configs:
+      - to: 'teamserverdown@whiteboard.student.k8s.aet.cit.tum.de'
+        from: 'alertmanager@whiteboard.student.k8s.aet.cit.tum.de'
+        smarthost: 'mailhog:1025'
+        send_resolved: true
