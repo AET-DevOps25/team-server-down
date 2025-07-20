@@ -16,6 +16,7 @@ import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import java.util.*;
+import java.util.stream.Collectors;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.ResponseEntity;
@@ -171,13 +172,12 @@ public class WhiteboardController {
       return ResponseEntity.status(404).build();
     }
 
-    List<User> collaborators = userWhiteboardAccessRepository.findUsersByWhiteboardId(id);
+    List<User> collaborators = new ArrayList<>();
     collaborators.add(whiteboardOpt.get().getUser());
+    collaborators.addAll(userWhiteboardAccessRepository.findUsersByWhiteboardId(id));
 
-    List<UserResponse> whiteboardUserListResponse = new ArrayList<>();
-    for (User collaborator : collaborators) {
-      whiteboardUserListResponse.add(UserResponse.fromEntity(collaborator));
-    }
+    List<UserResponse> whiteboardUserListResponse =
+        collaborators.stream().map(UserResponse::fromEntity).collect(Collectors.toList());
 
     return ResponseEntity.ok(whiteboardUserListResponse);
   }

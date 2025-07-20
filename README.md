@@ -24,6 +24,7 @@ It addresses the need for a flexible, collaborative space where users can visual
 - Teams collaborating on product ideas, diagrams, and planning
 - Individuals who want to sketch out concepts or ideas
 
+
 ---
 
 ## 💡 Example Use Cases
