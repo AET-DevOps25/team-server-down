@@ -95,7 +95,7 @@ keycloak:
   externalDatabase:
     host: '{{ printf "%s-postgresql" .Release.Name }}'
     user: postgres
-    password: '{{ .Values.postgresql.auth.postgresPassword }}'
+    password: ""
     database: keycloak
     port: 5432
   extraEnvVars:
