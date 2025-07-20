@@ -9,6 +9,7 @@ package di
 import (
 	"github.com/AET-DevOps25/team-server-down/pkg/api"
 	"github.com/AET-DevOps25/team-server-down/pkg/api/handler"
+	"github.com/AET-DevOps25/team-server-down/pkg/api/metrics"
 	"github.com/AET-DevOps25/team-server-down/pkg/config"
 	"github.com/AET-DevOps25/team-server-down/pkg/mq"
 )
@@ -18,7 +19,9 @@ import (
 func InitializeAPI(cfg config.Config) (*http.Server, error) {
 	rootHandler := handler.NewRootHandler()
 	redisMQ := mq.NewRedisMQ(cfg)
-	whiteboardHandler := handler.NewWhiteboardHandler(redisMQ)
-	server := http.NewServer(rootHandler, whiteboardHandler)
+	registry := metrics.ProvideRegistry()
+	metricsMetrics := metrics.ProvideMetrics(registry)
+	whiteboardHandler := handler.NewWhiteboardHandler(redisMQ, metricsMetrics)
+	server := http.NewServer(rootHandler, whiteboardHandler, registry)
 	return server, nil
 }

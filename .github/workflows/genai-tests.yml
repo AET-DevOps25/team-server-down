@@ -26,7 +26,7 @@ jobs:
           uv pip install -r ./genai/requirements.txt --system
 
       - name: GenAI tests
-        env: 
+        env:
          OPEN_WEB_UI_API_KEY: ${{ secrets.OPEN_WEB_UI_API_KEY }}
          API_URL: ${{ vars.API_URL }}
         run: |
