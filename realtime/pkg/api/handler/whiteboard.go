@@ -128,7 +128,7 @@ func (wh *WhiteboardHandler) PublishWhiteboardEvents(c *gin.Context) {
 			wh.metrics.WebsocketReadErrors.Inc()
 			break
 		}
-		wh.metrics.WebsocketSentMessages.Inc()
+		wh.metrics.WebsocketReceivedMessages.Inc()
 
 		err = wh.mq.Publish(whiteboardId, string(message))
 		if err != nil {

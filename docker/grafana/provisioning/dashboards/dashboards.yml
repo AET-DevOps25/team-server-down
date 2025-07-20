@@ -14,3 +14,10 @@ providers:
     updateIntervalSeconds: 10
     options:
       path: /etc/grafana/provisioning/dashboards/genai-dashboard.json
+
+  - name: "Realtime System Metrics Dashboard"
+    type: file
+    editable: true
+    updateIntervalSeconds: 10
+    options:
+      path: /etc/grafana/provisioning/dashboards/realtime-dashboard.json
