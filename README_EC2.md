@@ -27,30 +27,20 @@ Provisioning with Ansible
 
 The EC2 instance is provisioned and configured using Ansible with the following tasks:
 
-Install Docker and Docker Compose
-
-Create a Linux user teamserverdown
-
-Clone the project repository from GitHub
-
-Generate environment variables dynamically based on the instance public IP
-
-Start Docker containers via Docker Compose
+- Install Docker and Docker Compose
+- Create a Linux user `teamserverdown`
+- Clone the project repository from GitHub
+- Generate environment variables dynamically based on the instance public IP
+- Start Docker containers via Docker Compose
 
 
 ### Infrastructure Automation with Terraform
 Terraform is used to provision the AWS infrastructure, including:
 
-VPC and Subnet setup
-
-Internet Gateway and Route Tables
-
-Security Group allowing SSH (port 22) and application ports
-
-EC2 instance creation with specified AMI, instance type, subnet, and key pair
-
-Key pair creation for SSH access
-
-Automated waiting for instance SSH availability
-
-Triggering Ansible playbook execution to provision the EC2 instance after launch
+- VPC and Subnet setup
+- Internet Gateway and Route Tables
+- Security Group allowing SSH (port 22) and application ports
+- EC2 instance creation with specified AMI, instance type, subnet, and key pair
+- Key pair creation for SSH access
+- Automated waiting for instance SSH availability
+- Triggering Ansible playbook execution to provision the EC2 instance after launch
