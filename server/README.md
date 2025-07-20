@@ -1,38 +1,54 @@
-# Team Server Down Backend
-This is the Spring Boot backend for Team Server Down.
+# 🚦 Spring Boot Server
 
-## Local development
+This is the Spring Boot backend powering the Whiteboard. It provides REST APIs, integrates with a postgresql database using Hibernate, and supports migrations, metrics, and automated checks for quality and consistency.
+
+---
+
+## 🚀 Local Development
 
 ### Prerequisites
-1. Install & run Docker Desktop
-1. Add the following entries to `/etc/hosts`:
+
+1. **Install & run Docker Desktop**
+
+
+### ▶️ Starting the Server
+
+```bash
+docker compose build server
+docker compose up -d server
 ```
-127.0.0.1 api.teamserverdown.devops.aet.cit.tum.de
-```
 
-### Enable HTTPS
-#### On your development machine
-1. Add ./server/docker/nginx/cert.crt to your trust store (Keychain Access > System)
-1. Set "When using this certificate" to "Always Trust"
+---
 
-### Starting the server
-Start the server using `docker compose up`
+### 📚 API Documentation & Metrics
 
-### OpenAPI Specs
-https://api.teamserverdown.devops.aet.cit.tum.de/swagger-ui/index.html
+- **Swagger UI:**  
+  [http://localhost:9091/swagger-ui/index.html](http://localhost:9091/swagger-ui/index.html)
 
-## Run migration
-`gradle flywayMigrate`
+- **OpenAPI JSON:**  
+  [http://localhost:9091/v3/api-docs](http://localhost:9091/v3/api-docs)
 
-## Run linter
-`gradle sonarLintMain`
+- **Prometheus Metrics:**  
+  [http://localhost:9091/actuator/prometheus](http://localhost:9091/actuator/prometheus)
 
-## Run formatter
-| **Action**       | **Command**            |
-|------------------|------------------------|
-| Format files     | `gradle spotlessApply` |
-| Check formatting | `gradle spotlessCheck` |
+---
 
-## Run tests
-`gradle test`
+## ⚙️ Development Tasks
 
+| **Action**         | **Command**                |
+|--------------------|---------------------------|
+| Run DB migrations  | `gradle flywayMigrate`    |
+| Check formatting   | `gradle spotlessCheck`    |
+| Format code        | `gradle spotlessApply`    |
+| Run tests          | `gradle test`             |
+
+---
+
+## 🛠️ Tech Overview
+
+- **Spring Boot** for REST API & application logic
+- **Hibernate** for ORM & database access
+- **Flyway** for database migrations
+- **Spotless** for formatting
+- **Gradle** for build automation
+- **Prometheus** endpoint for metrics
