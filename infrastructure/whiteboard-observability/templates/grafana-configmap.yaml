@@ -19,4 +19,4 @@ data:
   server-dashboard.json: |-
 {{ .Files.Get "files/grafana/provisioning/dashboards/server-dashboard.json" | indent 4 }}
   genai-dashboard.json: |-
-  {{ .Files.Get "files/grafana/provisioning/dashboards/genai-dashboard.json" | indent 4 }}
+{{ .Files.Get "files/grafana/provisioning/dashboards/genai-dashboard.json" | indent 4 }}
