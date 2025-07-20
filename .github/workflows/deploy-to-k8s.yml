@@ -323,7 +323,6 @@ jobs:
           else
             PR_NUMBER=${{ github.event.pull_request.number }}
             RELEASE_NAME="whiteboard-pr-${PR_NUMBER}"
-            OBSERVABILITY_RELEASE_NAME="whiteboard-observability-staging"
           fi
       
           echo "RELEASE_NAME=${RELEASE_NAME}" >> $GITHUB_ENV
@@ -359,9 +358,10 @@ jobs:
             --set keycloak.auth.adminPassword="${{ env.KEYCLOAK_SECRET }}" \
 
       - name: Deploy Observability Stack with Helm
+        if: github.ref == 'refs/heads/develop' || github.ref == 'refs/heads/main'
         run: |
           helm upgrade ${{ env.OBSERVABILITY_RELEASE_NAME }} ./infrastructure/whiteboard-observability/ \
-            -f ./infrastructure/whiteboard-observability/staging.values.yaml \
+            -f ${{ env.VALUES_FILE }} \
             -n tsd-${{ env.NAMESPACE }} \
             --create-namespace \
             --install \
