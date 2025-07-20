@@ -1,43 +1,76 @@
-## AI-Powered Whiteboard Client
+## 🖌️ AI-Powered Whiteboard Client
 
-This is the client for AI-Powered Whiteboard. The frontend runs locally on http://localhost:3000
+This is the frontend for the AI-Powered Whiteboard. By default, the app runs locally at [http://localhost:3000](http://localhost:3000).
 
-## Tech Stack
+---
 
-We used Next.js with typescript as our primary framework for building the application, and for the UI components, we utilized the ShadCn and tailwind to create a consistent and modern user interface.
+## 🛠️ Tech Stack
 
+- **Framework:** Next.js (React, TypeScript)
+- **Styling/UI:** Tailwind CSS, Shadcn UI components
+- **Testing:** Jest
 
-## Development without Docker
+---
 
-Navigate to client folder and then run the following command for local development 
+## 🔄 OpenAPI Client Generation
 
-`npm run dev`
+The client uses OpenAPI code generation for seamless integration with backend APIs. Run the following commands inside the `client` directory to (re-)generate API clients:
 
-or to build the client do 
+- **Server (Spring Boot) API:**
+  ```bash
+  npm run openapi:generate:main
+  ```
 
-`npm run build`
+- **Realtime Service API:**
+  ```bash
+  npm run openapi:generate:realtime
+  ```
 
-To check for linting errors, run:
+- **GenAI Service API:**
+  ```bash
+  npm run openapi:generate:genai
+  ```
 
-`npm run lint`
+---
 
-## OpenAPI Client Generation
+## 🚨 Linting, Formatting & Testing
 
-To generate or update the OpenAPI client for the server, run the following command inside the client directory:
+- **Formatter:**  
+  `npm run format` (Prettier)
 
-`npm run openapi:generate:main`
+- **Linter:**  
+  `npm run lint` (ESLint)
 
-To generate or update the OpenAPI client for the realtime service, use:
+- **Tests:**  
+  `npm run test` (Jest)
 
-`npm run openapi:generate:realtime`
+- **Dependencies:**  
+  `npm ci` (installs exact versions from lockfile)
 
-For the GenAI OpenAPI client, run:
+---
 
-`npm run openapi:generate:genai`
+## ⚡️ Running the App
 
+**This client cannot be run in standalone mode**, because it requires authentication and communicates with the Spring Boot server, GenAI backend and Realtime Service.  
+To test or run the full application, please refer to the root [`README.md`](../README.md) and follow instructions there for combined setup.
 
+---
 
+## 📁 Folder Structure
 
+A brief overview of the `src/` structure:
 
+```text
+client/src
+├── api         # Typed API clients generated from OpenAPI specifications
+├── app         # Next.js app directory (routing, pages, layouts)
+├── assets      # Static assets such as images and icons
+├── components  # Reusable React components for the UI
+├── hooks       # Custom React hooks
+├── types       # TypeScript types and interfaces
+└── util        # Utility/helper functions
+```
 
+---
 
+For more information, be sure to check the main project documentation and other service-specific READMEs.
