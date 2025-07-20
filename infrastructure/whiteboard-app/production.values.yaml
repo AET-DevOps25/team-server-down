@@ -69,12 +69,11 @@ realtime:
   replicaCount: 1
 
 postgresql:
+  auth:
+    user: postgres
+    password: ""
   primary:
     extraEnvVars:
-      - name: POSTGRES_USER
-        value: postgres
-      - name: POSTGRES_PASSWORD
-        value: '{{ .Values.postgresql.password }}'
       - name: POSTGRES_MULTIPLE_DATABASES
         value: "main,keycloak"
     extraVolumes:

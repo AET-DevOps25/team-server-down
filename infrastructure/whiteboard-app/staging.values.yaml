@@ -41,7 +41,7 @@ server:
     - name: DB_USER
       value: postgres
     - name: DB_PASSWORD
-      value: '{{ .Values.postgresql.password }}'
+      value: '{{ .Values.postgresql.auth.password }}'
     - name: ALLOWED_ORIGIN
       value: "https://staging.whiteboard.student.k8s.aet.cit.tum.de"
     - name: IDP_INTERNAL_URI
@@ -69,12 +69,11 @@ realtime:
   replicaCount: 1
 
 postgresql:
+  auth:
+    user: postgres
+    password: ""
   primary:
     extraEnvVars:
-      - name: POSTGRES_USER
-        value: postgres
-      - name: POSTGRES_PASSWORD
-        value: '{{ .Values.postgresql.password}}'
       - name: POSTGRES_MULTIPLE_DATABASES
         value: "main,keycloak"
     extraVolumes:
@@ -90,13 +89,13 @@ keycloak:
     enabled: false
   auth:
     adminUser: admin
-    adminPassword: '{{ .Values.postgresql.password }}'
+    adminPassword: '{{ .Values.postgresql.auth.password }}'
   postgresql:
     enabled: false
   externalDatabase:
     host: '{{ printf "%s-postgresql" .Release.Name }}'
     user: postgres
-    password: '{{ .Values.postgresql.password }}'
+    password: '{{ .Values.postgresql.auth.password }}'
     database: keycloak
     port: 5432
   extraEnvVars:
