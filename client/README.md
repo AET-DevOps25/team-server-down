@@ -6,15 +6,6 @@ This is the client for AI-Powered Whiteboard. The frontend runs locally on http:
 
 We used Next.js with typescript as our primary framework for building the application, and for the UI components, we utilized the ShadCn and tailwind to create a consistent and modern user interface.
 
-## Development with Docker
-
-In order to start the client, server and genai run the below command 
-
-`docker compose up`
-
- and in order to build do 
-
-`docker compose up --build`
 
 ## Development without Docker
 
