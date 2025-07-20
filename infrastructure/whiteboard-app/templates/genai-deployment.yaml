@@ -9,6 +9,8 @@ spec:
       app: whiteboard-genai-selector
   template:
     metadata:
+      annotations:
+        deploy-timestamp: "{{ now }}"
       labels:
         app: whiteboard-genai-selector
     spec:

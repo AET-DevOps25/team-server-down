@@ -6,6 +6,7 @@ import React, {
   useEffect,
   useState,
   useRef,
+  useMemo,
 } from "react";
 import {
   ReactFlow,
@@ -60,11 +61,16 @@ export default function Whiteboard({ whiteboardId }: WhiteboardProps) {
   const [edges, setEdges, onEdgesChange] = useEdgesState<Edge>([]);
   const [rfInstance, setRfInstance] = useState<ReactFlowInstance | null>(null);
 
+
+  type ActivityMap = Record<string, boolean>;
+  const [userActivity, setUserActivity] = useState<ActivityMap>({});
+  const userTimeouts = useRef<Record<string, NodeJS.Timeout>>({});
+
   const { getNodes, getEdges, getViewport } = useReactFlow();
 
   const { data: user } = useGetMe();
 
-  const { data: amIOwner } = useAmIOwner(whiteboardId, user?.id);
+  const { data: isOwner } = useAmIOwner(whiteboardId, user?.id);
 
   const [dragStart, setDragStart] = useState<{
     cursor: { x: number; y: number };
@@ -92,7 +98,7 @@ export default function Whiteboard({ whiteboardId }: WhiteboardProps) {
     viewport: getViewport(),
   });
 
-  useInterval(saveWhiteboardState, 1000, amIOwner);
+  useInterval(saveWhiteboardState, 1000, isOwner);
 
   useRestoreWhiteboard({
     whiteboardId,
@@ -111,6 +117,8 @@ export default function Whiteboard({ whiteboardId }: WhiteboardProps) {
   );
 
   // custom cursor logic
+  const prevCursorRef = useRef<{ x: number; y: number } | null>(null);
+
   const onMouseMove: MouseEventHandler = (event) => {
     if (!rfInstance) return;
 
@@ -119,14 +127,11 @@ export default function Whiteboard({ whiteboardId }: WhiteboardProps) {
       y: event.clientY,
     });
 
-    setCursor((prev) => {
-      if (!prev) return prev;
-
-      return {
-        ...prev,
-        position,
-      };
-    });
+    const prev = prevCursorRef.current;
+    if (!prev || prev.x !== position.x || prev.y !== position.y) {
+      prevCursorRef.current = position;
+      setCursor((prev) => (prev ? { ...prev, position } : prev));
+    }
   };
 
   const onMove = () => {
@@ -191,7 +196,7 @@ export default function Whiteboard({ whiteboardId }: WhiteboardProps) {
       });
   };
 
-  function renderCursors(): ReactNode[] {
+  const renderedCursors = useMemo(() => {
     if (!rfInstance) return [];
 
     const viewport = rfInstance.getViewport();
@@ -199,53 +204,132 @@ export default function Whiteboard({ whiteboardId }: WhiteboardProps) {
     return allCursors
       .filter((cursor) => cursor.position)
       .map((cursor) => {
+        const pos = cursor.position!;
         const position = {
-          x: cursor.position!.x * viewport.zoom + viewport.x,
-          y: cursor.position!.y * viewport.zoom + viewport.y,
+          x: pos.x * viewport.zoom + viewport.x,
+          y: pos.y * viewport.zoom + viewport.y,
         };
+
         return (
           <CustomCursor
             key={cursor.id}
             username={cursor.username}
             position={position}
-            visible={true}
+            visible
           />
         );
       });
-  }
+  }, [allCursors, rfInstance]);
 
   // Realtime synchronisation logic
   const handleWhiteboardEvent = useCallback(
     (event: z.infer<typeof WhiteboardEvent>) => {
-      if (event.payload.id !== user?.id) {
+      if (event.type === "mousePosition") {
         const { id, username, position } = event.payload;
 
         if (id === user?.id) return; // skip current user
         if (!position) return;
+
+        setUserActivity((prev) => ({ ...prev, [username]: true }));
+
+        if (userTimeouts.current[username]) {
+          clearTimeout(userTimeouts.current[username]);
+        }
+
+        userTimeouts.current[username] = setTimeout(() => {
+          setUserActivity((prev) => ({ ...prev, [username]: false }));
+        }, 10000);
 
         setAllCursors((prevCursors) => {
           const otherCursors = prevCursors.filter((c) => c.id !== id);
           return [...otherCursors, { id, username, position }];
         });
       }
+
+      if (isOwner) {
+        return;
+      }
+
+      if (event.type === "nodePosition") {
+        const incomingNodes = event.payload;
+
+        setNodes((prevNodes) => {
+          const incomingMap = new Map(incomingNodes.map((n) => [n.id, n]));
+
+          const updatedNodes = incomingNodes.map((node) => {
+            const incoming = incomingMap.get(node.id);
+            if (!incoming) return node;
+
+            return {
+              id: incoming.id,
+              type: incoming.type,
+              position: incoming.position,
+              width: incoming.width,
+              height: incoming.height,
+              measured: incoming.measured,
+              selected: incoming.selected,
+              dragging: incoming.dragging,
+              data: {
+                shapeType: incoming.data.shapeType,
+                label: incoming.data.label,
+                nodeProperties: incoming.data.nodeProperties,
+              },
+            };
+          });
+
+          const newNodes = incomingNodes.filter(
+            (incoming) => !prevNodes.some((n) => n.id === incoming.id),
+          );
+
+          return [...updatedNodes, ...newNodes];
+        });
+      }
+
+      if (event.type === "edgePosition") {
+        const incomingEdges = event.payload;
+
+        setEdges((prevEdges) => {
+          const incomingMap = new Map(incomingEdges.map((e) => [e.id, e]));
+
+          const updatedEdges = incomingEdges.map((edge) => {
+            const incoming = incomingMap.get(edge.id);
+            if (!incoming) return edge;
+
+            return {
+              id: incoming.id,
+              source: incoming.source,
+              sourceHandle: incoming.sourceHandle,
+              target: incoming.target,
+              targetHandle: incoming.targetHandle,
+            };
+          });
+
+          const newEdges = incomingEdges.filter(
+            (incoming) => !prevEdges.some((e) => e.id === incoming.id),
+          );
+
+          return [...updatedEdges, ...newEdges];
+        });
+      }
     },
-    [user?.id],
+    [user?.id, isOwner],
   );
 
   useSubscribeToWhiteboardEvents(whiteboardId, handleWhiteboardEvent);
   const publishEvent = usePublishWhiteboardEvents(whiteboardId);
 
-  const latestPositionRef = useRef(cursor);
-  const lastPublishedPositionRef = useRef<typeof cursor | null>(null);
+  // Publish cursor events
+  const latestCursorPositionRef = useRef(cursor);
+  const lastCursorPublishedPositionRef = useRef<typeof cursor | null>(null);
 
   useEffect(() => {
-    latestPositionRef.current = cursor;
+    latestCursorPositionRef.current = cursor;
   }, [cursor]);
 
   useEffect(() => {
     const interval = setInterval(() => {
-      const current = latestPositionRef.current;
-      const last = lastPublishedPositionRef.current;
+      const current = latestCursorPositionRef.current;
+      const last = lastCursorPublishedPositionRef.current;
 
       const hasChanged =
         !last ||
@@ -253,7 +337,7 @@ export default function Whiteboard({ whiteboardId }: WhiteboardProps) {
         current?.position?.y !== last.position?.y;
 
       if (hasChanged) {
-        lastPublishedPositionRef.current = current;
+        lastCursorPublishedPositionRef.current = current;
         publishEvent(
           JSON.stringify({
             type: "mousePosition",
@@ -261,34 +345,107 @@ export default function Whiteboard({ whiteboardId }: WhiteboardProps) {
           }),
         );
       }
-    }, 40);
+    }, 50);
 
     return () => clearInterval(interval);
   }, []);
+
+  // Publish node events
+  const latestNodesPositionRef = useRef<Node[]>(nodes);
+  const lastNodesPublishedPositionRef = useRef<Node[] | null>(null);
+
+  useEffect(() => {
+    latestNodesPositionRef.current = nodes;
+  }, [nodes]);
+
+  useEffect(() => {
+    if (!isOwner) return;
+
+    const interval = setInterval(() => {
+      const current = latestNodesPositionRef.current;
+      const last = lastNodesPublishedPositionRef.current;
+
+      const hasChanged =
+        !last || JSON.stringify(current) !== JSON.stringify(last);
+
+      if (hasChanged) {
+        lastNodesPublishedPositionRef.current = current;
+        publishEvent(
+          JSON.stringify({
+            type: "nodePosition",
+            payload: nodes,
+          }),
+        );
+      }
+    }, 50);
+
+    return () => clearInterval(interval);
+  });
+
+  // Publish edge events
+  const latestEdgesPositionRef = useRef<Edge[]>(edges);
+  const lastEdgesPublishedPositionRef = useRef<Edge[] | null>(null);
+
+  useEffect(() => {
+    latestEdgesPositionRef.current = edges;
+  }, [edges]);
+
+  const haveEdgesChanged = (a: Edge[], b: Edge[]) => {
+    if (a.length !== b.length) return true;
+
+    const byId = new Map(b.map((edge) => [edge.id, edge]));
+
+    return a.some((edge) => {
+      const prev = byId.get(edge.id);
+      if (!prev) return true;
+      return edge.source !== prev.source || edge.target !== prev.target;
+    });
+  };
+
+  useEffect(() => {
+    if (!isOwner) return;
+
+    const interval = setInterval(() => {
+      const current = latestEdgesPositionRef.current;
+      const last = lastEdgesPublishedPositionRef.current;
+
+      const hasChanged = !last || haveEdgesChanged(current, last);
+      if (hasChanged) {
+        lastEdgesPublishedPositionRef.current = current;
+        publishEvent(
+          JSON.stringify({
+            type: "edgePosition",
+            payload: edges,
+          }),
+        );
+      }
+    }, 50);
+
+    return () => clearInterval(interval);
+  });
 
   return (
     <div style={{ width: "100vw", height: "100vh" }}>
       <div className="fixed top-0 right-0 left-0 z-20 mx-4 my-6">
         <div className="flex flex-row justify-between">
-          <MenuBar whiteboardId={whiteboardId} isEditable={amIOwner} />
+          <MenuBar whiteboardId={whiteboardId} isEditable={isOwner} />
           <CollaborationTopbar
             whiteboardId={whiteboardId}
-            isSharable={amIOwner}
+            userActivity={userActivity}
+            isSharable={isOwner}
           />
         </div>
       </div>
-
-      <div
-        className={`fixed top-1/2 left-4 z-10 -translate-y-1/2 ${!amIOwner ? "visibility: hidden" : ""}`}
-      >
-        <Sidebar onAddNode={handleAddNode} />
-      </div>
-
+      {isOwner && (
+        <div className="fixed top-1/2 left-4 z-10 -translate-y-1/2">
+          <Sidebar onAddNode={handleAddNode} />
+        </div>
+      )}
       <ReactFlow
-        nodesDraggable={amIOwner}
-        nodesConnectable={amIOwner}
-        nodesFocusable={amIOwner}
-        elementsSelectable={amIOwner}
+        nodesDraggable={isOwner}
+        nodesConnectable={isOwner}
+        nodesFocusable={isOwner}
+        elementsSelectable={isOwner}
         nodes={nodes}
         edges={edges}
         defaultViewport={{ x: 0, y: 0, zoom: 0.5 }}
@@ -307,7 +464,7 @@ export default function Whiteboard({ whiteboardId }: WhiteboardProps) {
         nodeTypes={nodeTypes}
       >
         <div className="pointer-events-none absolute top-0 left-0 h-full w-full">
-          {renderCursors()}
+          {renderedCursors}
         </div>
         <Controls position="bottom-right" />
         <Background variant={BackgroundVariant.Dots} gap={16} size={1} />

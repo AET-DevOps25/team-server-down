@@ -9,6 +9,8 @@ spec:
       app: whiteboard-realtime-selector
   template:
     metadata:
+      annotations:
+        deploy-timestamp: "{{ now }}"
       labels:
         app: whiteboard-realtime-selector
     spec:
@@ -26,7 +28,7 @@ spec:
           ports:
             - containerPort: {{ .Values.realtime.service.targetPort }}
           env:
-            {{-range .Values.realtime.env }}
+            {{- range .Values.realtime.env }}
             - name: {{ .name }}
               value: {{ tpl .value $ | quote }}
             {{- end }}

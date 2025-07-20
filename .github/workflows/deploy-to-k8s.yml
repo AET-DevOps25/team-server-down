@@ -223,6 +223,7 @@ jobs:
       - build-client
       - build-server
       - build-genai
+      - build-realtime
     runs-on: ubuntu-latest
     outputs:
       client_url: ${{ steps.set-vars.outputs.CLIENT_URL }}
@@ -250,6 +251,10 @@ jobs:
             echo "NAMESPACE=production" >> $GITHUB_ENV
             echo "IMAGE_TAG=latest" >> $GITHUB_ENV
             echo "VALUES_FILE=./infrastructure/whiteboard-app/production.values.yaml" >> $GITHUB_ENV
+            KEYCLOAK_CLIENT_SECRET="${{ secrets.PRODUCTION_KEYCLOAK_CLIENT_SECRET }}"
+            NEXTAUTH_SECRET="${{ secrets.PRODUCTION_NEXTAUTH_SECRET }}"
+            POSTGRESQL_SECRET="${{ secrets.PRODUCTION_DB_PASSWORD }}"
+            KEYCLOAK_SECRET="${{ secrets.PRODUCTION_KEYCLOAK_SECRET }}"
           elif [[ "$BRANCH" == "develop" ]]; then
             CLIENT_URL=staging.whiteboard.student.k8s.aet.cit.tum.de
             SERVER_URL=staging.api.whiteboard.student.k8s.aet.cit.tum.de
@@ -259,6 +264,10 @@ jobs:
             echo "NAMESPACE=staging" >> $GITHUB_ENV
             echo "IMAGE_TAG=develop" >> $GITHUB_ENV
             echo "VALUES_FILE=./infrastructure/whiteboard-app/staging.values.yaml" >> $GITHUB_ENV
+            KEYCLOAK_CLIENT_SECRET="${{ secrets.STAGING_KEYCLOAK_CLIENT_SECRET }}"
+            NEXTAUTH_SECRET="${{ secrets.STAGING_NEXTAUTH_SECRET }}"
+            POSTGRESQL_SECRET="${{ secrets.STAGING_DB_PASSWORD }}"
+            KEYCLOAK_SECRET="${{ secrets.STAGING_KEYCLOAK_SECRET }}"
           else
             BRANCH_SAFE=${BRANCH//\//-}
             CLIENT_URL=$BRANCH_SAFE.whiteboard.student.k8s.aet.cit.tum.de
@@ -269,6 +278,10 @@ jobs:
             echo "NAMESPACE=$BRANCH_SAFE" >> $GITHUB_ENV
             echo "IMAGE_TAG=$BRANCH_SAFE" >> $GITHUB_ENV
             echo "VALUES_FILE=./infrastructure/whiteboard-app/pullrequest.values.yaml" >> $GITHUB_ENV
+            KEYCLOAK_CLIENT_SECRET="${{ secrets.PR_KEYCLOAK_CLIENT_SECRET }}"
+            NEXTAUTH_SECRET="${{ secrets.PR_NEXTAUTH_SECRET }}"
+            POSTGRESQL_SECRET="${{ secrets.PR_DB_PASSWORD }}"
+            KEYCLOAK_SECRET="${{ secrets.PR_KEYCLOAK_SECRET }}"
           fi
           
           echo "CLIENT_URL=$CLIENT_URL" >> $GITHUB_ENV
@@ -276,13 +289,17 @@ jobs:
           echo "AUTH_URL=$AUTH_URL" >> $GITHUB_ENV
           echo "GENAI_URL=$GENAI_URL" >> $GITHUB_ENV
           echo "OPEN_WEB_UI_API_KEY=${{ secrets.OPEN_WEB_UI_API_KEY }}" >> $GITHUB_ENV
-          echo "REALTIME_URL=$REALTIME_URL" ?? $GITHUB_ENV
+          echo "REALTIME_URL=$REALTIME_URL" >> $GITHUB_ENV
+          echo "KEYCLOAK_CLIENT_SECRET=$KEYCLOAK_CLIENT_SECRET" >> $GITHUB_ENV
+          echo "NEXTAUTH_SECRET=$NEXTAUTH_SECRET" >> $GITHUB_ENV
+          echo "POSTGRESQL_SECRET=$POSTGRESQL_SECRET" >> $GITHUB_ENV
+          echo "KEYCLOAK_SECRET=$KEYCLOAK_SECRET" >> $GITHUB_ENV
           
           echo "CLIENT_URL=$CLIENT_URL" >> $GITHUB_OUTPUT
           echo "SERVER_URL=$SERVER_URL" >> $GITHUB_OUTPUT
           echo "AUTH_URL=$AUTH_URL" >> $GITHUB_OUTPUT
           echo "GENAI_URL=$GENAI_URL" >> $GITHUB_OUTPUT
-          echo "REALTIME_URL=$REALTIME_URL" ?? $GITHUB_OUTPUT
+          echo "REALTIME_URL=$REALTIME_URL" >> $GITHUB_OUTPUT
 
       - name: Set up Kubeconfig
         run: |
@@ -322,14 +339,18 @@ jobs:
             --set server.image.tag="${{ env.IMAGE_TAG }}" \
             --set client.image.tag="${{ env.IMAGE_TAG }}" \
             --set genai.image.tag="${{ env.IMAGE_TAG }}" \
-            --set realtime.image.tag="${{ env.IMAGE_TAG }}"
+            --set realtime.image.tag="${{ env.IMAGE_TAG }}" \
             --set client.url="${{ env.CLIENT_URL }}" \
             --set server.url="${{ env.SERVER_URL }}" \
             --set auth.url="${{ env.AUTH_URL }}" \
             --set genai.url="${{ env.GENAI_URL }}" \
             --set genai.apiKey="${{ env.OPEN_WEB_UI_API_KEY }}" \
-            --set auth.url="${{ env.AUTH_URL }}"
-            --set realtime.url=${{ env.REALTIME_URL }}"
+            --set realtime.url="${{ env.REALTIME_URL }}" \
+            --set keycloak.clientSecret="${{ env.KEYCLOAK_CLIENT_SECRET }}" \
+            --set nextauth.secret="${{ env.NEXTAUTH_SECRET }}" \
+            --set postgresql.auth.postgresPassword="${{ env.POSTGRESQL_SECRET }}" \
+            --set keycloak.externalDatabase.password="${{ env.POSTGRESQL_SECRET }}" \
+            --set keycloak.auth.adminPassword="${{ env.KEYCLOAK_SECRET }}" \
 
   comment-pr:
     needs: deploy

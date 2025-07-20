@@ -15,6 +15,18 @@ export function useWhiteboards() {
   });
 }
 
+export function useGetWhiteboardById(whiteboardId: number) {
+  return useQuery({
+    queryKey: ["whiteboard", whiteboardId],
+    queryFn: async () => {
+      const { data } =
+        await whiteboardApiFactory.getWhiteboardById(whiteboardId);
+      return data;
+    },
+    retry: 0,
+  });
+}
+
 export function useAmIOwner(whiteboardId: number, userId?: number) {
   return useQuery({
     queryKey: ["whiteboard", whiteboardId, userId],

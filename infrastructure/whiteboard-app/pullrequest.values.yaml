@@ -10,11 +10,11 @@ client:
   replicaCount: 1
   env:
     - name: KEYCLOAK_CLIENT_SECRET
-      value: SXiMvr1GG10bk2J63ODZC9SOaoAZ4dbe
+      value: '{{ .Values.keycloak.clientSecret }}'
     - name: NEXTAUTH_URL
       value: 'https://{{ .Values.client.url }}/api/auth/'
     - name: NEXTAUTH_SECRET
-      value: feZJWB3mcQ93VBmqHKQI5er5NEIxcDPb3wtT/KaLB9s=
+      value: '{{ .Values.nextauth.secret }}'
     - name: KEYCLOAK_CLIENT_ID
       value: webclient
     - name: KEYCLOAK_ISSUER
@@ -41,7 +41,7 @@ server:
     - name: DB_USER
       value: postgres
     - name: DB_PASSWORD
-      value: password
+      value: '{{ .Values.postgresql.auth.postgresPassword }}'
     - name: ALLOWED_ORIGIN
       value: 'https://{{ .Values.client.url }}'
     - name: IDP_INTERNAL_URI
@@ -63,18 +63,17 @@ realtime:
     targetPort: 9090
   env:
     - name: REDIS_HOST
-      value: '{{ printf "%s-redis" .Release.Name }}'
+      value: '{{ printf "%s-redis-master" .Release.Name }}'
     - name: REDIS_PORT
       value: "6379"
   replicaCount: 1
 
 postgresql:
+  auth:
+    username: postgres
+    postgresPassword: ""
   primary:
     extraEnvVars:
-      - name: POSTGRES_USER
-        value: postgres
-      - name: POSTGRES_PASSWORD
-        value: password
       - name: POSTGRES_MULTIPLE_DATABASES
         value: "main,keycloak"
     extraVolumes:
@@ -85,18 +84,22 @@ postgresql:
       - name: db-init
         mountPath: /docker-entrypoint-initdb.d
 
+redis:
+  auth:
+    enabled: false
+
 keycloak:
   ingress:
     enabled: false
   auth:
     adminUser: admin
-    adminPassword: password
+    adminPassword: ""
   postgresql:
     enabled: false
   externalDatabase:
     host: '{{ printf "%s-postgresql" .Release.Name }}'
     user: postgres
-    password: password
+    password: ""
     database: keycloak
     port: 5432
   extraEnvVars:
@@ -151,6 +154,7 @@ ingress:
       - '{{ .Values.server.url }}'
       - '{{ .Values.auth.url }}'
       - '{{ .Values.genai.url }}'
+      - '{{ .Values.realtime.url }}'
     secretName: '{{ .Values.namespace }}-whiteboard-devops25-tls'
   rules:
     - host: '{{ .Values.client.url }}'
@@ -185,3 +189,11 @@ ingress:
             name: '{{ printf "%s-genai" .Release.Name }}'
             port:
               number: 8000
+    - host: '{{ .Values.realtime.url }}'
+      paths:
+        - path: /
+          pathType: Prefix
+          service:
+            name: '{{ printf "%s-realtime" .Release.Name }}'
+            port:
+              number: 9090
